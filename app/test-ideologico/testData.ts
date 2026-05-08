@@ -11,6 +11,11 @@ export type Question = {
   text: string;
   block: Block;
   weights: Record<string, number>;
+  info?: {
+    meaning: string;
+    agree: string;
+    disagree: string;
+  };
 };
 
 export const answerOptions = [
@@ -2410,4 +2415,241 @@ export const ideologicalQuestions: Question[] = [
       "multiculturalista": -3
     }
   }
+];
+
+export const quickIdeologicalQuestions: Question[] = [
+  {
+    id: 1,
+    text: "¿El Estado debería intervenir fuertemente en la economía para reducir desigualdades?",
+    block: "economia",
+    weights: {
+      comunista: 3,
+      socialista: 3,
+      socialdemocrata: 2,
+      liberal: -2,
+      libertario: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si priorizas la igualdad económica mediante intervención estatal o si prefieres que el mercado funcione con menos control público.",
+      agree:
+        "Muy de acuerdo indica tendencia socialista, comunista o socialdemócrata: más impuestos, más regulación y más redistribución.",
+      disagree:
+        "Muy en desacuerdo indica tendencia liberal o libertaria: menos Estado, menos impuestos y más libertad económica.",
+    },
+  },
+  {
+    id: 2,
+    text: "¿La propiedad privada y la libertad empresarial deberían estar por encima de la redistribución económica?",
+    block: "economia",
+    weights: {
+      liberal: 3,
+      libertario: 3,
+      conservador: 1,
+      socialista: -3,
+      comunista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si das prioridad al derecho de propiedad y al mercado o a la corrección de desigualdades mediante el Estado.",
+      agree:
+        "Muy de acuerdo indica una posición liberal económica o libertaria.",
+      disagree:
+        "Muy en desacuerdo indica una posición socialista o comunista.",
+    },
+  },
+
+  {
+    id: 3,
+    text: "¿La soberanía nacional debe estar por encima de organismos internacionales como la UE, la ONU o tratados globales?",
+    block: "nacion",
+    weights: {
+      nacionalista: 3,
+      soberanista: 3,
+      globalista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si consideras que la nación debe ser el centro de la decisión política o si aceptas mayor poder de organismos internacionales.",
+      agree:
+        "Muy de acuerdo indica una visión nacionalista o soberanista.",
+      disagree:
+        "Muy en desacuerdo indica una visión globalista, europeísta o internacionalista.",
+    },
+  },
+  {
+    id: 4,
+    text: "¿La inmigración debería limitarse para proteger la identidad cultural y la cohesión social?",
+    block: "nacion",
+    weights: {
+      nacionalista: 3,
+      soberanista: 2,
+      conservador: 2,
+      multiculturalista: -3,
+      globalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide el peso que das a la identidad cultural, las fronteras y la cohesión nacional frente a una visión multicultural.",
+      agree:
+        "Muy de acuerdo indica tendencia nacionalista, soberanista o conservadora.",
+      disagree:
+        "Muy en desacuerdo indica tendencia multiculturalista, globalista o progresista.",
+    },
+  },
+
+  {
+    id: 5,
+    text: "¿La sociedad actual ha perdido valores tradicionales importantes?",
+    block: "sociedad",
+    weights: {
+      conservador: 3,
+      tradicionalista: 3,
+      progresista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si ves la tradición como algo valioso que debe protegerse o si consideras que el cambio social suele ser positivo.",
+      agree:
+        "Muy de acuerdo indica tendencia conservadora o tradicionalista.",
+      disagree:
+        "Muy en desacuerdo indica tendencia progresista.",
+    },
+  },
+  {
+    id: 6,
+    text: "¿El progreso social y los nuevos derechos deben tener prioridad sobre las costumbres tradicionales?",
+    block: "sociedad",
+    weights: {
+      progresista: 3,
+      multiculturalista: 2,
+      conservador: -2,
+      tradicionalista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si priorizas el cambio social, nuevos derechos y nuevas formas de convivencia frente a la continuidad de la tradición.",
+      agree:
+        "Muy de acuerdo indica tendencia progresista o multiculturalista.",
+      disagree:
+        "Muy en desacuerdo indica tendencia conservadora o tradicionalista.",
+    },
+  },
+
+  {
+    id: 7,
+    text: "¿La seguridad y el orden deben estar por encima de ciertas libertades individuales?",
+    block: "autoridad",
+    weights: {
+      autoritario: 3,
+      conservador: 2,
+      institucionalista: 1,
+      libertario: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si prefieres un Estado fuerte para garantizar orden y seguridad o si priorizas las libertades individuales.",
+      agree:
+        "Muy de acuerdo indica tendencia autoritaria, conservadora o de orden.",
+      disagree:
+        "Muy en desacuerdo indica tendencia libertaria o liberal en derechos civiles.",
+    },
+  },
+  {
+    id: 8,
+    text: "¿El Estado debería tener el menor poder posible sobre la vida privada de las personas?",
+    block: "autoridad",
+    weights: {
+      libertario: 3,
+      liberal: 2,
+      autoritario: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si desconfías del poder del Estado y prefieres máxima autonomía individual.",
+      agree:
+        "Muy de acuerdo indica tendencia libertaria o liberal.",
+      disagree:
+        "Muy en desacuerdo indica mayor aceptación de autoridad estatal.",
+    },
+  },
+
+  {
+    id: 9,
+    text: "¿España debería priorizar sus propios intereses aunque choque con decisiones de la UE o alianzas internacionales?",
+    block: "geopolitica",
+    weights: {
+      soberanista: 3,
+      nacionalista: 2,
+      globalista: -3,
+      institucionalista: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si tu visión exterior es soberanista o si prefieres cooperación internacional incluso con cesión de poder.",
+      agree:
+        "Muy de acuerdo indica soberanismo o nacionalismo geopolítico.",
+      disagree:
+        "Muy en desacuerdo indica globalismo, europeísmo o institucionalismo internacional.",
+    },
+  },
+  {
+    id: 10,
+    text: "¿La cooperación internacional es más importante que la soberanía nacional para resolver problemas globales?",
+    block: "geopolitica",
+    weights: {
+      globalista: 3,
+      progresista: 2,
+      soberanista: -3,
+      nacionalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si crees que los grandes problemas deben resolverse mediante organismos internacionales o desde cada nación.",
+      agree:
+        "Muy de acuerdo indica tendencia globalista o internacionalista.",
+      disagree:
+        "Muy en desacuerdo indica tendencia soberanista o nacionalista.",
+    },
+  },
+
+  {
+    id: 11,
+    text: "¿La identidad cultural propia debe protegerse activamente desde las instituciones?",
+    block: "identidad",
+    weights: {
+      nacionalista: 3,
+      tradicionalista: 2,
+      conservador: 2,
+      multiculturalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si consideras que la identidad cultural necesita protección política o si debe dejarse evolucionar libremente.",
+      agree:
+        "Muy de acuerdo indica nacionalismo cultural, tradicionalismo o conservadurismo.",
+      disagree:
+        "Muy en desacuerdo indica multiculturalismo, liberalismo cultural o progresismo.",
+    },
+  },
+  {
+    id: 12,
+    text: "¿Una sociedad multicultural es preferible a una sociedad con una cultura común dominante?",
+    block: "identidad",
+    weights: {
+      multiculturalista: 3,
+      globalista: 2,
+      progresista: 2,
+      nacionalista: -3,
+      tradicionalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si prefieres diversidad cultural amplia o una identidad común fuerte.",
+      agree:
+        "Muy de acuerdo indica tendencia multiculturalista, progresista o globalista.",
+      disagree:
+        "Muy en desacuerdo indica tendencia nacionalista, tradicionalista o identitaria.",
+    },
+  },
 ];

@@ -7,6 +7,7 @@ import {
   ideologicalQuestions,
   ideologyLabels,
   partyProfiles,
+  quickIdeologicalQuestions,
 } from "./testData";
 import "./test-ideologico.css";
 
@@ -22,15 +23,14 @@ function clamp(value: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
 
-function calculateResults(answers: Answers) {
+function calculateResults(answers: Answers, questions = ideologicalQuestions) {
   const ideologyScore: Record<string, number> = {};
   const ideologyMax: Record<string, number> = {};
   const blockScore: Record<string, Record<string, number>> = {};
   const blockMax: Record<string, Record<string, number>> = {};
 
-  ideologicalQuestions.forEach((question) => {
+  questions.forEach((question) => {
     const answer = answers[question.id];
-
     if (answer === undefined) return;
 
     if (!blockScore[question.block]) blockScore[question.block] = {};
@@ -115,12 +115,26 @@ export default function IdeologicalTestPage() {
   const [testMode, setTestMode] = useState<TestMode>("selector");
   const [answers, setAnswers] = useState<Answers>({});
   const [showResults, setShowResults] = useState(false);
+  const [openInfoId, setOpenInfoId] = useState<number | null>(null);
 
-  const results = useMemo(() => calculateResults(answers), [answers]);
+  const activeQuestions =
+    testMode === "rapido" ? quickIdeologicalQuestions : ideologicalQuestions;
 
-  const totalQuestions = ideologicalQuestions.length;
+  const results = useMemo(
+    () => calculateResults(answers, activeQuestions),
+    [answers, activeQuestions]
+  );
+
+  const totalQuestions = activeQuestions.length;
   const answeredQuestions = Object.keys(answers).length;
   const progress = Math.round((answeredQuestions / totalQuestions) * 100);
+
+  function startTest(mode: "rapido" | "completo") {
+    setTestMode(mode);
+    setAnswers({});
+    setShowResults(false);
+    setOpenInfoId(null);
+  }
 
   if (testMode === "selector") {
     return (
@@ -139,50 +153,27 @@ export default function IdeologicalTestPage() {
             <button
               type="button"
               className="test-option-card"
-              onClick={() => setTestMode("rapido")}
+              onClick={() => startTest("rapido")}
             >
               <span>Test rápido</span>
-              <strong>Próximamente</strong>
+              <strong>{quickIdeologicalQuestions.length} preguntas</strong>
               <p>
-                Versión resumida para obtener una orientación ideológica rápida.
+                Versión resumida con las preguntas más importantes para obtener
+                una orientación ideológica rápida.
               </p>
             </button>
 
             <button
               type="button"
               className="test-option-card"
-              onClick={() => setTestMode("completo")}
+              onClick={() => startTest("completo")}
             >
               <span>Test completo</span>
-              <strong>{totalQuestions} preguntas</strong>
+              <strong>{ideologicalQuestions.length} preguntas</strong>
               <p>
                 Versión completa con resultado general, bloques ideológicos y
                 partido más cercano.
               </p>
-            </button>
-          </div>
-        </section>
-      </main>
-    );
-  }
-
-  if (testMode === "rapido") {
-    return (
-      <main className="ideology-test">
-        <section className="test-selector">
-          <div className="test-selector__intro">
-            <h1>Test rápido</h1>
-            <p>
-              El test rápido todavía no está disponible. Lo generaremos más
-              adelante.
-            </p>
-
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={() => setTestMode("selector")}
-            >
-              Volver
             </button>
           </div>
         </section>
@@ -199,12 +190,19 @@ export default function IdeologicalTestPage() {
           onClick={() => {
             setTestMode("selector");
             setShowResults(false);
+            setAnswers({});
+            setOpenInfoId(null);
           }}
         >
           ← Volver
         </button>
 
-        <h1>Test ideológico completo</h1>
+        <h1>
+          {testMode === "rapido"
+            ? "Test ideológico rápido"
+            : "Test ideológico completo"}
+        </h1>
+
         <p>
           Responde las {totalQuestions} preguntas para obtener un resultado
           ideológico general, un resultado por bloques y el partido político más
@@ -225,11 +223,28 @@ export default function IdeologicalTestPage() {
       {!showResults && (
         <>
           <section className="questions">
-            {ideologicalQuestions.map((question) => (
+            {activeQuestions.map((question) => (
               <article key={question.id} className="question-card">
-                <span className="question-card__block">
-                  {blockLabels[question.block]}
-                </span>
+                <div className="question-card__top">
+                  <span className="question-card__block">
+                    {blockLabels[question.block]}
+                  </span>
+
+                  {question.info && (
+                    <button
+                      type="button"
+                      className="info-button"
+                      onClick={() =>
+                        setOpenInfoId((current) =>
+                          current === question.id ? null : question.id
+                        )
+                      }
+                      aria-label="Ver información de la pregunta"
+                    >
+                      i
+                    </button>
+                  )}
+                </div>
 
                 <h2>
                   {question.id}. {question.text}
@@ -256,6 +271,19 @@ export default function IdeologicalTestPage() {
                     </button>
                   ))}
                 </div>
+
+                {question.info && openInfoId === question.id && (
+                  <div className="question-info">
+                    <h3>¿Qué significa esta pregunta?</h3>
+                    <p>{question.info.meaning}</p>
+
+                    <h4>Si respondes “Muy de acuerdo”</h4>
+                    <p>{question.info.agree}</p>
+
+                    <h4>Si respondes “Muy en desacuerdo”</h4>
+                    <p>{question.info.disagree}</p>
+                  </div>
+                )}
               </article>
             ))}
           </section>
