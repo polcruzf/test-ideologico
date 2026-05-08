@@ -11,6 +11,7 @@ import {
 import "./test-ideologico.css";
 
 type Answers = Record<number, number>;
+type TestMode = "selector" | "rapido" | "completo";
 
 type IdeologyResult = {
   ideology: string;
@@ -111,6 +112,7 @@ function findClosestParty(userProfile: IdeologyResult[]) {
 }
 
 export default function IdeologicalTestPage() {
+  const [testMode, setTestMode] = useState<TestMode>("selector");
   const [answers, setAnswers] = useState<Answers>({});
   const [showResults, setShowResults] = useState(false);
 
@@ -120,14 +122,93 @@ export default function IdeologicalTestPage() {
   const answeredQuestions = Object.keys(answers).length;
   const progress = Math.round((answeredQuestions / totalQuestions) * 100);
 
+  if (testMode === "selector") {
+    return (
+      <main className="ideology-test">
+        <section className="test-selector">
+          <div className="test-selector__intro">
+            <h1>Test ideológico</h1>
+            <p>
+              Elige entre una versión rápida o el test completo para obtener tu
+              perfil ideológico por porcentajes, bloques y partido político más
+              cercano.
+            </p>
+          </div>
+
+          <div className="test-selector__grid">
+            <button
+              type="button"
+              className="test-option-card"
+              onClick={() => setTestMode("rapido")}
+            >
+              <span>Test rápido</span>
+              <strong>Próximamente</strong>
+              <p>
+                Versión resumida para obtener una orientación ideológica rápida.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              className="test-option-card"
+              onClick={() => setTestMode("completo")}
+            >
+              <span>Test completo</span>
+              <strong>{totalQuestions} preguntas</strong>
+              <p>
+                Versión completa con resultado general, bloques ideológicos y
+                partido más cercano.
+              </p>
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (testMode === "rapido") {
+    return (
+      <main className="ideology-test">
+        <section className="test-selector">
+          <div className="test-selector__intro">
+            <h1>Test rápido</h1>
+            <p>
+              El test rápido todavía no está disponible. Lo generaremos más
+              adelante.
+            </p>
+
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() => setTestMode("selector")}
+            >
+              Volver
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="ideology-test">
       <header className="ideology-test__header">
-        <h1>Test ideológico</h1>
+        <button
+          type="button"
+          className="back-button"
+          onClick={() => {
+            setTestMode("selector");
+            setShowResults(false);
+          }}
+        >
+          ← Volver
+        </button>
+
+        <h1>Test ideológico completo</h1>
         <p>
           Responde las {totalQuestions} preguntas para obtener un resultado
-          ideológico general, un resultado por bloques y el partido político
-          más cercano en cada bloque.
+          ideológico general, un resultado por bloques y el partido político más
+          cercano en cada bloque.
         </p>
 
         <div className="progress">

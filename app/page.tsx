@@ -1,65 +1,335 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useMemo, useState } from "react";
+import {
+  answerOptions,
+  blockLabels,
+  ideologicalQuestions,
+  ideologyLabels,
+  partyProfiles,
+} from "./testData";
+import "./test-ideologico.css";
+
+type Answers = Record<number, number>;
+type TestMode = "selector" | "rapido" | "completo";
+
+type IdeologyResult = {
+  ideology: string;
+  percentage: number;
+};
+
+function clamp(value: number, min = 0, max = 100) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function calculateResults(answers: Answers) {
+  const ideologyScore: Record<string, number> = {};
+  const ideologyMax: Record<string, number> = {};
+  const blockScore: Record<string, Record<string, number>> = {};
+  const blockMax: Record<string, Record<string, number>> = {};
+
+  ideologicalQuestions.forEach((question) => {
+    const answer = answers[question.id];
+
+    if (answer === undefined) return;
+
+    if (!blockScore[question.block]) blockScore[question.block] = {};
+    if (!blockMax[question.block]) blockMax[question.block] = {};
+
+    Object.entries(question.weights).forEach(([ideology, weight]) => {
+      const points = answer * weight;
+      const maxPoints = Math.abs(weight * 2);
+
+      ideologyScore[ideology] = (ideologyScore[ideology] || 0) + points;
+      ideologyMax[ideology] = (ideologyMax[ideology] || 0) + maxPoints;
+
+      blockScore[question.block][ideology] =
+        (blockScore[question.block][ideology] || 0) + points;
+
+      blockMax[question.block][ideology] =
+        (blockMax[question.block][ideology] || 0) + maxPoints;
+    });
+  });
+
+  const ideologyPercentages: IdeologyResult[] = Object.entries(ideologyMax)
+    .map(([ideology, max]) => {
+      const score = ideologyScore[ideology] || 0;
+      const percentage = Math.round(((score + max) / (max * 2)) * 100);
+
+      return {
+        ideology,
+        percentage: clamp(percentage),
+      };
+    })
+    .sort((a, b) => b.percentage - a.percentage);
+
+  const blockResults = Object.entries(blockScore).map(([block, scores]) => {
+    const ideologies = Object.entries(scores)
+      .map(([ideology, score]) => {
+        const max = blockMax[block]?.[ideology] || 1;
+        const percentage = Math.round(((score + max) / (max * 2)) * 100);
+
+        return {
+          ideology,
+          percentage: clamp(percentage),
+        };
+      })
+      .sort((a, b) => b.percentage - a.percentage);
+
+    return {
+      block,
+      ideologies: ideologies.slice(0, 6),
+      party: findClosestParty(ideologies),
+    };
+  });
+
+  return {
+    ideologyPercentages,
+    blockResults,
+    finalParty: findClosestParty(ideologyPercentages),
+  };
+}
+
+function findClosestParty(userProfile: IdeologyResult[]) {
+  let bestParty = "";
+  let bestDistance = Infinity;
+
+  Object.entries(partyProfiles).forEach(([party, profile]) => {
+    let distance = 0;
+
+    userProfile.forEach((item) => {
+      const expected = profile[item.ideology] ?? 50;
+      distance += Math.abs(item.percentage - expected);
+    });
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestParty = party;
+    }
+  });
+
+  return bestParty;
+}
+
+export default function IdeologicalTestPage() {
+  const [testMode, setTestMode] = useState<TestMode>("selector");
+  const [answers, setAnswers] = useState<Answers>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const results = useMemo(() => calculateResults(answers), [answers]);
+
+  const totalQuestions = ideologicalQuestions.length;
+  const answeredQuestions = Object.keys(answers).length;
+  const progress = Math.round((answeredQuestions / totalQuestions) * 100);
+
+  if (testMode === "selector") {
+    return (
+      <main className="ideology-test">
+        <section className="test-selector">
+          <div className="test-selector__intro">
+            <h1>Test ideológico</h1>
+            <p>
+              Elige entre una versión rápida o el test completo para obtener tu
+              perfil ideológico por porcentajes, bloques y partido político más
+              cercano.
+            </p>
+          </div>
+
+          <div className="test-selector__grid">
+            <button
+              type="button"
+              className="test-option-card"
+              onClick={() => setTestMode("rapido")}
+            >
+              <span>Test rápido</span>
+              <strong>Próximamente</strong>
+              <p>
+                Versión resumida para obtener una orientación ideológica rápida.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              className="test-option-card"
+              onClick={() => setTestMode("completo")}
+            >
+              <span>Test completo</span>
+              <strong>{totalQuestions} preguntas</strong>
+              <p>
+                Versión completa con resultado general, bloques ideológicos y
+                partido más cercano.
+              </p>
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (testMode === "rapido") {
+    return (
+      <main className="ideology-test">
+        <section className="test-selector">
+          <div className="test-selector__intro">
+            <h1>Test rápido</h1>
+            <p>
+              El test rápido todavía no está disponible. Lo generaremos más
+              adelante.
+            </p>
+
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() => setTestMode("selector")}
+            >
+              Volver
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="ideology-test">
+      <header className="ideology-test__header">
+        <button
+          type="button"
+          className="back-button"
+          onClick={() => {
+            setTestMode("selector");
+            setShowResults(false);
+          }}
+        >
+          ← Volver
+        </button>
+
+        <h1>Test ideológico completo</h1>
+        <p>
+          Responde las {totalQuestions} preguntas para obtener un resultado
+          ideológico general, un resultado por bloques y el partido político más
+          cercano en cada bloque.
+        </p>
+
+        <div className="progress">
+          <div className="progress__bar">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+          <p>
+            {answeredQuestions}/{totalQuestions} preguntas respondidas ·{" "}
+            {progress}%
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </header>
+
+      {!showResults && (
+        <>
+          <section className="questions">
+            {ideologicalQuestions.map((question) => (
+              <article key={question.id} className="question-card">
+                <span className="question-card__block">
+                  {blockLabels[question.block]}
+                </span>
+
+                <h2>
+                  {question.id}. {question.text}
+                </h2>
+
+                <div className="answer-options">
+                  {answerOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={
+                        answers[question.id] === option.value
+                          ? "answer-options__button is-active"
+                          : "answer-options__button"
+                      }
+                      onClick={() =>
+                        setAnswers((prev) => ({
+                          ...prev,
+                          [question.id]: option.value,
+                        }))
+                      }
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </section>
+
+          <button
+            type="button"
+            className="primary-button"
+            disabled={answeredQuestions < totalQuestions}
+            onClick={() => setShowResults(true)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Ver resultado
+          </button>
+        </>
+      )}
+
+      {showResults && (
+        <section className="results">
+          <h2>Resultado general</h2>
+
+          <div className="final-result">
+            <p>Partido más cercano en conjunto:</p>
+            <strong>{results.finalParty}</strong>
+          </div>
+
+          <div className="results-grid">
+            {results.ideologyPercentages.slice(0, 12).map((item) => (
+              <div key={item.ideology} className="result-card">
+                <span>{ideologyLabels[item.ideology] ?? item.ideology}</span>
+                <strong>{item.percentage}%</strong>
+              </div>
+            ))}
+          </div>
+
+          <h2>Resultado por bloques</h2>
+
+          <div className="block-results">
+            {results.blockResults.map((block) => (
+              <article key={block.block} className="block-result-card">
+                <div className="block-result-card__header">
+                  <h3>{blockLabels[block.block]}</h3>
+                  <p>
+                    Partido más cercano: <strong>{block.party}</strong>
+                  </p>
+                </div>
+
+                <div className="ideology-bars">
+                  {block.ideologies.map((item) => (
+                    <div key={item.ideology} className="ideology-bar">
+                      <div className="ideology-bar__top">
+                        <span>
+                          {ideologyLabels[item.ideology] ?? item.ideology}
+                        </span>
+                        <strong>{item.percentage}%</strong>
+                      </div>
+
+                      <div className="ideology-bar__track">
+                        <span style={{ width: `${item.percentage}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => setShowResults(false)}
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            Volver al test
+          </button>
+        </section>
+      )}
+    </main>
   );
 }
