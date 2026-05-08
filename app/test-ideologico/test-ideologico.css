@@ -597,38 +597,76 @@
 }
 
 
+/* Ajustes de botones, confirmación y respuestas */
 
-
-
-
-
-
-.results-grid {
-  align-items: start;
-}
-
-.result-card.is-open {
-  grid-column: 1 / -1;
-}
-
-.result-card__top {
+.question-header-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
-.result-card__top strong {
-  flex-shrink: 0;
-  text-align: right;
+.question-header-actions .back-button {
+  margin-bottom: 0;
 }
 
-.ideology-explanation {
-  max-width: 850px;
+.restart-button {
+  padding: 10px 16px;
+  border: 1px solid #111;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-.more-info-button {
-  left: 20px;
-  bottom: 16px;
+.restart-button:hover {
+  background: #333;
+}
+
+.back-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.primary-button--home {
+  justify-self: start;
+  margin-top: 8px;
+}
+
+/* Respuestas en horizontal en PC */
+.answer-options--single {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.answer-options--single .answer-options__button {
+  flex: 1 1 170px;
+}
+
+/* Respuestas menos redondeadas */
+.answer-options__button {
+  border-radius: 12px;
+}
+
+/* Mantener los controles en vertical en mobile */
+@media (max-width: 700px) {
+  .answer-options--single {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .answer-options--single .answer-options__button {
+    width: 100%;
+  }
+
+  .question-header-actions {
+    display: grid;
+  }
+
+  .restart-button,
+  .back-button {
+    width: 100%;
+  }
 }

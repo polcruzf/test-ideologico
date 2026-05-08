@@ -265,6 +265,26 @@ export default function IdeologicalTestPage() {
     setOpenIdeology(null);
   }
 
+  function confirmGoBackToSelector() {
+    const confirmed = window.confirm(
+      "¿Seguro que quieres volver al inicio? Se perderán las respuestas de este test."
+    );
+
+    if (confirmed) {
+      goBackToSelector();
+    }
+  }
+
+  function confirmRestartTest() {
+    const confirmed = window.confirm(
+      "¿Seguro que quieres volver a empezar? Se perderán las respuestas actuales."
+    );
+
+    if (confirmed) {
+      goBackToSelector();
+    }
+  }
+
   function goToPreviousQuestion() {
     setCurrentQuestionIndex((current) => Math.max(0, current - 1));
     setInfoOpen(false);
@@ -475,10 +495,10 @@ export default function IdeologicalTestPage() {
 
           <button
             type="button"
-            className="secondary-button"
-            onClick={goBackToSelector}
+            className="primary-button primary-button--home"
+            onClick={confirmGoBackToSelector}
           >
-            Volver al inicio
+            Volver a la selección de tests
           </button>
         </section>
       </main>
@@ -492,9 +512,24 @@ export default function IdeologicalTestPage() {
   return (
     <main className="ideology-test">
       <header className="ideology-test__header">
-        <button type="button" className="back-button" onClick={goBackToSelector}>
-          ← Volver
-        </button>
+        <div className="question-header-actions">
+          <button
+            type="button"
+            className="back-button"
+            onClick={goToPreviousQuestion}
+            disabled={currentQuestionIndex === 0}
+          >
+            ← Volver
+          </button>
+
+          <button
+            type="button"
+            className="restart-button"
+            onClick={confirmRestartTest}
+          >
+            Volver a empezar
+          </button>
+        </div>
 
         <h1>
           {testMode === "rapido"
