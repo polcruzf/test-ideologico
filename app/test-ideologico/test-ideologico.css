@@ -637,7 +637,7 @@
 /* Respuestas en horizontal en PC */
 .answer-options--single {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
 }
 
