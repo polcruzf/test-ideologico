@@ -2420,7 +2420,7 @@ export const ideologicalQuestions: Question[] = [
 export const quickIdeologicalQuestions: Question[] = [
   {
     id: 1,
-    text: "¿El Estado debería intervenir fuertemente en la economía para reducir desigualdades?",
+    text: "¿Prefieres que el Estado cobre más impuestos para pagar mejores servicios públicos y ayudas?",
     block: "economia",
     weights: {
       comunista: 3,
@@ -2431,16 +2431,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si priorizas la igualdad económica mediante intervención estatal o si prefieres que el mercado funcione con menos control público.",
+        "Esta pregunta trata sobre dinero público. Por ejemplo: sanidad, colegios, ayudas al alquiler, becas, pensiones o transporte público.",
       agree:
-        "Muy de acuerdo indica tendencia socialista, comunista o socialdemócrata: más impuestos, más regulación y más redistribución.",
+        "Si estás muy de acuerdo, en la práctica aceptas pagar más impuestos si eso permite tener más servicios y ayudas. Puede beneficiar a personas con menos ingresos, pero también puede hacer que trabajadores, autónomos y empresas paguen más.",
       disagree:
-        "Muy en desacuerdo indica tendencia liberal o libertaria: menos Estado, menos impuestos y más libertad económica.",
+        "Si estás muy en desacuerdo, en la práctica prefieres pagar menos impuestos y que cada persona decida más con su dinero. Puede dar más libertad económica, pero también puede dejar peor cubiertas cosas como sanidad, vivienda o ayudas sociales.",
     },
   },
   {
     id: 2,
-    text: "¿La propiedad privada y la libertad empresarial deberían estar por encima de la redistribución económica?",
+    text: "¿Crees que abrir empresas, invertir y ganar dinero debería tener pocas trabas del Estado?",
     block: "economia",
     weights: {
       liberal: 3,
@@ -2451,17 +2451,37 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si das prioridad al derecho de propiedad y al mercado o a la corrección de desigualdades mediante el Estado.",
+        "Esta pregunta trata sobre facilidad para emprender, contratar, vender, comprar vivienda, invertir o conservar patrimonio.",
       agree:
-        "Muy de acuerdo indica una posición liberal económica o libertaria.",
+        "Si estás muy de acuerdo, en la práctica quieres menos papeleo, menos impuestos y menos límites para empresas y propietarios. Puede crear más actividad económica, pero también puede aumentar diferencias entre quien tiene mucho y quien tiene poco.",
       disagree:
-        "Muy en desacuerdo indica una posición socialista o comunista.",
+        "Si estás muy en desacuerdo, en la práctica aceptas más normas para repartir mejor la riqueza o controlar abusos. Por ejemplo, limitar alquileres o subir impuestos a grandes fortunas. Puede proteger más, pero también puede frenar inversión o crear más burocracia.",
+    },
+  },
+  {
+    id: 3,
+    text: "¿Sanidad, educación y pensiones deberían depender sobre todo del Estado?",
+    block: "economia",
+    weights: {
+      socialista: 3,
+      socialdemocrata: 3,
+      comunista: 2,
+      liberal: -2,
+      libertario: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta habla de servicios básicos que casi todos usamos: médico, hospital, escuela, universidad, pensión o dependencia.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres que esos servicios estén garantizados aunque una persona tenga poco dinero. El coste es que hacen falta más impuestos y puede haber listas de espera o gestión lenta.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica quieres más peso de opciones privadas y elección personal. Puede dar más rapidez a quien puede pagar, pero también puede crear diferencias entre ciudadanos.",
     },
   },
 
   {
-    id: 3,
-    text: "¿La soberanía nacional debe estar por encima de organismos internacionales como la UE, la ONU o tratados globales?",
+    id: 4,
+    text: "¿España debería decidir más por sí misma aunque la Unión Europea u otros organismos digan otra cosa?",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2470,16 +2490,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si consideras que la nación debe ser el centro de la decisión política o si aceptas mayor poder de organismos internacionales.",
+        "Esta pregunta trata sobre quién debe mandar más: el país o instituciones externas como la UE. Afecta a leyes, fronteras, ayudas europeas, energía o comercio.",
       agree:
-        "Muy de acuerdo indica una visión nacionalista o soberanista.",
+        "Si estás muy de acuerdo, en la práctica quieres más independencia para tomar decisiones propias. Puede dar más control al país, pero también puede traer choques con Europa, pérdida de fondos o menos influencia fuera.",
       disagree:
-        "Muy en desacuerdo indica una visión globalista, europeísta o internacionalista.",
+        "Si estás muy en desacuerdo, en la práctica aceptas más normas comunes y cooperación internacional. Puede dar estabilidad y acuerdos, pero algunas decisiones quedan más lejos del voto directo de los ciudadanos.",
     },
   },
   {
-    id: 4,
-    text: "¿La inmigración debería limitarse para proteger la identidad cultural y la cohesión social?",
+    id: 5,
+    text: "¿La inmigración debería controlarse más para evitar problemas de vivienda, empleo o integración?",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2490,17 +2510,37 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide el peso que das a la identidad cultural, las fronteras y la cohesión nacional frente a una visión multicultural.",
+        "Esta pregunta no va solo de fronteras. También trata de vivienda, trabajo, servicios públicos, seguridad, idioma e integración cultural.",
       agree:
-        "Muy de acuerdo indica tendencia nacionalista, soberanista o conservadora.",
+        "Si estás muy de acuerdo, en la práctica quieres más requisitos de entrada, más control y más prioridad para la población local. Puede reducir presión sobre vivienda o servicios, pero también puede faltar mano de obra y limitar acogida de personas que necesitan ayuda.",
       disagree:
-        "Muy en desacuerdo indica tendencia multiculturalista, globalista o progresista.",
+        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más abierta. Puede aportar trabajadores, diversidad y población joven, pero necesita buena gestión para evitar problemas de convivencia, empleo o vivienda.",
+    },
+  },
+  {
+    id: 6,
+    text: "¿La escuela debería enseñar más historia, lengua y cultura propias?",
+    block: "nacion",
+    weights: {
+      nacionalista: 3,
+      soberanista: 2,
+      tradicionalista: 2,
+      globalista: -2,
+      multiculturalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta trata sobre si una comunidad necesita una base común: historia, lengua, símbolos, fiestas y cultura compartida.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres que la escuela refuerce más la identidad común. Puede aumentar sentimiento de pertenencia, pero algunas familias pueden sentir que se impone una visión concreta.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres una escuela más neutral o más abierta a muchas identidades. Puede ser más plural, pero puede debilitar los vínculos comunes.",
     },
   },
 
   {
-    id: 5,
-    text: "¿La sociedad actual ha perdido valores tradicionales importantes?",
+    id: 7,
+    text: "¿Crees que se han perdido valores como respeto, familia, esfuerzo o disciplina?",
     block: "sociedad",
     weights: {
       conservador: 3,
@@ -2509,16 +2549,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si ves la tradición como algo valioso que debe protegerse o si consideras que el cambio social suele ser positivo.",
+        "Esta pregunta trata sobre cambios sociales del día a día: familia, educación, respeto a profesores, normas, formas de hablar o convivencia.",
       agree:
-        "Muy de acuerdo indica tendencia conservadora o tradicionalista.",
+        "Si estás muy de acuerdo, en la práctica sueles querer reforzar autoridad, familia, disciplina y costumbres. Puede dar más orden, pero también puede frenar cambios que otros consideran necesarios.",
       disagree:
-        "Muy en desacuerdo indica tendencia progresista.",
+        "Si estás muy en desacuerdo, en la práctica ves los cambios sociales como algo normal o positivo. Puede abrir más libertad personal, pero también puede generar sensación de falta de límites.",
     },
   },
   {
-    id: 6,
-    text: "¿El progreso social y los nuevos derechos deben tener prioridad sobre las costumbres tradicionales?",
+    id: 8,
+    text: "¿Los nuevos derechos y formas de vida deberían avanzar aunque choquen con costumbres antiguas?",
     block: "sociedad",
     weights: {
       progresista: 3,
@@ -2528,17 +2568,37 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si priorizas el cambio social, nuevos derechos y nuevas formas de convivencia frente a la continuidad de la tradición.",
+        "Esta pregunta trata sobre temas como modelos de familia, igualdad, identidad, costumbres, lenguaje público o cambios en la educación.",
       agree:
-        "Muy de acuerdo indica tendencia progresista o multiculturalista.",
+        "Si estás muy de acuerdo, en la práctica apoyas adaptar leyes y normas sociales a nuevas realidades. Puede ampliar derechos, pero también puede molestar a quienes sienten que sus valores quedan apartados.",
       disagree:
-        "Muy en desacuerdo indica tendencia conservadora o tradicionalista.",
+        "Si estás muy en desacuerdo, en la práctica prefieres conservar más las costumbres existentes. Puede dar estabilidad, pero puede dejar sin respuesta a personas que piden reconocimiento o igualdad.",
+    },
+  },
+  {
+    id: 9,
+    text: "¿La gente debería poder decir opiniones duras u ofensivas sin miedo a multas o censura?",
+    block: "sociedad",
+    weights: {
+      libertario: 3,
+      liberal: 2,
+      conservador: 1,
+      progresista: -1,
+      autoritario: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta trata sobre libertad de expresión. Por ejemplo: bromas polémicas, críticas al gobierno, opiniones sobre religión, inmigración o género.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica proteges más el debate abierto y la crítica. El riesgo es que circulen mensajes hirientes, insultos o discursos que generen tensión.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica aceptas más límites para evitar daño o discriminación. El riesgo es que se use para censurar opiniones incómodas.",
     },
   },
 
   {
-    id: 7,
-    text: "¿La seguridad y el orden deben estar por encima de ciertas libertades individuales?",
+    id: 10,
+    text: "¿Para mejorar la seguridad, aceptarías más vigilancia, más policía o penas más duras?",
     block: "autoridad",
     weights: {
       autoritario: 3,
@@ -2548,16 +2608,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si prefieres un Estado fuerte para garantizar orden y seguridad o si priorizas las libertades individuales.",
+        "Esta pregunta trata sobre seguridad cotidiana: robos, okupación, disturbios, delitos graves, cámaras, policía y justicia.",
       agree:
-        "Muy de acuerdo indica tendencia autoritaria, conservadora o de orden.",
+        "Si estás muy de acuerdo, en la práctica quieres más herramientas contra el delito. Puede aumentar la sensación de seguridad, pero también puede reducir privacidad o aumentar abusos si no hay controles.",
       disagree:
-        "Muy en desacuerdo indica tendencia libertaria o liberal en derechos civiles.",
+        "Si estás muy en desacuerdo, en la práctica prefieres proteger más derechos y límites al poder. Puede evitar abusos, pero puede hacer que el Estado actúe más lento contra algunos problemas.",
     },
   },
   {
-    id: 8,
-    text: "¿El Estado debería tener el menor poder posible sobre la vida privada de las personas?",
+    id: 11,
+    text: "¿El Estado debería meterse lo menos posible en la vida privada de las personas?",
     block: "autoridad",
     weights: {
       libertario: 3,
@@ -2566,17 +2626,36 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si desconfías del poder del Estado y prefieres máxima autonomía individual.",
+        "Esta pregunta trata sobre decisiones personales: privacidad, familia, consumo, educación, redes sociales o forma de vivir.",
       agree:
-        "Muy de acuerdo indica tendencia libertaria o liberal.",
+        "Si estás muy de acuerdo, en la práctica quieres que cada persona decida más por sí misma. Puede dar libertad, pero también reduce la capacidad del Estado para prevenir ciertos problemas.",
       disagree:
-        "Muy en desacuerdo indica mayor aceptación de autoridad estatal.",
+        "Si estás muy en desacuerdo, en la práctica aceptas que el Estado regule más para proteger, ordenar o evitar riesgos. Puede dar más control social, pero también puede resultar invasivo.",
+    },
+  },
+  {
+    id: 12,
+    text: "¿Los delitos graves o repetidos deberían castigarse con más dureza?",
+    block: "autoridad",
+    weights: {
+      autoritario: 3,
+      conservador: 2,
+      progresista: -2,
+      libertario: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta trata sobre justicia penal: cárcel, multas, reincidencia, protección a víctimas y reinserción.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres castigos más duros para dar seguridad y sensación de justicia. Puede proteger más a víctimas, pero también llenar cárceles y dificultar segundas oportunidades.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica das más peso a reinserción y proporcionalidad. Puede ayudar a recuperar personas, pero puede generar sensación de impunidad si la respuesta parece blanda.",
     },
   },
 
   {
-    id: 9,
-    text: "¿España debería priorizar sus propios intereses aunque choque con decisiones de la UE o alianzas internacionales?",
+    id: 13,
+    text: "¿España debería pensar primero en sus propios intereses aunque moleste a sus aliados?",
     block: "geopolitica",
     weights: {
       soberanista: 3,
@@ -2586,16 +2665,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si tu visión exterior es soberanista o si prefieres cooperación internacional incluso con cesión de poder.",
+        "Esta pregunta trata sobre política exterior: UE, OTAN, comercio, energía, guerras, acuerdos y relaciones con otros países.",
       agree:
-        "Muy de acuerdo indica soberanismo o nacionalismo geopolítico.",
+        "Si estás muy de acuerdo, en la práctica quieres más independencia exterior. Puede proteger intereses propios, pero también puede aislar o reducir apoyos internacionales.",
       disagree:
-        "Muy en desacuerdo indica globalismo, europeísmo o institucionalismo internacional.",
+        "Si estás muy en desacuerdo, en la práctica prefieres coordinación con aliados. Puede dar estabilidad y apoyo, pero a veces obliga a aceptar decisiones que no gustan dentro del país.",
     },
   },
   {
-    id: 10,
-    text: "¿La cooperación internacional es más importante que la soberanía nacional para resolver problemas globales?",
+    id: 14,
+    text: "¿Problemas como clima, guerras o migración se resuelven mejor con acuerdos internacionales?",
     block: "geopolitica",
     weights: {
       globalista: 3,
@@ -2605,17 +2684,37 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si crees que los grandes problemas deben resolverse mediante organismos internacionales o desde cada nación.",
+        "Esta pregunta trata sobre problemas que cruzan fronteras. Por ejemplo: cambio climático, refugiados, comercio, pandemias o guerras.",
       agree:
-        "Muy de acuerdo indica tendencia globalista o internacionalista.",
+        "Si estás muy de acuerdo, en la práctica apoyas normas comunes y cooperación entre países. Puede resolver mejor problemas globales, pero reduce la libertad de cada país para actuar solo.",
       disagree:
-        "Muy en desacuerdo indica tendencia soberanista o nacionalista.",
+        "Si estás muy en desacuerdo, en la práctica prefieres que cada país decida por su cuenta. Da más control interno, pero dificulta coordinar soluciones amplias.",
+    },
+  },
+  {
+    id: 15,
+    text: "¿España debería depender menos de otros países en energía, comida y defensa aunque sea más caro?",
+    block: "geopolitica",
+    weights: {
+      soberanista: 3,
+      nacionalista: 2,
+      conservador: 1,
+      globalista: -2,
+      liberal: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta trata sobre autosuficiencia. Por ejemplo: producir más energía aquí, proteger agricultura local o reforzar defensa.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres más independencia en sectores básicos. Puede proteger en crisis, pero puede subir precios o gasto público.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica aceptas depender más del comercio internacional si es más barato. Puede bajar costes, pero aumenta dependencia de otros países.",
     },
   },
 
   {
-    id: 11,
-    text: "¿La identidad cultural propia debe protegerse activamente desde las instituciones?",
+    id: 16,
+    text: "¿Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios?",
     block: "identidad",
     weights: {
       nacionalista: 3,
@@ -2625,16 +2724,16 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si consideras que la identidad cultural necesita protección política o si debe dejarse evolucionar libremente.",
+        "Esta pregunta trata sobre fiestas, lengua, símbolos, historia, religión, tradiciones y cultura local o nacional.",
       agree:
-        "Muy de acuerdo indica nacionalismo cultural, tradicionalismo o conservadurismo.",
+        "Si estás muy de acuerdo, en la práctica quieres más apoyo público a la cultura propia. Puede reforzar pertenencia, pero puede dejar menos espacio a otras culturas.",
       disagree:
-        "Muy en desacuerdo indica multiculturalismo, liberalismo cultural o progresismo.",
+        "Si estás muy en desacuerdo, en la práctica prefieres instituciones más neutrales. Puede favorecer pluralidad, pero también hacer que la cultura propia pierda presencia.",
     },
   },
   {
-    id: 12,
-    text: "¿Una sociedad multicultural es preferible a una sociedad con una cultura común dominante?",
+    id: 17,
+    text: "¿Es mejor una sociedad con muchas culturas conviviendo que una con una cultura común fuerte?",
     block: "identidad",
     weights: {
       multiculturalista: 3,
@@ -2645,11 +2744,330 @@ export const quickIdeologicalQuestions: Question[] = [
     },
     info: {
       meaning:
-        "Esta pregunta mide si prefieres diversidad cultural amplia o una identidad común fuerte.",
+        "Esta pregunta trata sobre diversidad cultural frente a una identidad común compartida.",
       agree:
-        "Muy de acuerdo indica tendencia multiculturalista, progresista o globalista.",
+        "Si estás muy de acuerdo, en la práctica valoras diversidad, mezcla cultural y apertura. Puede enriquecer la sociedad, pero necesita buena integración para evitar separación entre grupos.",
       disagree:
-        "Muy en desacuerdo indica tendencia nacionalista, tradicionalista o identitaria.",
+        "Si estás muy en desacuerdo, en la práctica prefieres una cultura común fuerte. Puede mejorar cohesión, pero puede dificultar que personas distintas se sientan plenamente incluidas.",
+    },
+  },
+  {
+    id: 18,
+    text: "¿La religión y las tradiciones ayudan a mantener una sociedad más unida?",
+    block: "identidad",
+    weights: {
+      tradicionalista: 3,
+      conservador: 2,
+      progresista: -2,
+      multiculturalista: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta trata sobre si religión y tradición siguen dando normas, comunidad y sentido compartido.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica valoras más conservar celebraciones, creencias y costumbres. Puede unir a parte de la sociedad, pero puede excluir a quienes no comparten esa tradición.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más secular y flexible. Puede dar más libertad individual, pero puede reducir referencias comunes.",
     },
   },
 ];
+
+export const nationalPartyProfiles: Record<string, Record<string, number>> = {
+  PSOE: {
+    socialdemocrata: 85,
+    socialista: 55,
+    progresista: 75,
+    globalista: 60,
+    institucionalista: 70,
+    conservador: 20,
+    nacionalista: 35,
+  },
+  PP: {
+    liberal: 70,
+    conservador: 65,
+    institucionalista: 75,
+    nacionalista: 50,
+    soberanista: 45,
+    progresista: 25,
+    socialista: 20,
+  },
+  VOX: {
+    nacionalista: 90,
+    soberanista: 90,
+    conservador: 90,
+    tradicionalista: 80,
+    autoritario: 70,
+    liberal: 60,
+    multiculturalista: 5,
+    globalista: 10,
+  },
+  Sumar: {
+    socialista: 75,
+    socialdemocrata: 65,
+    progresista: 90,
+    globalista: 75,
+    multiculturalista: 85,
+    conservador: 10,
+    nacionalista: 25,
+  },
+  Podemos: {
+    comunista: 55,
+    socialista: 85,
+    progresista: 90,
+    globalista: 70,
+    multiculturalista: 85,
+    liberal: 10,
+    conservador: 5,
+  },
+};
+
+export const autonomousCommunities = [
+  { id: "andalucia", name: "Andalucía" },
+  { id: "aragon", name: "Aragón" },
+  { id: "asturias", name: "Asturias" },
+  { id: "baleares", name: "Islas Baleares" },
+  { id: "canarias", name: "Canarias" },
+  { id: "cantabria", name: "Cantabria" },
+  { id: "castilla-la-mancha", name: "Castilla-La Mancha" },
+  { id: "castilla-y-leon", name: "Castilla y León" },
+  { id: "cataluna", name: "Cataluña" },
+  { id: "comunidad-valenciana", name: "Comunidad Valenciana" },
+  { id: "extremadura", name: "Extremadura" },
+  { id: "galicia", name: "Galicia" },
+  { id: "la-rioja", name: "La Rioja" },
+  { id: "madrid", name: "Comunidad de Madrid" },
+  { id: "murcia", name: "Región de Murcia" },
+  { id: "navarra", name: "Navarra" },
+  { id: "pais-vasco", name: "País Vasco" },
+] as const;
+
+export const regionalPartyProfiles: Record<string, Record<string, Record<string, number>>> = {
+  andalucia: {
+    "PP-A": { liberal: 70, conservador: 65, institucionalista: 70, nacionalista: 45, socialista: 20, progresista: 25 },
+    "PSOE-A": { socialdemocrata: 85, socialista: 55, progresista: 70, institucionalista: 70, conservador: 20 },
+    "Vox Andalucía": { nacionalista: 90, soberanista: 85, conservador: 90, tradicionalista: 80, autoritario: 70, multiculturalista: 5 },
+    "Por Andalucía": { socialista: 75, progresista: 85, globalista: 70, multiculturalista: 80, conservador: 10 },
+    "Adelante Andalucía": { socialista: 80, progresista: 80, soberanista: 65, nacionalista: 55, multiculturalista: 75 },
+  },
+  aragon: {
+    "PP Aragón": { liberal: 70, conservador: 65, institucionalista: 70, nacionalista: 45 },
+    "PSOE Aragón": { socialdemocrata: 85, socialista: 55, progresista: 70, institucionalista: 70 },
+    "Vox Aragón": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "CHA": { socialdemocrata: 65, progresista: 70, nacionalista: 70, soberanista: 60 },
+    "Aragón Existe": { institucionalista: 65, soberanista: 55, socialdemocrata: 50, conservador: 35 },
+  },
+  asturias: {
+    "PSOE Asturias": { socialdemocrata: 85, socialista: 55, progresista: 70, institucionalista: 70 },
+    "PP Asturias": { liberal: 70, conservador: 65, institucionalista: 70, nacionalista: 45 },
+    "Vox Asturias": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "IU-Convocatoria por Asturias": { socialista: 80, comunista: 45, progresista: 80, multiculturalista: 75 },
+    "Foro Asturias": { conservador: 65, liberal: 55, soberanista: 50, institucionalista: 55 },
+  },
+  baleares: {
+    "PP Balears": { liberal: 70, conservador: 65, institucionalista: 70, nacionalista: 45 },
+    "PSIB-PSOE": { socialdemocrata: 85, socialista: 55, progresista: 75, institucionalista: 70 },
+    "Vox Baleares": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "Més per Mallorca": { socialdemocrata: 65, progresista: 75, nacionalista: 75, soberanista: 70, multiculturalista: 70 },
+    "Unidas Podemos Baleares": { socialista: 80, progresista: 90, globalista: 70, multiculturalista: 85 },
+  },
+  canarias: {
+    "Coalición Canaria": { nacionalista: 75, soberanista: 65, socialdemocrata: 50, conservador: 35, institucionalista: 60 },
+    "PSOE Canarias": { socialdemocrata: 85, socialista: 55, progresista: 70, institucionalista: 70 },
+    "PP Canarias": { liberal: 70, conservador: 65, institucionalista: 70 },
+    "Vox Canarias": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "Nueva Canarias": { socialdemocrata: 65, progresista: 70, nacionalista: 70, soberanista: 65 },
+  },
+  cantabria: {
+    "PP Cantabria": { liberal: 70, conservador: 65, institucionalista: 70 },
+    "PRC": { institucionalista: 65, conservador: 45, socialdemocrata: 50, soberanista: 45 },
+    "PSOE Cantabria": { socialdemocrata: 85, socialista: 55, progresista: 70 },
+    "Vox Cantabria": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  "castilla-la-mancha": {
+    "PSOE Castilla-La Mancha": { socialdemocrata: 85, socialista: 55, progresista: 65, institucionalista: 70 },
+    "PP Castilla-La Mancha": { liberal: 70, conservador: 70, institucionalista: 70 },
+    "Vox Castilla-La Mancha": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  "castilla-y-leon": {
+    "PP Castilla y León": { liberal: 70, conservador: 70, institucionalista: 70 },
+    "PSOE Castilla y León": { socialdemocrata: 85, socialista: 55, progresista: 65 },
+    "Vox Castilla y León": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "UPL": { nacionalista: 65, soberanista: 60, conservador: 45, socialdemocrata: 45 },
+    "Soria ¡Ya!": { institucionalista: 65, socialdemocrata: 50, soberanista: 50 },
+  },
+  cataluna: {
+    "PSC": { socialdemocrata: 85, socialista: 55, progresista: 75, institucionalista: 70, nacionalista: 35 },
+    "Junts": { liberal: 65, nacionalista: 90, soberanista: 90, conservador: 45 },
+    "ERC": { socialista: 70, socialdemocrata: 55, progresista: 80, nacionalista: 85, soberanista: 85 },
+    "Vox Cataluña": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "PP Cataluña": { liberal: 70, conservador: 65, institucionalista: 75, nacionalista: 50 },
+    "Comuns": { socialista: 75, progresista: 90, globalista: 75, multiculturalista: 85 },
+    "CUP": { comunista: 85, socialista: 90, nacionalista: 80, soberanista: 85, progresista: 85 },
+    "Aliança Catalana": { nacionalista: 95, soberanista: 95, conservador: 90, tradicionalista: 85, multiculturalista: 5 },
+  },
+  "comunidad-valenciana": {
+    "PP Comunitat Valenciana": { liberal: 70, conservador: 65, institucionalista: 70 },
+    "PSPV-PSOE": { socialdemocrata: 85, socialista: 55, progresista: 75, institucionalista: 70 },
+    "Vox Comunidad Valenciana": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "Compromís": { socialdemocrata: 65, socialista: 55, progresista: 80, nacionalista: 70, multiculturalista: 75 },
+  },
+  extremadura: {
+    "PP Extremadura": { liberal: 70, conservador: 65, institucionalista: 70 },
+    "PSOE Extremadura": { socialdemocrata: 85, socialista: 55, progresista: 65 },
+    "Vox Extremadura": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "Unidas por Extremadura": { socialista: 80, progresista: 85, multiculturalista: 80 },
+  },
+  galicia: {
+    "PPdeG": { liberal: 70, conservador: 65, institucionalista: 75, nacionalista: 45 },
+    "PSdeG-PSOE": { socialdemocrata: 85, socialista: 55, progresista: 70 },
+    "BNG": { socialista: 70, progresista: 75, nacionalista: 85, soberanista: 85 },
+    "Vox Galicia": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  "la-rioja": {
+    "PP La Rioja": { liberal: 70, conservador: 65, institucionalista: 70 },
+    "PSOE La Rioja": { socialdemocrata: 85, socialista: 55, progresista: 70 },
+    "Vox La Rioja": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  madrid: {
+    "PP Madrid": { liberal: 80, conservador: 65, institucionalista: 70, nacionalista: 50 },
+    "Más Madrid": { socialdemocrata: 65, socialista: 60, progresista: 90, globalista: 75, multiculturalista: 85 },
+    "PSOE Madrid": { socialdemocrata: 85, socialista: 55, progresista: 75 },
+    "Vox Madrid": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  murcia: {
+    "PP Región de Murcia": { liberal: 70, conservador: 70, institucionalista: 70 },
+    "PSOE Murcia": { socialdemocrata: 85, socialista: 55, progresista: 65 },
+    "Vox Murcia": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+    "Podemos-IU Murcia": { socialista: 80, progresista: 85, multiculturalista: 80 },
+  },
+  navarra: {
+    "UPN": { conservador: 70, institucionalista: 70, nacionalista: 55, liberal: 55 },
+    "PSN-PSOE": { socialdemocrata: 85, socialista: 55, progresista: 70 },
+    "EH Bildu Navarra": { socialista: 80, progresista: 80, nacionalista: 85, soberanista: 85 },
+    "Geroa Bai": { socialdemocrata: 60, progresista: 65, nacionalista: 75, soberanista: 70 },
+    "PP Navarra": { liberal: 70, conservador: 65, institucionalista: 75 },
+    "Vox Navarra": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+  "pais-vasco": {
+    "PNV": { liberal: 55, socialdemocrata: 50, nacionalista: 85, soberanista: 75, institucionalista: 65 },
+    "EH Bildu": { socialista: 85, comunista: 45, progresista: 85, nacionalista: 90, soberanista: 90 },
+    "PSE-EE": { socialdemocrata: 85, socialista: 55, progresista: 70, institucionalista: 70 },
+    "PP País Vasco": { liberal: 70, conservador: 65, institucionalista: 75 },
+    "Vox País Vasco": { nacionalista: 90, soberanista: 85, conservador: 90, autoritario: 70 },
+  },
+};
+
+export const ideologyExplanations: Record<string, { title: string; description: string; example: string }> = {
+  comunista: {
+    title: "Comunista",
+    description:
+      "Da mucho peso a que la economía esté controlada por lo público o por la comunidad. Busca reducir al máximo las diferencias entre ricos y pobres.",
+    example:
+      "Por ejemplo: nacionalizar grandes empresas, limitar grandes fortunas o hacer que vivienda, energía y banca estén muy controladas por el Estado.",
+  },
+  socialista: {
+    title: "Socialista",
+    description:
+      "Quiere que el Estado intervenga bastante para repartir mejor la riqueza y proteger a trabajadores, personas con menos ingresos y servicios públicos.",
+    example:
+      "Por ejemplo: impuestos más altos a rentas altas, ayudas al alquiler, sanidad pública fuerte y más regulación de empresas.",
+  },
+  socialdemocrata: {
+    title: "Socialdemócrata",
+    description:
+      "Acepta el mercado y la empresa privada, pero quiere corregir sus excesos con impuestos, derechos laborales y servicios públicos fuertes.",
+    example:
+      "Por ejemplo: economía privada, pero con sanidad, educación, pensiones y ayudas públicas financiadas con impuestos.",
+  },
+  liberal: {
+    title: "Liberal económico",
+    description:
+      "Prefiere menos impuestos, menos trabas para empresas y más libertad para comprar, vender, invertir o emprender.",
+    example:
+      "Por ejemplo: facilitar abrir negocios, bajar impuestos o permitir más competencia privada en servicios.",
+  },
+  libertario: {
+    title: "Libertario",
+    description:
+      "Quiere que el Estado se meta lo mínimo posible tanto en la economía como en la vida privada de las personas.",
+    example:
+      "Por ejemplo: menos impuestos, menos regulación, más privacidad y más libertad individual para decidir.",
+  },
+  nacionalista: {
+    title: "Nacionalista",
+    description:
+      "Da mucha importancia a la nación, la cultura propia, la lengua, los símbolos y la prioridad de la comunidad nacional.",
+    example:
+      "Por ejemplo: proteger la lengua propia, controlar más la inmigración o priorizar los intereses del país o territorio.",
+  },
+  soberanista: {
+    title: "Soberanista",
+    description:
+      "Quiere que las decisiones importantes se tomen dentro del país o territorio, sin depender tanto de organismos externos.",
+    example:
+      "Por ejemplo: que España, Cataluña, Euskadi u otra comunidad tenga más capacidad para decidir leyes, economía o fronteras.",
+  },
+  globalista: {
+    title: "Globalista",
+    description:
+      "Prefiere cooperación entre países, normas internacionales y soluciones comunes para problemas que superan fronteras.",
+    example:
+      "Por ejemplo: más coordinación europea, acuerdos climáticos, acogida internacional o tratados comunes.",
+  },
+  conservador: {
+    title: "Conservador",
+    description:
+      "Prefiere mantener valores, costumbres e instituciones que considera importantes para la estabilidad social.",
+    example:
+      "Por ejemplo: dar más importancia a familia, orden, disciplina, autoridad, tradición o seguridad.",
+  },
+  progresista: {
+    title: "Progresista",
+    description:
+      "Quiere cambios sociales para ampliar derechos, igualdad y reconocimiento de nuevas formas de vida.",
+    example:
+      "Por ejemplo: políticas de igualdad, derechos de minorías, nuevos modelos familiares o educación más inclusiva.",
+  },
+  autoritario: {
+    title: "Autoritario",
+    description:
+      "Da mucho peso al orden, la seguridad y la autoridad del Estado, aunque eso limite algunas libertades.",
+    example:
+      "Por ejemplo: más policía, penas más duras, más vigilancia o menos tolerancia con disturbios.",
+  },
+  institucionalista: {
+    title: "Institucionalista",
+    description:
+      "Confía en normas, instituciones, jueces, administración y acuerdos estables para mantener el sistema funcionando.",
+    example:
+      "Por ejemplo: respetar la Constitución, pactos de Estado, tribunales y procedimientos legales.",
+  },
+  tradicionalista: {
+    title: "Tradicionalista",
+    description:
+      "Da mucha importancia a costumbres heredadas, religión, historia, familia tradicional y continuidad cultural.",
+    example:
+      "Por ejemplo: proteger fiestas tradicionales, símbolos religiosos, educación clásica o valores familiares.",
+  },
+  multiculturalista: {
+    title: "Multiculturalista",
+    description:
+      "Ve positivo que convivan varias culturas, religiones y formas de vida dentro de una misma sociedad.",
+    example:
+      "Por ejemplo: apoyar diversidad cultural, integración de inmigrantes, pluralidad religiosa y políticas antidiscriminación.",
+  },
+  neutralista: {
+    title: "Neutralista",
+    description:
+      "Prefiere que el país no se implique demasiado en bloques militares o conflictos internacionales.",
+    example:
+      "Por ejemplo: evitar alinearse automáticamente con potencias extranjeras o reducir participación en guerras.",
+  },
+  populista: {
+    title: "Populista",
+    description:
+      "Suele enfrentar al pueblo común contra unas élites políticas, económicas o mediáticas que considera alejadas de la gente.",
+    example:
+      "Por ejemplo: criticar a partidos tradicionales, grandes medios o instituciones por no escuchar a la ciudadanía.",
+  },
+};

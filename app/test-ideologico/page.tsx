@@ -3,11 +3,15 @@
 import { useMemo, useState } from "react";
 import {
   answerOptions,
+  autonomousCommunities,
   blockLabels,
   ideologicalQuestions,
+  ideologyExplanations,
   ideologyLabels,
-  partyProfiles,
+  nationalPartyProfiles,
   quickIdeologicalQuestions,
+  regionalPartyProfiles,
+  type Question,
 } from "./testData";
 import "./test-ideologico.css";
 
@@ -19,11 +23,26 @@ type IdeologyResult = {
   percentage: number;
 };
 
+type PartyMatch = {
+  party: string;
+  percentage: number;
+};
+
+type PracticalInfo = {
+  meaning: string;
+  agree: string;
+  disagree: string;
+};
+
 function clamp(value: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
 
-function calculateResults(answers: Answers, questions = ideologicalQuestions) {
+function calculateResults(
+  answers: Answers,
+  questions: Question[],
+  selectedCommunity: string
+) {
   const ideologyScore: Record<string, number> = {};
   const ideologyMax: Record<string, number> = {};
   const blockScore: Record<string, Record<string, number>> = {};
@@ -31,6 +50,7 @@ function calculateResults(answers: Answers, questions = ideologicalQuestions) {
 
   questions.forEach((question) => {
     const answer = answers[question.id];
+
     if (answer === undefined) return;
 
     if (!blockScore[question.block]) blockScore[question.block] = {};
@@ -63,6 +83,9 @@ function calculateResults(answers: Answers, questions = ideologicalQuestions) {
     })
     .sort((a, b) => b.percentage - a.percentage);
 
+  const regionalProfiles =
+    regionalPartyProfiles[selectedCommunity] ?? nationalPartyProfiles;
+
   const blockResults = Object.entries(blockScore).map(([block, scores]) => {
     const ideologies = Object.entries(scores)
       .map(([ideology, score]) => {
@@ -79,50 +102,145 @@ function calculateResults(answers: Answers, questions = ideologicalQuestions) {
     return {
       block,
       ideologies: ideologies.slice(0, 6),
-      party: findClosestParty(ideologies),
+      nationalParty: findClosestParty(ideologies, nationalPartyProfiles),
+      regionalParty: findClosestParty(ideologies, regionalProfiles),
     };
   });
 
   return {
     ideologyPercentages,
     blockResults,
-    finalParty: findClosestParty(ideologyPercentages),
+    finalNationalParty: findClosestParty(ideologyPercentages, nationalPartyProfiles),
+    finalRegionalParty: findClosestParty(ideologyPercentages, regionalProfiles),
   };
 }
 
-function findClosestParty(userProfile: IdeologyResult[]) {
+function findClosestParty(
+  userProfile: IdeologyResult[],
+  partyProfiles: Record<string, Record<string, number>>
+): PartyMatch {
   let bestParty = "";
-  let bestDistance = Infinity;
+  let bestSimilarity = -Infinity;
 
   Object.entries(partyProfiles).forEach(([party, profile]) => {
-    let distance = 0;
+    const similarity = calculatePartySimilarity(userProfile, profile);
 
-    userProfile.forEach((item) => {
-      const expected = profile[item.ideology] ?? 50;
-      distance += Math.abs(item.percentage - expected);
-    });
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
+    if (similarity > bestSimilarity) {
+      bestSimilarity = similarity;
       bestParty = party;
     }
   });
 
-  return bestParty;
+  return {
+    party: bestParty,
+    percentage: Math.round(bestSimilarity),
+  };
+}
+
+function calculatePartySimilarity(
+  userProfile: IdeologyResult[],
+  partyProfile: Record<string, number>
+) {
+  if (userProfile.length === 0) return 0;
+
+  let totalDistance = 0;
+
+  userProfile.forEach((item) => {
+    const expected = partyProfile[item.ideology] ?? 50;
+    totalDistance += Math.abs(item.percentage - expected);
+  });
+
+  const averageDistance = totalDistance / userProfile.length;
+  return clamp(100 - averageDistance);
+}
+
+function getPracticalInfo(question: Question): PracticalInfo {
+  if (question.info) return question.info;
+
+  const blockInfo: Record<string, PracticalInfo> = {
+    economia: {
+      meaning:
+        "Esta pregunta habla de dinero, impuestos, precios, empresas, trabajo, vivienda o servicios públicos.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica apoyas con fuerza la idea de la pregunta. Por ejemplo, si habla de controlar precios, eso puede ayudar a quien paga alquiler, pero puede desanimar a propietarios o inversores.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres el enfoque contrario. Por ejemplo, menos control público puede dar más libertad económica, pero también dejar más diferencias entre ciudadanos.",
+    },
+    nacion: {
+      meaning:
+        "Esta pregunta habla de país, fronteras, identidad, lengua, inmigración o quién debe tomar las decisiones importantes.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica das más peso a proteger lo propio. Por ejemplo, más control migratorio, más prioridad a ciudadanos locales o más protección de lengua y cultura.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica das más peso a apertura, cooperación y diversidad. Por ejemplo, más facilidad para acuerdos internacionales o para que convivan culturas distintas.",
+    },
+    sociedad: {
+      meaning:
+        "Esta pregunta habla de valores, familia, igualdad, libertad de expresión, educación o cambios sociales.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica apoyas la idea de la frase. Por ejemplo, si habla de tradición, puede significar reforzar familia o disciplina; si habla de nuevos derechos, puede significar cambiar leyes y costumbres.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica apoyas el lado contrario. Eso puede conservar estabilidad o abrir cambios, según la pregunta concreta.",
+    },
+    autoridad: {
+      meaning:
+        "Esta pregunta habla de seguridad, policía, justicia, privacidad, vigilancia y poder del Estado.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica aceptas más medidas para imponer orden o seguridad. Por ejemplo, más policía, más cámaras o penas más duras.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres limitar más el poder público. Por ejemplo, más privacidad, más garantías y menos vigilancia.",
+    },
+    geopolitica: {
+      meaning:
+        "Esta pregunta habla de relaciones con otros países, Unión Europea, defensa, comercio, energía o guerras.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica apoyas la idea de la pregunta. Por ejemplo, más independencia exterior puede dar control, pero también crear choques con aliados.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica apoyas el enfoque contrario. Por ejemplo, más cooperación internacional puede dar estabilidad, pero también obliga a aceptar normas externas.",
+    },
+    identidad: {
+      meaning:
+        "Esta pregunta habla de cultura, religión, tradiciones, símbolos, diversidad o forma de convivencia.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres reforzar lo que dice la pregunta. Por ejemplo, proteger tradiciones puede unir a una parte de la sociedad, pero puede incomodar a quien no las comparte.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres reducir ese peso o abrir más espacio a otras formas de vida. Puede dar pluralidad, pero también debilitar referencias comunes.",
+    },
+  };
+
+  return blockInfo[question.block] ?? {
+    meaning:
+      "Esta pregunta mide una preferencia política que puede afectar a leyes, impuestos, derechos, servicios públicos o convivencia.",
+    agree:
+      "Responder muy de acuerdo empuja a aplicar con más fuerza la idea de la pregunta.",
+    disagree:
+      "Responder muy en desacuerdo empuja a limitar o rechazar la idea de la pregunta.",
+  };
 }
 
 export default function IdeologicalTestPage() {
   const [testMode, setTestMode] = useState<TestMode>("selector");
   const [answers, setAnswers] = useState<Answers>({});
   const [showResults, setShowResults] = useState(false);
-  const [openInfoId, setOpenInfoId] = useState<number | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [selectedCommunity, setSelectedCommunity] = useState("cataluna");
+  const [openIdeology, setOpenIdeology] = useState<string | null>(null);
 
   const activeQuestions =
     testMode === "rapido" ? quickIdeologicalQuestions : ideologicalQuestions;
 
+  const currentQuestion = activeQuestions[currentQuestionIndex];
+  const currentAnswer =
+    currentQuestion !== undefined ? answers[currentQuestion.id] : undefined;
+
+  const selectedCommunityName =
+    autonomousCommunities.find((item) => item.id === selectedCommunity)?.name ??
+    "la comunidad elegida";
+
   const results = useMemo(
-    () => calculateResults(answers, activeQuestions),
-    [answers, activeQuestions]
+    () => calculateResults(answers, activeQuestions, selectedCommunity),
+    [answers, activeQuestions, selectedCommunity]
   );
 
   const totalQuestions = activeQuestions.length;
@@ -133,7 +251,38 @@ export default function IdeologicalTestPage() {
     setTestMode(mode);
     setAnswers({});
     setShowResults(false);
-    setOpenInfoId(null);
+    setCurrentQuestionIndex(0);
+    setInfoOpen(false);
+    setOpenIdeology(null);
+  }
+
+  function goBackToSelector() {
+    setTestMode("selector");
+    setAnswers({});
+    setShowResults(false);
+    setCurrentQuestionIndex(0);
+    setInfoOpen(false);
+    setOpenIdeology(null);
+  }
+
+  function goToPreviousQuestion() {
+    setCurrentQuestionIndex((current) => Math.max(0, current - 1));
+    setInfoOpen(false);
+  }
+
+  function goToNextQuestion() {
+    if (currentAnswer === undefined) return;
+
+    if (currentQuestionIndex >= totalQuestions - 1) {
+      setShowResults(true);
+      setInfoOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setCurrentQuestionIndex((current) => current + 1);
+    setInfoOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (testMode === "selector") {
@@ -158,8 +307,8 @@ export default function IdeologicalTestPage() {
               <span>Test rápido</span>
               <strong>{quickIdeologicalQuestions.length} preguntas</strong>
               <p>
-                Versión resumida con las preguntas más importantes para obtener
-                una orientación ideológica rápida.
+                Versión resumida con las preguntas más importantes. Se muestra
+                una pregunta por pantalla.
               </p>
             </button>
 
@@ -181,140 +330,106 @@ export default function IdeologicalTestPage() {
     );
   }
 
-  return (
-    <main className="ideology-test">
-      <header className="ideology-test__header">
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => {
-            setTestMode("selector");
-            setShowResults(false);
-            setAnswers({});
-            setOpenInfoId(null);
-          }}
-        >
-          ← Volver
-        </button>
-
-        <h1>
-          {testMode === "rapido"
-            ? "Test ideológico rápido"
-            : "Test ideológico completo"}
-        </h1>
-
-        <p>
-          Responde las {totalQuestions} preguntas para obtener un resultado
-          ideológico general, un resultado por bloques y el partido político más
-          cercano en cada bloque.
-        </p>
-
-        <div className="progress">
-          <div className="progress__bar">
-            <span style={{ width: `${progress}%` }} />
-          </div>
-          <p>
-            {answeredQuestions}/{totalQuestions} preguntas respondidas ·{" "}
-            {progress}%
-          </p>
-        </div>
-      </header>
-
-      {!showResults && (
-        <>
-          <section className="questions">
-            {activeQuestions.map((question) => (
-              <article key={question.id} className="question-card">
-                <div className="question-card__top">
-                  <span className="question-card__block">
-                    {blockLabels[question.block]}
-                  </span>
-
-                  {question.info && (
-                    <button
-                      type="button"
-                      className="info-button"
-                      onClick={() =>
-                        setOpenInfoId((current) =>
-                          current === question.id ? null : question.id
-                        )
-                      }
-                      aria-label="Ver información de la pregunta"
-                    >
-                      i
-                    </button>
-                  )}
-                </div>
-
-                <h2>
-                  {question.id}. {question.text}
-                </h2>
-
-                <div className="answer-options">
-                  {answerOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      className={
-                        answers[question.id] === option.value
-                          ? "answer-options__button is-active"
-                          : "answer-options__button"
-                      }
-                      onClick={() =>
-                        setAnswers((prev) => ({
-                          ...prev,
-                          [question.id]: option.value,
-                        }))
-                      }
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-
-                {question.info && openInfoId === question.id && (
-                  <div className="question-info">
-                    <h3>¿Qué significa esta pregunta?</h3>
-                    <p>{question.info.meaning}</p>
-
-                    <h4>Si respondes “Muy de acuerdo”</h4>
-                    <p>{question.info.agree}</p>
-
-                    <h4>Si respondes “Muy en desacuerdo”</h4>
-                    <p>{question.info.disagree}</p>
-                  </div>
-                )}
-              </article>
-            ))}
-          </section>
-
+  if (showResults) {
+    return (
+      <main className="ideology-test">
+        <section className="results">
           <button
             type="button"
-            className="primary-button"
-            disabled={answeredQuestions < totalQuestions}
-            onClick={() => setShowResults(true)}
+            className="back-button"
+            onClick={() => {
+              setShowResults(false);
+              setCurrentQuestionIndex(totalQuestions - 1);
+            }}
           >
-            Ver resultado
+            ← Volver a la última pregunta
           </button>
-        </>
-      )}
 
-      {showResults && (
-        <section className="results">
-          <h2>Resultado general</h2>
+          <h1>
+            Resultado del{" "}
+            {testMode === "rapido" ? "test rápido" : "test completo"}
+          </h1>
 
-          <div className="final-result">
-            <p>Partido más cercano en conjunto:</p>
-            <strong>{results.finalParty}</strong>
+          <div className="community-selector">
+            <label htmlFor="community">Comunidad autónoma</label>
+            <select
+              id="community"
+              value={selectedCommunity}
+              onChange={(event) => setSelectedCommunity(event.target.value)}
+            >
+              {autonomousCommunities.map((community) => (
+                <option key={community.id} value={community.id}>
+                  {community.name}
+                </option>
+              ))}
+            </select>
+            <p>
+              Al cambiar la comunidad, el partido autonómico más afín se
+              actualiza automáticamente.
+            </p>
           </div>
 
+          <h2>Partido más afín</h2>
+
+          <div className="party-results">
+            <div className="party-card">
+              <span>Elecciones generales en España</span>
+              <strong>{results.finalNationalParty.party}</strong>
+              <em>{results.finalNationalParty.percentage}% de coincidencia</em>
+            </div>
+
+            <div className="party-card">
+              <span>Elecciones autonómicas en {selectedCommunityName}</span>
+              <strong>{results.finalRegionalParty.party}</strong>
+              <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
+            </div>
+          </div>
+
+          <h2>Porcentaje ideológico</h2>
+
+          <p className="results-help">
+            Cada bloque incluye una explicación sencilla. Pulsa “Más información”.
+          </p>
+
           <div className="results-grid">
-            {results.ideologyPercentages.slice(0, 12).map((item) => (
-              <div key={item.ideology} className="result-card">
-                <span>{ideologyLabels[item.ideology] ?? item.ideology}</span>
-                <strong>{item.percentage}%</strong>
-              </div>
-            ))}
+            {results.ideologyPercentages.slice(0, 12).map((item) => {
+              const explanation = ideologyExplanations[item.ideology];
+              const isOpen = openIdeology === item.ideology;
+
+              return (
+                <article
+                  key={item.ideology}
+                  className={isOpen ? "result-card is-open" : "result-card"}
+                >
+                  <div className="result-card__top">
+                    <span>{ideologyLabels[item.ideology] ?? item.ideology}</span>
+                    <strong>{item.percentage}%</strong>
+                  </div>
+
+                  {isOpen && explanation && (
+                    <div className="ideology-explanation">
+                      <h3>{explanation.title}</h3>
+                      <p>{explanation.description}</p>
+                      <p>
+                        <strong>Ejemplo:</strong> {explanation.example}
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    className="more-info-button"
+                    onClick={() =>
+                      setOpenIdeology((current) =>
+                        current === item.ideology ? null : item.ideology
+                      )
+                    }
+                  >
+                    {isOpen ? "Ocultar información" : "Más información"}
+                  </button>
+                </article>
+              );
+            })}
           </div>
 
           <h2>Resultado por bloques</h2>
@@ -324,8 +439,17 @@ export default function IdeologicalTestPage() {
               <article key={block.block} className="block-result-card">
                 <div className="block-result-card__header">
                   <h3>{blockLabels[block.block]}</h3>
+                </div>
+
+                <div className="block-party-results">
                   <p>
-                    Partido más cercano: <strong>{block.party}</strong>
+                    España: <strong>{block.nationalParty.party}</strong>
+                    <em>{block.nationalParty.percentage}% de coincidencia</em>
+                  </p>
+                  <p>
+                    {selectedCommunityName}:{" "}
+                    <strong>{block.regionalParty.party}</strong>
+                    <em>{block.regionalParty.percentage}% de coincidencia</em>
                   </p>
                 </div>
 
@@ -352,12 +476,128 @@ export default function IdeologicalTestPage() {
           <button
             type="button"
             className="secondary-button"
-            onClick={() => setShowResults(false)}
+            onClick={goBackToSelector}
           >
-            Volver al test
+            Volver al inicio
           </button>
         </section>
-      )}
+      </main>
+    );
+  }
+
+  if (!currentQuestion) return null;
+
+  const practicalInfo = getPracticalInfo(currentQuestion);
+
+  return (
+    <main className="ideology-test">
+      <header className="ideology-test__header">
+        <button type="button" className="back-button" onClick={goBackToSelector}>
+          ← Volver
+        </button>
+
+        <h1>
+          {testMode === "rapido"
+            ? "Test ideológico rápido"
+            : "Test ideológico completo"}
+        </h1>
+
+        <p>
+          Responde una pregunta cada vez. Puedes usar el botón de información
+          para entender ejemplos y consecuencias prácticas antes de responder.
+        </p>
+
+        <div className="progress">
+          <div className="progress__bar">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+          <p>
+            Pregunta {currentQuestionIndex + 1}/{totalQuestions} ·{" "}
+            {answeredQuestions}/{totalQuestions} respondidas · {progress}%
+          </p>
+        </div>
+      </header>
+
+      <section className="single-question">
+        <article className="question-card question-card--single">
+          <div className="question-card__top">
+            <span className="question-card__block">
+              {blockLabels[currentQuestion.block]}
+            </span>
+
+            <button
+              type="button"
+              className="info-button"
+              onClick={() => setInfoOpen((current) => !current)}
+              aria-expanded={infoOpen}
+              aria-label="Ver información de la pregunta"
+            >
+              i
+            </button>
+          </div>
+
+          <h2>
+            {currentQuestion.id}. {currentQuestion.text}
+          </h2>
+
+          <div className="answer-options answer-options--single">
+            {answerOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={
+                  currentAnswer === option.value
+                    ? "answer-options__button is-active"
+                    : "answer-options__button"
+                }
+                onClick={() =>
+                  setAnswers((prev) => ({
+                    ...prev,
+                    [currentQuestion.id]: option.value,
+                  }))
+                }
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
+          {infoOpen && (
+            <div className="question-info">
+              <h3>¿Qué significa esta pregunta?</h3>
+              <p>{practicalInfo.meaning}</p>
+
+              <h4>Si respondes “Muy de acuerdo”</h4>
+              <p>{practicalInfo.agree}</p>
+
+              <h4>Si respondes “Muy en desacuerdo”</h4>
+              <p>{practicalInfo.disagree}</p>
+            </div>
+          )}
+        </article>
+
+        <div className="question-navigation">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={goToPreviousQuestion}
+            disabled={currentQuestionIndex === 0}
+          >
+            Anterior
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={goToNextQuestion}
+            disabled={currentAnswer === undefined}
+          >
+            {currentQuestionIndex >= totalQuestions - 1
+              ? "Ver resultado"
+              : "Seguir"}
+          </button>
+        </div>
+      </section>
     </main>
   );
 }
