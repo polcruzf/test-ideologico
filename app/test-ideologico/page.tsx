@@ -816,7 +816,7 @@ function goBackToSelector() {
               </p>
             </div>
 
-          <h2>Partido más afín</h2>
+          <h2>Partido político más afín</h2>
 
           <div className="party-results">
                 <div className="party-card">
