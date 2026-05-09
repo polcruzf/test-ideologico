@@ -829,24 +829,7 @@ export default function IdeologicalTestPage() {
   return (
     <main className="ideology-test">
       <header className="ideology-test__header">
-        <div className="question-header-actions">
-          <button
-            type="button"
-            className="back-button"
-            onClick={goToPreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-          >
-            ← Volver
-          </button>
-
-          <button
-            type="button"
-            className="restart-button"
-            onClick={() => setConfirmationType("restart")}
-          >
-            Volver a la selección de tests
-          </button>
-        </div>
+        
 
         <h1>{getTestTitle(testMode)}</h1>
 
@@ -934,7 +917,15 @@ export default function IdeologicalTestPage() {
           >
             Anterior
           </button>
-
+<div className="question-header-actions">
+          <button
+            type="button"
+            className="restart-button"
+            onClick={() => setConfirmationType("restart")}
+          >
+            Volver a la selección de tests
+          </button>
+        </div>
         </div>
       </section>
 
