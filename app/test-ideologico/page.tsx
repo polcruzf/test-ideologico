@@ -37,6 +37,177 @@ type PracticalInfo = {
   disagree: string;
 };
 
+const IMPORTANT_AFFINITY_THRESHOLD = 70;
+const IDEOLOGY_BLOCKS_INFO_URL = "#";
+
+
+const oppositeIdeologyPairs: [string, string][] = [
+  ["liberal", "socialista"],
+  ["liberal", "comunista"],
+  ["conservador", "progresista"],
+  ["tradicionalista", "progresista"],
+  ["nacionalista", "globalista"],
+  ["soberanista", "globalista"],
+  ["multiculturalista", "nacionalista"],
+  ["libertario", "autoritario"],
+];
+
+const partyProgramSummaries: Record<string, string> = {
+  PSOE:
+    "Comparado con el programa del PSOE, tu resultado se acerca a una socialdemocracia reformista: más peso de los servicios públicos, políticas de igualdad, transición ecológica y una visión institucional y europeísta.",
+  PP:
+    "Comparado con la ponencia política del PP, tu resultado se acerca a un perfil de centro-derecha reformista: economía social de mercado, defensa de la unidad de España, seguridad jurídica, apoyo a familias, reducción de trabas y menor presión fiscal.",
+  VOX:
+    "Comparado con el programa de VOX, tu resultado se acerca a una derecha nacional-conservadora: prioridad a la unidad de España, soberanía nacional, control migratorio, seguridad, valores tradicionales y reducción de impuestos y gasto político.",
+  Sumar:
+    "Comparado con el programa de Sumar, tu resultado se acerca a una izquierda ecosocial: intervención pública en vivienda y energía, derechos laborales, feminismo, transición ecológica, fiscalidad progresiva y protección social amplia.",
+  Podemos:
+    "Comparado con el espacio de Podemos/Sumar, tu resultado se acerca a una izquierda transformadora: más intervención pública, redistribución, derechos sociales, regulación de mercados y ampliación de servicios públicos.",
+};
+
+function IdeologyBlocksInfoCard({ variant }: { variant: "home" | "results" }) {
+  const title =
+    variant === "home"
+      ? "¿Qué bloques definen una ideología?"
+      : "Bloques que ayudan a interpretar tu resultado";
+
+  const text =
+    variant === "home"
+      ? "Una ideología no se define solo por izquierda o derecha. También influyen los servicios públicos, la economía, la cultura, la identidad nacional, la seguridad, la libertad individual, la inmigración, el medio ambiente y la forma de entender el papel del Estado."
+      : "Tu resultado se interpreta comparando tus respuestas en varios ámbitos: servicios públicos, economía, cultura, identidad nacional, seguridad, derechos sociales, medio ambiente y papel del Estado. Estos bloques ayudan a entender por qué puedes coincidir con una ideología en unas cosas y con otra en otros temas.";
+
+  return (
+    <section
+      className={`ideology-blocks-info-card ideology-blocks-info-card--${variant}`}
+    >
+      <div className="ideology-blocks-info-card__content">
+        <h2 className="ideology-blocks-info-card__title">{title}</h2>
+        <p className="ideology-blocks-info-card__text">{text}</p>
+        <ul className="ideology-blocks-info-card__list">
+          <li>Servicios públicos y Estado del bienestar</li>
+          <li>Economía, impuestos y mercado laboral</li>
+          <li>Cultura, familia, valores e identidad</li>
+          <li>Nación, soberanía, inmigración y seguridad</li>
+        </ul>
+      </div>
+
+      <a
+        className="ideology-blocks-info-card__button"
+        href={IDEOLOGY_BLOCKS_INFO_URL}
+      >
+        Más información
+      </a>
+    </section>
+  );
+}
+
+function getIdeologyDefinition(ideology: string) {
+  const explanation = ideologyExplanations[ideology];
+  if (!explanation) {
+    return `${ideologyLabels[ideology] ?? ideology}: tendencia política presente en tus respuestas.`;
+  }
+
+  return `${explanation.title}: ${explanation.description}`;
+}
+
+function getIdeologyProfileDetail(item: IdeologyResult) {
+  const label = ideologyLabels[item.ideology] ?? item.ideology;
+
+  const details: Record<string, string> = {
+    socialdemocrata:
+      "tiendes a defender una economía de mercado con un Estado fuerte que garantice sanidad, educación, pensiones, derechos laborales y políticas de igualdad.",
+    socialista:
+      "das prioridad a la redistribución, la protección social y la intervención pública para corregir desigualdades económicas y laborales.",
+    comunista:
+      "muestras preferencia por una transformación profunda del sistema económico, con mucho más peso de lo público y menor protagonismo del capital privado.",
+    liberal:
+      "das importancia a la libertad individual, la iniciativa privada, la reducción de trabas y una menor intervención del Estado en la economía y en la vida personal.",
+    conservador:
+      "valoras el orden institucional, la continuidad, la seguridad jurídica, la familia y los cambios graduales antes que las rupturas políticas rápidas.",
+    progresista:
+      "priorizas la ampliación de derechos civiles, la igualdad social, los cambios culturales y una política pública activa frente a discriminaciones o desigualdades.",
+    tradicionalista:
+      "das peso a la familia, la herencia cultural, la religión o las costumbres como referencias importantes para ordenar la vida social.",
+    libertario:
+      "prefieres que el Estado intervenga lo menos posible y que las personas puedan decidir con libertad en economía, educación, costumbres y vida privada.",
+    autoritario:
+      "tiendes a aceptar más control, disciplina institucional y medidas firmes cuando lo consideras necesario para mantener orden, seguridad o estabilidad.",
+    nacionalista:
+      "sitúas la identidad nacional, la soberanía, la unidad del país y la protección de los intereses propios por encima de enfoques más globales o supranacionales.",
+    soberanista:
+      "das prioridad a que las decisiones importantes se tomen dentro del propio país o territorio, limitando la dependencia de organismos externos.",
+    globalista:
+      "muestras preferencia por la cooperación internacional, la integración europea, los acuerdos multilaterales y soluciones compartidas ante problemas globales.",
+    multiculturalista:
+      "valoras la convivencia entre culturas, la integración de minorías y una sociedad abierta a distintas identidades, orígenes y formas de vida.",
+    ecologista:
+      "das mucha importancia a la transición energética, la protección ambiental, la sostenibilidad y la intervención pública frente al cambio climático.",
+  };
+
+  return `${label} (${item.percentage}%): ${details[item.ideology] ?? "esta tendencia aparece de forma destacada en tus respuestas y marca una parte importante de tu orientación política."}`;
+}
+
+function getIdeologyPercentage(results: IdeologyResult[], ideology: string) {
+  return results.find((item) => item.ideology === ideology)?.percentage ?? 0;
+}
+
+function detectInconsistencies(results: IdeologyResult[]) {
+  return oppositeIdeologyPairs
+    .map(([first, second]) => {
+      const firstPercentage = getIdeologyPercentage(results, first);
+      const secondPercentage = getIdeologyPercentage(results, second);
+
+      if (firstPercentage >= 65 && secondPercentage >= 65) {
+        return {
+          first,
+          second,
+          firstPercentage,
+          secondPercentage,
+        };
+      }
+
+      return null;
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+}
+
+function getProfileIntro(testMode: TestMode) {
+  if (testMode === "ultra") {
+    return "Perfil orientativo muy breve. Este test tiene solo 8 preguntas, por lo que sirve para detectar una tendencia general, pero no permite leer con precisión todos los matices de economía, sociedad, nación o autoridad.";
+  }
+
+  if (testMode === "rapido") {
+    return "Perfil resumido. El test rápido permite ver tus tendencias principales y algunos matices por bloques, aunque puede simplificar posiciones complejas.";
+  }
+
+  return "Perfil ideológico detallado. El test completo cruza muchas más respuestas, por eso permite detectar mejor prioridades, matices, tensiones internas y afinidades políticas concretas.";
+}
+
+function generateIdeologicalProfile(
+  results: ReturnType<typeof calculateResults>,
+  testMode: TestMode
+) {
+  const relevantIdeologies = results.ideologyPercentages
+    .filter((item) => item.percentage >= IMPORTANT_AFFINITY_THRESHOLD)
+    .slice(0, 2);
+
+  const topIdeologies =
+    relevantIdeologies.length > 0
+      ? relevantIdeologies
+      : results.ideologyPercentages.slice(0, 2);
+
+  const inconsistencies = detectInconsistencies(results.ideologyPercentages);
+  const partySummary = partyProgramSummaries[results.finalNationalParty.party];
+
+  return {
+    intro: getProfileIntro(testMode),
+    ideologies: topIdeologies,
+    profileDetails: topIdeologies.map((item) => getIdeologyProfileDetail(item)),
+    inconsistencies,
+    partySummary,
+  };
+}
+
 function clamp(value: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
@@ -308,7 +479,7 @@ export default function IdeologicalTestPage() {
 
   const confirmationTitle =
     confirmationType === "restart"
-      ? "¿Volver a empezar?"
+      ? "¿Volver a la selección de tests?"
       : "¿Volver a la selección de tests?";
 
   const confirmationText =
@@ -337,8 +508,9 @@ export default function IdeologicalTestPage() {
               <span>Test ultra rápido</span>
               <strong>{ultraQuickIdeologicalQuestions.length} preguntas</strong>
               <p>
-                Ideal si quieres una orientación inmediata. Obtendrás solo tu
-                porcentaje ideológico general, sin bloques ni partidos afines.
+                Ideal si quieres una orientación inmediata. Obtendrás tu
+                porcentaje ideológico general y el partido que más encaja con tu
+                resultado, sin análisis por bloques.
               </p>
             </button>
 
@@ -369,10 +541,13 @@ export default function IdeologicalTestPage() {
             </button>
           </div>
 
+          <IdeologyBlocksInfoCard variant="home" />
+
           <p className="method-note">
-            Los resultados se calculan comparando tus respuestas con una base de
-            programas electorales, decisiones públicas y declaraciones políticas
-            de los partidos disponibles en la app.
+            El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
+            de la app. Estos perfiles se han elaborado a partir de programas
+            electorales, medidas públicas y declaraciones políticas de los partidos
+            incluidos.
           </p>
         </section>
       </main>
@@ -381,6 +556,7 @@ export default function IdeologicalTestPage() {
 
   if (showResults) {
     const isUltraTest = testMode === "ultra";
+    const ideologicalProfile = generateIdeologicalProfile(results, testMode);
 
     return (
       <main className="ideology-test">
@@ -398,8 +574,7 @@ export default function IdeologicalTestPage() {
 
           <h1>Resultado del {getTestTitle(testMode).toLowerCase()}</h1>
 
-          {!isUltraTest && (
-            <div className="community-selector">
+          <div className="community-selector">
               <label htmlFor="community">Comunidad autónoma</label>
               <select
                 id="community"
@@ -417,13 +592,10 @@ export default function IdeologicalTestPage() {
                 actualiza automáticamente.
               </p>
             </div>
-          )}
 
-          {!isUltraTest && (
-            <>
-              <h2>Partido más afín</h2>
+          <h2>Partido más afín</h2>
 
-              <div className="party-results">
+          <div className="party-results">
                 <div className="party-card">
                   <span>Elecciones generales en España</span>
                   <strong>{results.finalNationalParty.party}</strong>
@@ -435,9 +607,45 @@ export default function IdeologicalTestPage() {
                   <strong>{results.finalRegionalParty.party}</strong>
                   <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
                 </div>
+          </div>
+
+          <section className="ideological-profile-card results-profile-card">
+            <h2 className="results-profile-title">Perfil ideológico resumido</h2>
+            <p className="results-profile-intro">{ideologicalProfile.intro}</p>
+
+            <div className="profile-highlight-list results-profile-highlight-list">
+              {ideologicalProfile.ideologies.map((item) => (
+                <span key={item.ideology} className="results-profile-highlight-item">
+                  {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
+                </span>
+              ))}
+            </div>
+
+            <div className="profile-definition-list results-profile-detail-list">
+              {ideologicalProfile.profileDetails.map((detail) => (
+                <p key={detail} className="results-profile-detail-item">{detail}</p>
+              ))}
+            </div>
+
+            {ideologicalProfile.partySummary && (
+              <p className="profile-party-context results-profile-party-context">{ideologicalProfile.partySummary}</p>
+            )}
+
+            {ideologicalProfile.inconsistencies.length > 0 ? (
+              <div className="profile-inconsistencies">
+                <h3>Posibles incoherencias o tensiones internas</h3>
+                {ideologicalProfile.inconsistencies.map((item) => (
+                  <p key={`${item.first}-${item.second}`}>
+                    Aparece una tensión entre <strong>{ideologyLabels[item.first] ?? item.first}</strong> ({item.firstPercentage}%) y <strong>{ideologyLabels[item.second] ?? item.second}</strong> ({item.secondPercentage}%). Esto suele pasar cuando una persona defiende libertad o apertura en unos temas, pero prefiere más control, protección o intervención en otros. No significa que el resultado sea inválido; indica que tu perfil mezcla prioridades distintas según el asunto.
+                  </p>
+                ))}
               </div>
-            </>
-          )}
+            ) : (
+              <p className="profile-no-inconsistencies">
+                No se detectan incoherencias fuertes entre las respuestas. Tu perfil muestra una orientación bastante coherente dentro de las tendencias principales.
+              </p>
+            )}
+          </section>
 
           <h2>Porcentaje ideológico</h2>
 
@@ -447,44 +655,39 @@ export default function IdeologicalTestPage() {
 
           <div className="results-grid">
             {results.ideologyPercentages.slice(0, 12).map((item) => {
-              const explanation = ideologyExplanations[item.ideology];
-              const isOpen = openIdeology === item.ideology;
+              const isRelevant = item.percentage >= IMPORTANT_AFFINITY_THRESHOLD;
 
               return (
                 <article
                   key={item.ideology}
-                  className={isOpen ? "result-card is-open" : "result-card"}
+                  className={`result-card result-ideology-card ${isRelevant ? "is-relevant" : "is-secondary"}`}
                 >
-                  <div className="result-card__top">
-                    <span>{ideologyLabels[item.ideology] ?? item.ideology}</span>
-                    <strong>{item.percentage}%</strong>
+                  <div className="result-card__top result-ideology-card__top">
+                    <span className="result-ideology-card__title">{ideologyLabels[item.ideology] ?? item.ideology}</span>
+                    <strong className="result-ideology-card__percentage">{item.percentage}%</strong>
                   </div>
 
-                  {isOpen && explanation && (
-                    <div className="ideology-explanation">
-                      <h3>{explanation.title}</h3>
-                      <p>{explanation.description}</p>
-                      <p>
-                        <strong>Ejemplo:</strong> {explanation.example}
-                      </p>
-                    </div>
+                  {isRelevant && (
+                    <span className="result-ideology-card__badge">Afinidad relevante</span>
                   )}
 
                   <button
                     type="button"
-                    className="more-info-button"
+                    className="more-info-button result-ideology-card__more-button"
                     onClick={() =>
                       setOpenIdeology((current) =>
                         current === item.ideology ? null : item.ideology
                       )
                     }
                   >
-                    {isOpen ? "Ocultar información" : "Más información"}
+                    Más información
                   </button>
                 </article>
               );
             })}
           </div>
+
+          <IdeologyBlocksInfoCard variant="results" />
 
           {isUltraTest && (
             <div className="upgrade-result-card">
@@ -496,6 +699,13 @@ export default function IdeologicalTestPage() {
                 e identidad cultural. Así sabrás no solo “dónde encajas”, sino
                 en qué temas concretos coincides más o menos con cada tendencia.
               </p>
+              <button
+                type="button"
+                className="primary-button primary-button--home primary-button--inside-dark"
+                onClick={() => setConfirmationType("home")}
+              >
+                Volver a la selección de tests
+              </button>
             </div>
           )}
 
@@ -541,14 +751,44 @@ export default function IdeologicalTestPage() {
             </>
           )}
 
-          <button
-            type="button"
-            className="primary-button primary-button--home"
-            onClick={() => setConfirmationType("home")}
-          >
-            Volver a la selección de tests
-          </button>
+          {!isUltraTest && (
+            <div className="upgrade-result-card">
+              <h2>¿Quieres volver a elegir otro test?</h2>
+              <p>
+                Puedes volver a la página inicial para hacer el test ultra rápido,
+                repetir el test rápido o realizar el test completo si quieres un
+                análisis más detallado.
+              </p>
+              <button
+                type="button"
+                className="primary-button primary-button--home primary-button--inside-dark"
+                onClick={() => setConfirmationType("home")}
+              >
+                Volver a la selección de tests
+              </button>
+            </div>
+          )}
         </section>
+
+        {openIdeology && ideologyExplanations[openIdeology] && (
+          <div className="modal-overlay" role="dialog" aria-modal="true">
+            <div className="ideology-explanation ideology-explanation--popup">
+              <button
+                type="button"
+                className="modal-close-button"
+                onClick={() => setOpenIdeology(null)}
+                aria-label="Cerrar información ideológica"
+              >
+                ×
+              </button>
+              <h3>{ideologyExplanations[openIdeology].title}</h3>
+              <p>{ideologyExplanations[openIdeology].description}</p>
+              <p>
+                <strong>Ejemplo:</strong> {ideologyExplanations[openIdeology].example}
+              </p>
+            </div>
+          </div>
+        )}
 
         {confirmationType && (
           <div className="modal-overlay" role="dialog" aria-modal="true">
@@ -604,7 +844,7 @@ export default function IdeologicalTestPage() {
             className="restart-button"
             onClick={() => setConfirmationType("restart")}
           >
-            Volver a empezar
+            Volver a la selección de tests
           </button>
         </div>
 
@@ -659,12 +899,25 @@ export default function IdeologicalTestPage() {
                     ? "answer-options__button is-active"
                     : "answer-options__button"
                 }
-                onClick={() =>
+                onClick={() => {
                   setAnswers((prev) => ({
                     ...prev,
                     [currentQuestion.id]: option.value,
-                  }))
-                }
+                  }));
+
+                  window.setTimeout(() => {
+                    if (currentQuestionIndex >= totalQuestions - 1) {
+                      setShowResults(true);
+                      setInfoOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      return;
+                    }
+
+                    setCurrentQuestionIndex((current) => current + 1);
+                    setInfoOpen(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }, 220);
+                }}
               >
                 {option.label}
               </button>
@@ -682,16 +935,6 @@ export default function IdeologicalTestPage() {
             Anterior
           </button>
 
-          <button
-            type="button"
-            className="primary-button"
-            onClick={goToNextQuestion}
-            disabled={currentAnswer === undefined}
-          >
-            {currentQuestionIndex >= totalQuestions - 1
-              ? "Ver resultado"
-              : "Seguir"}
-          </button>
         </div>
       </section>
 

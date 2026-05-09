@@ -1,3 +1,23 @@
+/* AJUSTES RÁPIDOS DE LAS CAJAS DE PORCENTAJE IDEOLÓGICO
+   Líneas 6-13: cambia estos valores cuando quieras modificar tamaño/altura. */
+:root {
+  --ideology-card-min-height-desktop: 92px;
+  --ideology-card-min-height-mobile: 86px;
+
+  --ideology-card-padding-y: 12px;
+  --ideology-card-padding-x: 14px;
+
+  /* TITULO IDEOLOGIA */
+  --ideology-card-title-size: 13px;
+
+  /* PORCENTAJE */
+  --ideology-card-percentage-size: 14px;
+
+  /* MOBILE */
+  --ideology-card-title-size-mobile: 13px;
+  --ideology-card-percentage-size-mobile: 16px;
+}
+
 .ideology-test {
   max-width: 1100px;
   margin: 0 auto;
@@ -808,5 +828,522 @@
   .modal-actions .primary-button,
   .modal-actions .secondary-button {
     width: 100%;
+  }
+}
+
+
+/* Actualización: perfil ideológico, popup de porcentajes y pesos visuales */
+.ideological-profile-card {
+  display: grid;
+  gap: 16px;
+  padding: 26px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #f7f7f7;
+}
+
+.ideological-profile-card h2 {
+  margin: 0;
+}
+
+.ideological-profile-card p {
+  margin: 0;
+  color: #444;
+  line-height: 1.6;
+}
+
+.profile-highlight-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.profile-highlight-list span {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.profile-definition-list {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-definition-list p {
+  padding: 14px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+
+.profile-party-context {
+  padding: 16px;
+  border-radius: 16px;
+  background: #111;
+  color: #fff !important;
+  font-weight: 750;
+}
+
+.profile-inconsistencies,
+.profile-no-inconsistencies {
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.profile-inconsistencies h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.result-card {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.result-card__top {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.result-card__top span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.result-card__top strong {
+  max-width: 100%;
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.result-card.is-relevant {
+  border-color: #111;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.result-card.is-relevant::after {
+  content: "Afinidad relevante";
+  display: inline-flex;
+  margin-top: 20px;
+  margin-bottom: 28px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.result-card.is-secondary {
+  opacity: 0.62;
+  background: #fafafa;
+}
+
+.result-card.is-secondary .result-card__top strong {
+  font-size: clamp(24px, 4vw, 34px);
+}
+
+.ideology-explanation--popup {
+  position: relative;
+  width: min(100%, 640px);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  margin: 0;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.ideology-explanation--popup h3 {
+  margin: 0 44px 10px 0;
+  font-size: clamp(24px, 4vw, 34px);
+  letter-spacing: -0.04em;
+}
+
+.ideology-explanation--popup p {
+  margin: 0 0 12px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.info-button {
+  position: relative;
+  animation: subtleInfoPulse 4s ease-in-out infinite;
+}
+
+@keyframes subtleInfoPulse {
+  0%, 78%, 100% {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  86% {
+    background: #111;
+    color: #fff;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.08);
+  }
+  94% {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.primary-button--inside-dark {
+  width: fit-content;
+  margin-top: 18px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #111;
+}
+
+.primary-button--inside-dark:hover {
+  background: #f2f2f2;
+}
+
+.question-navigation {
+  justify-content: flex-start;
+}
+
+@media (max-width: 700px) {
+  .question-navigation {
+    justify-content: flex-start;
+  }
+
+  .question-navigation .secondary-button {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .result-card__top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .result-card__top strong {
+    font-size: clamp(26px, 9vw, 38px);
+  }
+
+  .profile-highlight-list {
+    display: grid;
+  }
+
+  .primary-button--inside-dark {
+    width: 100%;
+  }
+}
+
+/* Ajuste final de cajas de porcentaje ideológico */
+.results-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
+}
+
+.result-ideology-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 128px;
+  padding: 16px 18px 44px;
+  overflow: hidden;
+}
+
+.result-ideology-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: auto;
+}
+
+
+
+.result-ideology-card__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.result-card.is-relevant::after {
+  content: none;
+  display: none;
+}
+
+.result-ideology-card__more-button {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  font-size: 13px;
+}
+
+.result-ideology-card.is-secondary .result-ideology-card__percentage {
+  font-size: clamp(17px, 1.35vw, 20px);
+}
+
+/* Elementos independientes del perfil ideológico */
+.results-profile-card {}
+.results-profile-title {}
+.results-profile-intro {}
+.results-profile-highlight-list {}
+.results-profile-highlight-item {}
+.results-profile-detail-list {}
+.results-profile-detail-item {}
+.results-profile-party-context {}
+.profile-inconsistencies {}
+.profile-no-inconsistencies {}
+
+.results-profile-detail-item {
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-ideology-card {
+    min-height: 122px;
+  }
+
+  .result-ideology-card__top {
+    gap: 10px;
+  }
+
+  .result-ideology-card__title {
+    font-size: 18px;
+  }
+
+  .result-ideology-card__percentage {
+    font-size: 20px;
+  }
+}
+
+/* Bloque informativo de bloques ideológicos */
+.ideology-blocks-info-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #fff;
+  color: #111;
+}
+
+.ideology-blocks-info-card--home {
+  margin-top: -10px;
+}
+
+.ideology-blocks-info-card--results {
+  margin-top: 8px;
+}
+
+.ideology-blocks-info-card__content {
+  display: grid;
+  gap: 12px;
+}
+
+.ideology-blocks-info-card__title {
+  margin: 0;
+  color: #111;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.ideology-blocks-info-card__text {
+  max-width: 860px;
+  margin: 0;
+  color: #444;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.ideology-blocks-info-card__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ideology-blocks-info-card__list li {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #f2f2f2;
+  color: #333;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ideology-blocks-info-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  padding: 13px 18px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ideology-blocks-info-card__button:hover {
+  background: #333;
+}
+
+/* Forzar apariencia clara también en móviles y navegadores con modo oscuro */
+.ideology-test {
+  color-scheme: light;
+  background: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ideology-test,
+  .test-selector,
+  .single-question,
+  .results {
+    background: #fff;
+    color: #111;
+  }
+
+  .test-option-card,
+  .question-card,
+  .community-selector,
+  .result-card,
+  .block-result-card,
+  .ideology-blocks-info-card,
+  .ideology-explanation--popup,
+  .confirmation-modal {
+    background: #fff;
+    color: #111;
+    border-color: #ddd;
+  }
+
+  .test-selector__intro p,
+  .method-note,
+  .results-help,
+  .community-selector p,
+  .ideology-blocks-info-card__text,
+  .question-info p,
+  .ideology-explanation p,
+  .result-ideology-card__title,
+  .result-card span {
+    color: #555;
+  }
+
+  .answer-options__button,
+  .secondary-button,
+  .back-button,
+  .restart-button {
+    background: #f7f7f7;
+    color: #111;
+    border-color: #ddd;
+  }
+}
+
+@media (max-width: 700px) {
+  .ideology-test {
+    background: #fff;
+    color: #111;
+  }
+
+  .ideology-blocks-info-card {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 22px;
+  }
+
+  .ideology-blocks-info-card__button {
+    width: 100%;
+  }
+
+  .ideology-blocks-info-card__list {
+    display: grid;
+  }
+}
+
+
+/* Ajuste editable final: cajas de porcentaje ideológico más compactas
+   Cambia las variables de las líneas 6-13 para ajustar altura y tipografía. */
+.results-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.result-card.result-ideology-card {
+  min-height: var(--ideology-card-min-height-desktop);
+  padding: var(--ideology-card-padding-y) var(--ideology-card-padding-x) 32px;
+  border-radius: 16px;
+}
+
+.result-ideology-card__top {
+  gap: 8px;
+}
+
+.result-ideology-card__title {
+  font-size: var(--ideology-card-title-size);
+  line-height: 1.12;
+}
+
+.result-ideology-card__percentage {
+  font-size: var(--ideology-card-percentage-size);
+  line-height: 1;
+}
+
+.result-ideology-card__badge {
+  margin-top: 10px;
+  padding: 5px 8px;
+  font-size: 10px;
+}
+
+.result-ideology-card__more-button {
+  left: var(--ideology-card-padding-x);
+  bottom: 10px;
+  font-size: 11px;
+}
+
+.result-ideology-card.is-secondary .result-ideology-card__percentage {
+  font-size: calc(var(--ideology-card-percentage-size) - 1px);
+}
+
+@media (max-width: 700px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .result-card.result-ideology-card {
+    min-height: var(--ideology-card-min-height-mobile);
+    padding: 12px 14px 32px;
+  }
+
+  .result-ideology-card__title {
+    font-size: var(--ideology-card-title-size-mobile);
+  }
+
+  .result-ideology-card__percentage {
+    font-size: var(--ideology-card-percentage-size-mobile);
   }
 }
