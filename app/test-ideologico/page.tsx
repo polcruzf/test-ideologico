@@ -441,15 +441,20 @@ export default function IdeologicalTestPage() {
     setConfirmationType(null);
   }
 
-  function goBackToSelector() {
-    setTestMode("selector");
-    setAnswers({});
-    setShowResults(false);
-    setCurrentQuestionIndex(0);
-    setInfoOpen(false);
-    setOpenIdeology(null);
-    setConfirmationType(null);
-  }
+function goBackToSelector() {
+  setTestMode("selector");
+  setAnswers({});
+  setShowResults(false);
+  setCurrentQuestionIndex(0);
+  setInfoOpen(false);
+  setOpenIdeology(null);
+  setConfirmationType(null);
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
 
   function confirmAction() {
     if (confirmationType === "restart" || confirmationType === "home") {
