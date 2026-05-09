@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useState } from "react";
@@ -11,12 +12,14 @@ import {
   nationalPartyProfiles,
   quickIdeologicalQuestions,
   regionalPartyProfiles,
+  ultraQuickIdeologicalQuestions,
   type Question,
 } from "./testData";
 import "./test-ideologico.css";
 
 type Answers = Record<number, number>;
-type TestMode = "selector" | "rapido" | "completo";
+type TestMode = "selector" | "ultra" | "rapido" | "completo";
+type ConfirmationType = "restart" | "home" | null;
 
 type IdeologyResult = {
   ideology: string;
@@ -160,62 +163,68 @@ function getPracticalInfo(question: Question): PracticalInfo {
   const blockInfo: Record<string, PracticalInfo> = {
     economia: {
       meaning:
-        "Esta pregunta habla de dinero, impuestos, precios, empresas, trabajo, vivienda o servicios públicos.",
+        "Esta pregunta habla de cómo se reparte y se gestiona el dinero en la sociedad: impuestos, empresas, salarios, vivienda, ayudas públicas o servicios como sanidad y educación. Ejemplo cotidiano: pagar menos impuestos y contratar un seguro privado, o pagar más impuestos y tener más servicios públicos.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas con fuerza la idea de la pregunta. Por ejemplo, si habla de controlar precios, eso puede ayudar a quien paga alquiler, pero puede desanimar a propietarios o inversores.",
+        "Si respondes muy de acuerdo, empujas tu resultado hacia la idea concreta de la pregunta. Por ejemplo, si habla de nacionalizar empresas, aceptarías que sectores como energía, trenes o sanidad dependan más del Estado.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres el enfoque contrario. Por ejemplo, menos control público puede dar más libertad económica, pero también dejar más diferencias entre ciudadanos.",
+        "Si respondes muy en desacuerdo, empujas tu resultado hacia el enfoque contrario. Por ejemplo, si la pregunta defiende más intervención pública, tu respuesta indica que prefieres más libertad para empresas, propietarios o consumidores.",
     },
     nacion: {
       meaning:
-        "Esta pregunta habla de país, fronteras, identidad, lengua, inmigración o quién debe tomar las decisiones importantes.",
+        "Esta pregunta habla de país, soberanía, fronteras, identidad, lengua, inmigración o quién debe tomar las decisiones importantes. Ejemplo cotidiano: si una norma sobre vivienda, educación o migración debe decidirse más en España, en tu comunidad o en organismos externos.",
       agree:
-        "Si estás muy de acuerdo, en la práctica das más peso a proteger lo propio. Por ejemplo, más control migratorio, más prioridad a ciudadanos locales o más protección de lengua y cultura.",
+        "Si respondes muy de acuerdo, das más peso a proteger lo propio y decidir desde dentro. Por ejemplo, priorizar ciudadanos locales, reforzar la lengua propia o limitar decisiones impuestas desde fuera.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica das más peso a apertura, cooperación y diversidad. Por ejemplo, más facilidad para acuerdos internacionales o para que convivan culturas distintas.",
+        "Si respondes muy en desacuerdo, das más peso a apertura, cooperación y diversidad. Por ejemplo, aceptar normas comunes con la Unión Europea o facilitar más convivencia entre culturas distintas.",
     },
     sociedad: {
       meaning:
-        "Esta pregunta habla de valores, familia, igualdad, libertad de expresión, educación o cambios sociales.",
+        "Esta pregunta habla de valores, costumbres, igualdad, libertad de expresión, familia, educación o cambios sociales. Ejemplo cotidiano: qué se enseña en clase, qué discursos se permiten en redes o cómo se regulan nuevos modelos familiares.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas la idea de la frase. Por ejemplo, si habla de tradición, puede significar reforzar familia o disciplina; si habla de nuevos derechos, puede significar cambiar leyes y costumbres.",
+        "Si respondes muy de acuerdo, apoyas con fuerza la idea de la frase. Si habla de tradición, tiendes a reforzar familia, disciplina o costumbres; si habla de nuevos derechos, tiendes a aceptar cambios legales y sociales.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica apoyas el lado contrario. Eso puede conservar estabilidad o abrir cambios, según la pregunta concreta.",
+        "Si respondes muy en desacuerdo, apoyas el lado contrario. Eso puede significar conservar más estabilidad o abrir más cambios, según lo que diga la pregunta concreta.",
     },
     autoridad: {
       meaning:
-        "Esta pregunta habla de seguridad, policía, justicia, privacidad, vigilancia y poder del Estado.",
+        "Esta pregunta habla de seguridad, policía, justicia, privacidad, vigilancia y poder del Estado. Ejemplo cotidiano: más cámaras en la calle, penas más duras, más controles policiales o más límites a lo que el Estado puede hacer.",
       agree:
-        "Si estás muy de acuerdo, en la práctica aceptas más medidas para imponer orden o seguridad. Por ejemplo, más policía, más cámaras o penas más duras.",
+        "Si respondes muy de acuerdo, aceptas más medidas para imponer orden o seguridad. Por ejemplo, más policía, más vigilancia, castigos más duros o actuación más firme del Estado.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres limitar más el poder público. Por ejemplo, más privacidad, más garantías y menos vigilancia.",
+        "Si respondes muy en desacuerdo, prefieres limitar más el poder público. Por ejemplo, más privacidad, más garantías legales y menos vigilancia aunque eso pueda hacer algunas actuaciones más lentas.",
     },
     geopolitica: {
       meaning:
-        "Esta pregunta habla de relaciones con otros países, Unión Europea, defensa, comercio, energía o guerras.",
+        "Esta pregunta habla de relaciones con otros países, Unión Europea, defensa, comercio, energía o guerras. Ejemplo cotidiano: comprar energía más barata fuera o producirla aquí aunque cueste más para depender menos de otros países.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas la idea de la pregunta. Por ejemplo, más independencia exterior puede dar control, pero también crear choques con aliados.",
+        "Si respondes muy de acuerdo, apoyas la idea exterior de la pregunta. Por ejemplo, más independencia internacional puede dar control, pero también puede crear choques con aliados o subir costes.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica apoyas el enfoque contrario. Por ejemplo, más cooperación internacional puede dar estabilidad, pero también obliga a aceptar normas externas.",
+        "Si respondes muy en desacuerdo, apoyas el enfoque contrario. Por ejemplo, más cooperación internacional puede dar estabilidad, pero también obliga a aceptar normas o acuerdos externos.",
     },
     identidad: {
       meaning:
-        "Esta pregunta habla de cultura, religión, tradiciones, símbolos, diversidad o forma de convivencia.",
+        "Esta pregunta habla de cultura, religión, tradiciones, símbolos, diversidad o forma de convivencia. Ejemplo cotidiano: fiestas populares, símbolos en edificios públicos, lengua en la escuela o presencia de distintas religiones y culturas.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres reforzar lo que dice la pregunta. Por ejemplo, proteger tradiciones puede unir a una parte de la sociedad, pero puede incomodar a quien no las comparte.",
+        "Si respondes muy de acuerdo, quieres reforzar lo que dice la pregunta. Por ejemplo, proteger tradiciones puede unir a una parte de la sociedad, pero puede incomodar a quien no las comparte.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres reducir ese peso o abrir más espacio a otras formas de vida. Puede dar pluralidad, pero también debilitar referencias comunes.",
+        "Si respondes muy en desacuerdo, prefieres reducir ese peso o abrir más espacio a otras formas de vida. Puede dar pluralidad, pero también debilitar referencias comunes.",
     },
   };
 
   return blockInfo[question.block] ?? {
     meaning:
-      "Esta pregunta mide una preferencia política que puede afectar a leyes, impuestos, derechos, servicios públicos o convivencia.",
+      "Esta pregunta mide una preferencia política que puede afectar a leyes, impuestos, derechos, servicios públicos o convivencia. Ejemplo cotidiano: pagar impuestos, acceder a vivienda, educar a los hijos o relacionarse con instituciones públicas.",
     agree:
       "Responder muy de acuerdo empuja a aplicar con más fuerza la idea de la pregunta.",
     disagree:
       "Responder muy en desacuerdo empuja a limitar o rechazar la idea de la pregunta.",
   };
+}
+
+function getTestTitle(testMode: TestMode) {
+  if (testMode === "ultra") return "Test ideológico ultra rápido";
+  if (testMode === "rapido") return "Test ideológico rápido";
+  return "Test ideológico completo";
 }
 
 export default function IdeologicalTestPage() {
@@ -226,9 +235,14 @@ export default function IdeologicalTestPage() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [selectedCommunity, setSelectedCommunity] = useState("cataluna");
   const [openIdeology, setOpenIdeology] = useState<string | null>(null);
+  const [confirmationType, setConfirmationType] = useState<ConfirmationType>(null);
 
   const activeQuestions =
-    testMode === "rapido" ? quickIdeologicalQuestions : ideologicalQuestions;
+    testMode === "ultra"
+      ? ultraQuickIdeologicalQuestions
+      : testMode === "rapido"
+        ? quickIdeologicalQuestions
+        : ideologicalQuestions;
 
   const currentQuestion = activeQuestions[currentQuestionIndex];
   const currentAnswer =
@@ -244,16 +258,16 @@ export default function IdeologicalTestPage() {
   );
 
   const totalQuestions = activeQuestions.length;
-  const answeredQuestions = Object.keys(answers).length;
-  const progress = Math.round((answeredQuestions / totalQuestions) * 100);
+  const progress = Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
 
-  function startTest(mode: "rapido" | "completo") {
+  function startTest(mode: "ultra" | "rapido" | "completo") {
     setTestMode(mode);
     setAnswers({});
     setShowResults(false);
     setCurrentQuestionIndex(0);
     setInfoOpen(false);
     setOpenIdeology(null);
+    setConfirmationType(null);
   }
 
   function goBackToSelector() {
@@ -263,24 +277,11 @@ export default function IdeologicalTestPage() {
     setCurrentQuestionIndex(0);
     setInfoOpen(false);
     setOpenIdeology(null);
+    setConfirmationType(null);
   }
 
-  function confirmGoBackToSelector() {
-    const confirmed = window.confirm(
-      "¿Seguro que quieres volver al inicio? Se perderán las respuestas de este test."
-    );
-
-    if (confirmed) {
-      goBackToSelector();
-    }
-  }
-
-  function confirmRestartTest() {
-    const confirmed = window.confirm(
-      "¿Seguro que quieres volver a empezar? Se perderán las respuestas actuales."
-    );
-
-    if (confirmed) {
+  function confirmAction() {
+    if (confirmationType === "restart" || confirmationType === "home") {
       goBackToSelector();
     }
   }
@@ -305,6 +306,16 @@ export default function IdeologicalTestPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  const confirmationTitle =
+    confirmationType === "restart"
+      ? "¿Volver a empezar?"
+      : "¿Volver a la selección de tests?";
+
+  const confirmationText =
+    confirmationType === "restart"
+      ? "Se perderán las respuestas actuales y volverás a la página principal de selección de tests."
+      : "Se perderán las respuestas de este test y volverás a la página principal de selección.";
+
   if (testMode === "selector") {
     return (
       <main className="ideology-test">
@@ -312,13 +323,25 @@ export default function IdeologicalTestPage() {
           <div className="test-selector__intro">
             <h1>Test ideológico</h1>
             <p>
-              Elige entre una versión rápida o el test completo para obtener tu
-              perfil ideológico por porcentajes, bloques y partido político más
-              cercano.
+              Elige el nivel de profundidad del test. Cuantas más preguntas
+              respondas, más detallado será el resultado.
             </p>
           </div>
 
-          <div className="test-selector__grid">
+          <div className="test-selector__grid test-selector__grid--three">
+            <button
+              type="button"
+              className="test-option-card"
+              onClick={() => startTest("ultra")}
+            >
+              <span>Test ultra rápido</span>
+              <strong>{ultraQuickIdeologicalQuestions.length} preguntas</strong>
+              <p>
+                Ideal si quieres una orientación inmediata. Obtendrás solo tu
+                porcentaje ideológico general, sin bloques ni partidos afines.
+              </p>
+            </button>
+
             <button
               type="button"
               className="test-option-card"
@@ -327,8 +350,8 @@ export default function IdeologicalTestPage() {
               <span>Test rápido</span>
               <strong>{quickIdeologicalQuestions.length} preguntas</strong>
               <p>
-                Versión resumida con las preguntas más importantes. Se muestra
-                una pregunta por pantalla.
+                Versión equilibrada. Obtendrás porcentaje ideológico, bloques
+                temáticos y partidos más afines a nivel estatal y autonómico.
               </p>
             </button>
 
@@ -340,17 +363,25 @@ export default function IdeologicalTestPage() {
               <span>Test completo</span>
               <strong>{ideologicalQuestions.length} preguntas</strong>
               <p>
-                Versión completa con resultado general, bloques ideológicos y
-                partido más cercano.
+                Versión más precisa. Analiza más matices para afinar resultados
+                por economía, sociedad, nación, autoridad, geopolítica e identidad.
               </p>
             </button>
           </div>
+
+          <p className="method-note">
+            Los resultados se calculan comparando tus respuestas con una base de
+            programas electorales, decisiones públicas y declaraciones políticas
+            de los partidos disponibles en la app.
+          </p>
         </section>
       </main>
     );
   }
 
   if (showResults) {
+    const isUltraTest = testMode === "ultra";
+
     return (
       <main className="ideology-test">
         <section className="results">
@@ -365,50 +396,53 @@ export default function IdeologicalTestPage() {
             ← Volver a la última pregunta
           </button>
 
-          <h1>
-            Resultado del{" "}
-            {testMode === "rapido" ? "test rápido" : "test completo"}
-          </h1>
+          <h1>Resultado del {getTestTitle(testMode).toLowerCase()}</h1>
 
-          <div className="community-selector">
-            <label htmlFor="community">Comunidad autónoma</label>
-            <select
-              id="community"
-              value={selectedCommunity}
-              onChange={(event) => setSelectedCommunity(event.target.value)}
-            >
-              {autonomousCommunities.map((community) => (
-                <option key={community.id} value={community.id}>
-                  {community.name}
-                </option>
-              ))}
-            </select>
-            <p>
-              Al cambiar la comunidad, el partido autonómico más afín se
-              actualiza automáticamente.
-            </p>
-          </div>
-
-          <h2>Partido más afín</h2>
-
-          <div className="party-results">
-            <div className="party-card">
-              <span>Elecciones generales en España</span>
-              <strong>{results.finalNationalParty.party}</strong>
-              <em>{results.finalNationalParty.percentage}% de coincidencia</em>
+          {!isUltraTest && (
+            <div className="community-selector">
+              <label htmlFor="community">Comunidad autónoma</label>
+              <select
+                id="community"
+                value={selectedCommunity}
+                onChange={(event) => setSelectedCommunity(event.target.value)}
+              >
+                {autonomousCommunities.map((community) => (
+                  <option key={community.id} value={community.id}>
+                    {community.name}
+                  </option>
+                ))}
+              </select>
+              <p>
+                Al cambiar la comunidad, el partido autonómico más afín se
+                actualiza automáticamente.
+              </p>
             </div>
+          )}
 
-            <div className="party-card">
-              <span>Elecciones autonómicas en {selectedCommunityName}</span>
-              <strong>{results.finalRegionalParty.party}</strong>
-              <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
-            </div>
-          </div>
+          {!isUltraTest && (
+            <>
+              <h2>Partido más afín</h2>
+
+              <div className="party-results">
+                <div className="party-card">
+                  <span>Elecciones generales en España</span>
+                  <strong>{results.finalNationalParty.party}</strong>
+                  <em>{results.finalNationalParty.percentage}% de coincidencia</em>
+                </div>
+
+                <div className="party-card">
+                  <span>Elecciones autonómicas en {selectedCommunityName}</span>
+                  <strong>{results.finalRegionalParty.party}</strong>
+                  <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
+                </div>
+              </div>
+            </>
+          )}
 
           <h2>Porcentaje ideológico</h2>
 
           <p className="results-help">
-            Cada bloque incluye una explicación sencilla. Pulsa “Más información”.
+            Cada tendencia incluye una explicación sencilla. Pulsa “Más información”.
           </p>
 
           <div className="results-grid">
@@ -452,55 +486,98 @@ export default function IdeologicalTestPage() {
             })}
           </div>
 
-          <h2>Resultado por bloques</h2>
+          {isUltraTest && (
+            <div className="upgrade-result-card">
+              <h2>¿Quieres un resultado mucho más completo?</h2>
+              <p>
+                El test ultra rápido te da una orientación general. Si haces el
+                Test rápido o el Test completo, también podrás ver tu afinidad
+                por bloques: economía, sociedad, nación, autoridad, geopolítica
+                e identidad cultural. Así sabrás no solo “dónde encajas”, sino
+                en qué temas concretos coincides más o menos con cada tendencia.
+              </p>
+            </div>
+          )}
 
-          <div className="block-results">
-            {results.blockResults.map((block) => (
-              <article key={block.block} className="block-result-card">
-                <div className="block-result-card__header">
-                  <h3>{blockLabels[block.block]}</h3>
-                </div>
+          {!isUltraTest && (
+            <>
+              <h2>Resultado por bloques</h2>
 
-                <div className="block-party-results">
-                  <p>
-                    España: <strong>{block.nationalParty.party}</strong>
-                    <em>{block.nationalParty.percentage}% de coincidencia</em>
-                  </p>
-                  <p>
-                    {selectedCommunityName}:{" "}
-                    <strong>{block.regionalParty.party}</strong>
-                    <em>{block.regionalParty.percentage}% de coincidencia</em>
-                  </p>
-                </div>
-
-                <div className="ideology-bars">
-                  {block.ideologies.map((item) => (
-                    <div key={item.ideology} className="ideology-bar">
-                      <div className="ideology-bar__top">
-                        <span>
-                          {ideologyLabels[item.ideology] ?? item.ideology}
-                        </span>
-                        <strong>{item.percentage}%</strong>
-                      </div>
-
-                      <div className="ideology-bar__track">
-                        <span style={{ width: `${item.percentage}%` }} />
-                      </div>
+              <div className="block-results">
+                {results.blockResults.map((block) => (
+                  <article key={block.block} className="block-result-card">
+                    <div className="block-result-card__header">
+                      <h3>{blockLabels[block.block]}</h3>
                     </div>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
+
+                    <div className="block-party-results">
+                      <p>
+                        España: <strong>{block.nationalParty.party}</strong>
+                        <em>{block.nationalParty.percentage}% de coincidencia</em>
+                      </p>
+                      <p>
+                        {selectedCommunityName}: <strong>{block.regionalParty.party}</strong>
+                        <em>{block.regionalParty.percentage}% de coincidencia</em>
+                      </p>
+                    </div>
+
+                    <div className="ideology-bars">
+                      {block.ideologies.map((item) => (
+                        <div key={item.ideology} className="ideology-bar">
+                          <div className="ideology-bar__top">
+                            <span>{ideologyLabels[item.ideology] ?? item.ideology}</span>
+                            <strong>{item.percentage}%</strong>
+                          </div>
+
+                          <div className="ideology-bar__track">
+                            <span style={{ width: `${item.percentage}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
 
           <button
             type="button"
             className="primary-button primary-button--home"
-            onClick={confirmGoBackToSelector}
+            onClick={() => setConfirmationType("home")}
           >
             Volver a la selección de tests
           </button>
         </section>
+
+        {confirmationType && (
+          <div className="modal-overlay" role="dialog" aria-modal="true">
+            <div className="confirmation-modal">
+              <button
+                type="button"
+                className="modal-close-button"
+                onClick={() => setConfirmationType(null)}
+                aria-label="Cerrar confirmación"
+              >
+                ×
+              </button>
+              <h2>{confirmationTitle}</h2>
+              <p>{confirmationText}</p>
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => setConfirmationType(null)}
+                >
+                  Cancelar
+                </button>
+                <button type="button" className="primary-button" onClick={confirmAction}>
+                  Sí, continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     );
   }
@@ -525,30 +602,27 @@ export default function IdeologicalTestPage() {
           <button
             type="button"
             className="restart-button"
-            onClick={confirmRestartTest}
+            onClick={() => setConfirmationType("restart")}
           >
             Volver a empezar
           </button>
         </div>
 
-        <h1>
-          {testMode === "rapido"
-            ? "Test ideológico rápido"
-            : "Test ideológico completo"}
-        </h1>
+        <h1>{getTestTitle(testMode)}</h1>
 
-        <p>
-          Responde una pregunta cada vez. Puedes usar el botón de información
-          para entender ejemplos y consecuencias prácticas antes de responder.
-        </p>
+        {currentQuestionIndex === 0 && (
+          <p>
+            Responde una pregunta cada vez. Puedes usar el botón de información
+            para entender ejemplos y consecuencias prácticas antes de responder.
+          </p>
+        )}
 
         <div className="progress">
           <div className="progress__bar">
             <span style={{ width: `${progress}%` }} />
           </div>
           <p>
-            Pregunta {currentQuestionIndex + 1}/{totalQuestions} ·{" "}
-            {answeredQuestions}/{totalQuestions} respondidas · {progress}%
+            Pregunta {currentQuestionIndex + 1}/{totalQuestions} · {progress}%
           </p>
         </div>
       </header>
@@ -563,7 +637,7 @@ export default function IdeologicalTestPage() {
             <button
               type="button"
               className="info-button"
-              onClick={() => setInfoOpen((current) => !current)}
+              onClick={() => setInfoOpen(true)}
               aria-expanded={infoOpen}
               aria-label="Ver información de la pregunta"
             >
@@ -596,19 +670,6 @@ export default function IdeologicalTestPage() {
               </button>
             ))}
           </div>
-
-          {infoOpen && (
-            <div className="question-info">
-              <h3>¿Qué significa esta pregunta?</h3>
-              <p>{practicalInfo.meaning}</p>
-
-              <h4>Si respondes “Muy de acuerdo”</h4>
-              <p>{practicalInfo.agree}</p>
-
-              <h4>Si respondes “Muy en desacuerdo”</h4>
-              <p>{practicalInfo.disagree}</p>
-            </div>
-          )}
         </article>
 
         <div className="question-navigation">
@@ -633,6 +694,58 @@ export default function IdeologicalTestPage() {
           </button>
         </div>
       </section>
+
+      {infoOpen && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="question-info question-info--popup">
+            <button
+              type="button"
+              className="modal-close-button"
+              onClick={() => setInfoOpen(false)}
+              aria-label="Cerrar información"
+            >
+              ×
+            </button>
+            <h3>¿Qué significa esta pregunta?</h3>
+            <p>{practicalInfo.meaning}</p>
+
+            <h4>Si respondes “Muy de acuerdo”</h4>
+            <p>{practicalInfo.agree}</p>
+
+            <h4>Si respondes “Muy en desacuerdo”</h4>
+            <p>{practicalInfo.disagree}</p>
+          </div>
+        </div>
+      )}
+
+      {confirmationType && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="confirmation-modal">
+            <button
+              type="button"
+              className="modal-close-button"
+              onClick={() => setConfirmationType(null)}
+              aria-label="Cerrar confirmación"
+            >
+              ×
+            </button>
+            <h2>{confirmationTitle}</h2>
+            <p>{confirmationText}</p>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setConfirmationType(null)}
+              >
+                Cancelar
+              </button>
+              <button type="button" className="primary-button" onClick={confirmAction}>
+                Sí, continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

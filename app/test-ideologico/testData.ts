@@ -2417,6 +2417,166 @@ export const ideologicalQuestions: Question[] = [
   }
 ];
 
+
+export const ultraQuickIdeologicalQuestions: Question[] = [
+  {
+    id: 1,
+    text: "¿Prefieres pagar más impuestos si eso permite tener mejores servicios públicos?",
+    block: "economia",
+    weights: {
+      comunista: 3,
+      socialista: 3,
+      socialdemocrata: 2,
+      liberal: -2,
+      libertario: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si priorizas servicios públicos financiados entre todos o si prefieres que cada persona conserve más dinero y elija por su cuenta. Ejemplo cotidiano: pagar más impuestos para mejorar sanidad, becas o transporte público.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica aceptas más impuestos para reforzar servicios comunes. Puede ayudar a quien tiene menos recursos, pero también aumenta la carga fiscal de trabajadores, autónomos y empresas.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres menos impuestos y más decisión individual. Puede dar más libertad económica, pero también puede dejar peor cubiertas algunas necesidades sociales.",
+    },
+  },
+  {
+    id: 2,
+    text: "¿Crees que las empresas y autónomos deberían tener menos trabas para crecer?",
+    block: "economia",
+    weights: {
+      liberal: 3,
+      libertario: 3,
+      conservador: 1,
+      socialista: -2,
+      comunista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si das más importancia a facilitar la actividad económica o a regularla más. Ejemplo cotidiano: abrir un negocio con menos papeleo, contratar con menos costes o pagar menos impuestos empresariales.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica favoreces menos burocracia y más libertad para emprender. Puede crear actividad y empleo, pero también reducir controles laborales o fiscales.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica aceptas más normas para evitar abusos o repartir mejor la riqueza. Puede proteger más, pero también hacer más difícil emprender o contratar.",
+    },
+  },
+  {
+    id: 3,
+    text: "¿España debería tomar más decisiones por sí misma aunque choque con la Unión Europea?",
+    block: "nacion",
+    weights: {
+      nacionalista: 3,
+      soberanista: 3,
+      globalista: -3,
+      institucionalista: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si prefieres más soberanía nacional o más coordinación con instituciones externas. Ejemplo cotidiano: aceptar o rechazar normas europeas sobre fronteras, agricultura, energía o ayudas públicas.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres que España tenga más margen para decidir aunque haya conflictos con organismos externos.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica valoras más la cooperación internacional y las reglas comunes, aunque algunas decisiones se tomen lejos del voto directo nacional.",
+    },
+  },
+  {
+    id: 4,
+    text: "¿La inmigración debería controlarse más para proteger empleo, vivienda y convivencia?",
+    block: "nacion",
+    weights: {
+      nacionalista: 3,
+      soberanista: 2,
+      conservador: 2,
+      multiculturalista: -3,
+      globalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide tu posición sobre fronteras, integración y presión sobre servicios. Ejemplo cotidiano: acceso a vivienda, empleo, ayudas, idioma, seguridad o convivencia en barrios y escuelas.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres más requisitos, más control y más prioridad para la población local. Puede reducir presión social, pero también limitar llegada de trabajadores o personas que necesitan acogida.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más abierta. Puede aportar diversidad y población activa, pero necesita buena gestión para evitar problemas reales de integración.",
+    },
+  },
+  {
+    id: 5,
+    text: "¿Se han perdido valores como respeto, familia, esfuerzo o disciplina?",
+    block: "sociedad",
+    weights: {
+      conservador: 3,
+      tradicionalista: 3,
+      progresista: -3,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si ves los cambios sociales como pérdida de valores o como evolución normal. Ejemplo cotidiano: educación de los hijos, respeto a profesores, normas de convivencia o importancia de la familia.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica tiendes a valorar más autoridad, tradición, disciplina y continuidad cultural.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica tiendes a ver los cambios sociales como positivos o necesarios, aunque puedan incomodar a sectores más tradicionales.",
+    },
+  },
+  {
+    id: 6,
+    text: "¿Para mejorar la seguridad aceptarías más policía, vigilancia o penas más duras?",
+    block: "autoridad",
+    weights: {
+      autoritario: 3,
+      conservador: 2,
+      institucionalista: 1,
+      libertario: -3,
+      progresista: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide cuánto poder debe tener el Estado para mantener el orden. Ejemplo cotidiano: cámaras en la calle, más controles policiales, más cárcel para reincidentes o más vigilancia digital.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica priorizas seguridad y orden aunque haya menos privacidad o más poder policial.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica priorizas garantías, privacidad y límites al Estado, aunque algunas respuestas contra el delito sean más lentas.",
+    },
+  },
+  {
+    id: 7,
+    text: "¿Los problemas globales se resuelven mejor con acuerdos internacionales?",
+    block: "geopolitica",
+    weights: {
+      globalista: 3,
+      progresista: 2,
+      soberanista: -3,
+      nacionalista: -2,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si prefieres cooperación internacional o soluciones decididas por cada país. Ejemplo cotidiano: cambio climático, guerras, comercio, pandemias o inmigración.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica apoyas normas comunes y acuerdos entre países. Puede coordinar mejor grandes problemas, pero reduce libertad de actuación nacional.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres que cada país actúe según sus propios intereses. Da más control interno, pero dificulta soluciones coordinadas.",
+    },
+  },
+  {
+    id: 8,
+    text: "¿Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios?",
+    block: "identidad",
+    weights: {
+      nacionalista: 3,
+      tradicionalista: 2,
+      conservador: 2,
+      multiculturalista: -2,
+      globalista: -1,
+    },
+    info: {
+      meaning:
+        "Esta pregunta mide si das más importancia a una identidad cultural común o a una sociedad más plural. Ejemplo cotidiano: lengua, fiestas populares, símbolos públicos, religión, historia o tradiciones locales.",
+      agree:
+        "Si estás muy de acuerdo, en la práctica quieres reforzar la cultura propia desde las instituciones. Puede aumentar cohesión, pero dejar menos espacio a otras identidades.",
+      disagree:
+        "Si estás muy en desacuerdo, en la práctica prefieres instituciones más neutrales o multiculturales. Puede favorecer pluralidad, pero debilitar referencias comunes.",
+    },
+  },
+];
+
 export const quickIdeologicalQuestions: Question[] = [
   {
     id: 1,

@@ -670,3 +670,143 @@
     width: 100%;
   }
 }
+
+/* Nuevos ajustes: 3 tests, modales, popup informativo y mobile */
+.test-selector__grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.method-note {
+  margin: -12px 0 0;
+  padding: 18px 20px;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  background: #f7f7f7;
+  color: #444;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.upgrade-result-card {
+  padding: 26px;
+  border: 1px solid #111;
+  border-radius: 22px;
+  background: #111;
+  color: #fff;
+}
+
+.upgrade-result-card h2 {
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.upgrade-result-card p {
+  margin: 0;
+  color: #f2f2f2;
+  line-height: 1.6;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.confirmation-modal,
+.question-info--popup {
+  position: relative;
+  width: min(100%, 620px);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.confirmation-modal h2 {
+  margin: 0 40px 10px 0;
+  font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: -0.04em;
+}
+
+.confirmation-modal p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal-close-button:hover {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.question-info--popup {
+  margin-top: 0;
+}
+
+.question-info--popup h3 {
+  margin-right: 42px;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+
+@media (max-width: 900px) {
+  .test-selector__grid--three {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .question-navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .question-navigation .primary-button,
+  .question-navigation .secondary-button {
+    width: auto;
+    flex: 1 1 0;
+  }
+
+  .modal-actions {
+    display: grid;
+  }
+
+  .modal-actions .primary-button,
+  .modal-actions .secondary-button {
+    width: 100%;
+  }
+}
