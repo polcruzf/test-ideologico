@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   answerOptions,
   autonomousCommunities,
@@ -620,6 +620,18 @@ export default function IdeologicalTestPage() {
   const totalQuestions = activeQuestions.length;
   const progress = Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
 
+  useEffect(() => {
+    if (testMode === "selector" || showResults) return;
+
+    window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+      });
+    });
+  }, [testMode, showResults]);
+
   function startTest(mode: "ultra" | "rapido" | "completo") {
     setTestMode(mode);
     setAnswers({});
@@ -628,6 +640,14 @@ export default function IdeologicalTestPage() {
     setInfoOpen(false);
     setOpenIdeology(null);
     setConfirmationType(null);
+
+    window.setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+      });
+    }, 0);
   }
 
 function goBackToSelector() {
@@ -1153,9 +1173,10 @@ function goBackToSelector() {
           <div className="progress__bar">
             <span style={{ width: `${progress}%` }} />
           </div>
-          <p>
-            Pregunta {currentQuestionIndex + 1}/{totalQuestions} · {progress}%
-          </p>
+          <div className="progress__meta">
+            <span>Pregunta {currentQuestionIndex + 1}/{totalQuestions}</span>
+            <span>{progress}%</span>
+          </div>
         </div>
       </header>
 

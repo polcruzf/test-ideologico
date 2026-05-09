@@ -63,6 +63,21 @@
   transition: width 0.25s ease;
 }
 
+.progress__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 0;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.progress__meta span:last-child {
+  text-align: right;
+}
+
 .test-selector {
   min-height: 70vh;
   display: grid;
