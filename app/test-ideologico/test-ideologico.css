@@ -720,7 +720,7 @@
   border: 1px solid #ddd;
   border-radius: 18px;
   background: #3d3d3d;
-  color: #fb8888;
+  color: #ffffff!important;
   line-height: 1.6;
   font-weight: 700;
 }
@@ -1598,6 +1598,9 @@ main.ideology-test {
 body.min-h-full.flex.flex-col {
     background-color: #f6f6f6;
 }
+section.test-selector {
+  background-color: #f6f6f6;
+}
 
 a.ideology-blocks-info-card__button {
     display: none;
@@ -1637,7 +1640,5 @@ p.method-note {
 .Percentatge_ideo p.results-help {
     margin-top: 10px;
 }
-section.test-selector {
-  background-color: #f6f6f6;
-}
+
 }
