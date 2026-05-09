@@ -1143,10 +1143,10 @@ function goBackToSelector() {
         <h1>{getTestTitle(testMode)}</h1>
 
         {currentQuestionIndex === 0 && (
-          <p>
-            Responde una pregunta cada vez. Puedes usar el botón de información
-            para entender ejemplos y consecuencias prácticas antes de responder.
-          </p>
+          // <p>
+          //   Responde una pregunta cada vez. Puedes usar el botón de información
+          //   para entender ejemplos y consecuencias prácticas antes de responder.
+          // </p>
         )}
 
         <div className="progress">
