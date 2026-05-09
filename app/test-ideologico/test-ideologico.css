@@ -1601,6 +1601,9 @@ body.min-h-full.flex.flex-col {
 section.test-selector {
   background-color: #f6f6f6;
 }
+section.single-question, section.results {
+  background-color: #f6f6f6;
+}
 
 a.ideology-blocks-info-card__button {
     display: none;
