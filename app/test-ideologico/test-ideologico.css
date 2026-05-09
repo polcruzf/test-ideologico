@@ -1589,32 +1589,6 @@
   .partial-party-match span {
     text-align: left;
   }
-}
-
-main.ideology-test {
-  background-color: #f6f6f6;
-}
-
-body.min-h-full.flex.flex-col {
-    background-color: #f6f6f6;
-}
-section.test-selector {
-  background-color: #f6f6f6;
-}
-section.single-question, section.results {
-  background-color: #f6f6f6;
-}
-
-a.ideology-blocks-info-card__button {
-    display: none;
-}
-
-.modal-actions button.secondary-button {
-  background-color: #eeeeee;
-}
-
-
-@media (max-width:700px) {
   p.ideology-blocks-info-card__text {
     padding-top: 15px;
 }
@@ -1643,5 +1617,26 @@ p.method-note {
 .Percentatge_ideo p.results-help {
     margin-top: 10px;
 }
+}
 
+main.ideology-test {
+  background-color: #f6f6f6;
+}
+
+body.min-h-full.flex.flex-col {
+    background-color: #f6f6f6;
+}
+section.test-selector {
+  background-color: #f6f6f6;
+}
+section.single-question, section.results {
+  background-color: #f6f6f6;
+}
+
+a.ideology-blocks-info-card__button {
+    display: none;
+}
+
+.modal-actions button.secondary-button {
+  background-color: #eeeeee;
 }
