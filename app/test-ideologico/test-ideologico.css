@@ -2,7 +2,7 @@
    Líneas 6-13: cambia estos valores cuando quieras modificar tamaño/altura. */
 :root {
   --ideology-card-min-height-desktop: 92px;
-  --ideology-card-min-height-mobile: 86px;
+  --ideology-card-min-height-mobile: 46px;
 
   --ideology-card-padding-y: 12px;
   --ideology-card-padding-x: 14px;
@@ -35,6 +35,7 @@
   margin: 0 0 12px;
   font-size: clamp(32px, 5vw, 56px);
   letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .ideology-test__header p {
@@ -71,7 +72,7 @@
   margin: 8px 0 0;
   color: #555;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .progress__meta span:last-child {
@@ -295,10 +296,10 @@
 .secondary-button {
   background: #ffffff;
   color: #111;
+  border: 1px solid #e2e2e2;
 }
 
 .back-button {
-  margin-bottom: 24px;
   padding: 10px 16px;
   border: 1px solid #ddd;
   border-radius: 999px;
@@ -319,8 +320,9 @@
 
 .results h2 {
   margin: 0;
-  font-size: 30px;
+  font-size: 25px;
   letter-spacing: -0.03em;
+  font-weight: 700;
 }
 
 .results-help {
@@ -437,7 +439,7 @@
 
 .block-results {
   display: grid;
-  gap: 20px;
+  gap: 40px;
 }
 
 .block-result-card {
@@ -592,7 +594,7 @@
   background: transparent;
   color: #555;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -855,7 +857,8 @@
   padding: 26px;
   border: 1px solid #ddd;
   border-radius: 24px;
-  background: #f7f7f7;
+  background: #ffffff;
+  margin: 30px 0px;
 }
 
 .ideological-profile-card h2 {
@@ -1169,7 +1172,7 @@
 }
 
 .ideology-blocks-info-card--results {
-  margin-top: 8px;
+  margin: 30px 0px;
 }
 
 .ideology-blocks-info-card__content {
@@ -1196,7 +1199,7 @@
 .ideology-blocks-info-card__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 20px;
   margin: 0;
   padding: 20px 0px;
   list-style: none;
@@ -1307,6 +1310,7 @@
 .results-grid {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 10px;
+  margin-top: 20px;
 }
 
 .result-card.result-ideology-card {
@@ -1349,6 +1353,7 @@
   .results-grid {
     grid-template-columns: 1fr;
     gap: 10px;
+    margin-top: 20px;
   }
 
   .result-card.result-ideology-card {
@@ -1372,7 +1377,7 @@
   padding: 26px;
   border: 1px solid #ddd;
   border-radius: 26px;
-  background: #f7f7f7;
+  background: #ffffff;
 }
 
 .complete-analysis-card__intro {
@@ -1417,6 +1422,7 @@
   border: 1px solid #ddd;
   border-radius: 20px;
   background: #fff;
+  margin: 15px 0px;
 }
 
 .complete-analysis-panel__label {
@@ -1614,5 +1620,21 @@ section.ideology-blocks-info-card.ideology-blocks-info-card--home {
 }
 p.method-note {
     margin-top: 15px;
+}
+.party-card_results {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+}
+.party-card em{
+  margin-top: 0px;
+}
+.Percentatge_ideo {
+    margin-top: 20px;
+}
+.Percentatge_ideo p.results-help {
+    margin-top: 10px;
 }
 }

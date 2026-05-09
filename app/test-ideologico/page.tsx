@@ -820,16 +820,16 @@ function goBackToSelector() {
 
           <div className="party-results">
                 <div className="party-card">
-                  <span>Elecciones generales en España</span>
-                  <strong>{results.finalNationalParty.party}</strong>
-                  <em>{results.finalNationalParty.percentage}% de coincidencia</em>
-                </div>
+                  <div className="party-card_title"><span>Elecciones generales en España</span></div>
+                  <div className="party-card_results"><div className="party-card_finalresult"><strong>{results.finalNationalParty.party}</strong></div>
+                  <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
+                </div></div>
 
                 <div className="party-card">
-                  <span>Elecciones autonómicas en {selectedCommunityName}</span>
-                  <strong>{results.finalRegionalParty.party}</strong>
-                  <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
-                </div>
+                  <div className="party-card_title"><span>Elecciones autonómicas en {selectedCommunityName}</span></div>
+                  <div className="party-card_results"><div className="party-card_finalresult"><strong>{results.finalRegionalParty.party}</strong></div>
+                  <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
+                </div></div>
           </div>
 
           <section className="ideological-profile-card results-profile-card">
@@ -976,7 +976,7 @@ function goBackToSelector() {
             </section>
           )}
 
-          <h2>Porcentaje ideológico</h2>
+          <div className="Percentatge_ideo"><h2>Porcentaje ideológico</h2>
 
           <p className="results-help">
             Cada tendencia incluye una explicación sencilla. Pulsa “Más información”.
@@ -1014,7 +1014,7 @@ function goBackToSelector() {
                 </article>
               );
             })}
-          </div>
+          </div></div>
 
           <IdeologyBlocksInfoCard variant="results" />
 
