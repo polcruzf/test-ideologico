@@ -450,10 +450,13 @@ function goBackToSelector() {
   setOpenIdeology(null);
   setConfirmationType(null);
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, 0);
 }
 
   function confirmAction() {
