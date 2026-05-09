@@ -733,7 +733,7 @@ function goBackToSelector() {
               className="test-option-card"
               onClick={() => startTest("completo")}
             >
-              <span>Test completo</span>
+              <span>Test Completo</span>
               <strong>{ideologicalQuestions.length} preguntas</strong>
               <p>
                 Versión más precisa. Analiza más matices para afinar resultados
@@ -853,7 +853,7 @@ function goBackToSelector() {
           {completeAnalysis && (
             <section className="complete-analysis-card">
               <div className="complete-analysis-card__intro">
-                <span className="complete-analysis-card__eyebrow">Solo en el test completo</span>
+                <span className="complete-analysis-card__eyebrow">Solo en el Test Completo</span>
                 <h2>Análisis político avanzado</h2>
                 <p>
                   Este apartado interpreta tu resultado con más profundidad que los
