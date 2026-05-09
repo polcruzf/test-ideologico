@@ -25,7 +25,6 @@
   padding: 48px 20px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #111;
-  color-scheme: light;
   background: #fff;
 }
 
@@ -1252,50 +1251,6 @@ a.ideology-blocks-info-card__button {
   font-weight: 800;
 }
 
-/* Modo oscuro del navegador: forzar apariencia clara */
-@media (prefers-color-scheme: dark) {
-  .ideology-test,
-  .test-selector,
-  .single-question,
-  .results {
-    background: #fff;
-    color: #111;
-  }
-
-  .test-option-card,
-  .question-card,
-  .community-selector,
-  .result-card,
-  .block-result-card,
-  .ideology-blocks-info-card,
-  .ideology-explanation--popup,
-  .confirmation-modal {
-    background: #fff;
-    color: #111;
-    border-color: #ddd;
-  }
-
-  .test-selector__intro p,
-  .method-note,
-  .results-help,
-  .community-selector p,
-  .ideology-blocks-info-card__text,
-  .question-info p,
-  .ideology-explanation p,
-  .result-ideology-card__title,
-  .result-card span {
-    color: #555;
-  }
-
-  .answer-options__button,
-  .secondary-button,
-  .back-button,
-  .restart-button {
-    background: #f7f7f7;
-    color: #111;
-    border-color: #ddd;
-  }
-}
 
 /* Tablet */
 @media (max-width: 900px) {
