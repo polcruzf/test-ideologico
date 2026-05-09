@@ -75,9 +75,13 @@
 }
 
 .test-selector__intro h1 {
-  margin: 0 0 16px;
   font-size: clamp(38px, 6vw, 72px);
-  letter-spacing: -0.05em;
+  letter-spacing: -0.03em;
+}
+.test-selector__subintro h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 25px;
 }
 
 .test-selector__intro p {
@@ -1142,9 +1146,8 @@
   align-items: center;
   gap: 24px;
   padding: 24px;
-  border: 1px solid #ddd;
   border-radius: 24px;
-  background: #fff;
+  background: #e7f1f3;
   color: #111;
 }
 
@@ -1189,7 +1192,7 @@
 .ideology-blocks-info-card__list li {
   padding: 7px 11px;
   border-radius: 999px;
-  background: #f2f2f2;
+  background: #ffffff;
   color: #333;
   font-size: 13px;
   font-weight: 800;
@@ -1345,5 +1348,225 @@
 
   .result-ideology-card__percentage {
     font-size: var(--ideology-card-percentage-size-mobile)!important;
+  }
+}
+
+/* Análisis avanzado exclusivo del test completo */
+.complete-analysis-card {
+  display: grid;
+  gap: 22px;
+  padding: 26px;
+  border: 1px solid #ddd;
+  border-radius: 26px;
+  background: #f7f7f7;
+}
+
+.complete-analysis-card__intro {
+  display: grid;
+  gap: 10px;
+}
+
+.complete-analysis-card__eyebrow {
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.complete-analysis-card h2,
+.complete-analysis-card h3 {
+  margin: 0;
+  color: #111;
+}
+
+.complete-analysis-card p {
+  margin: 0;
+  color: #444;
+  line-height: 1.6;
+}
+
+.complete-analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.complete-analysis-panel {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.complete-analysis-panel__label {
+  color: #666;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.voter-type-card {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.voter-type-card .complete-analysis-panel__label,
+.voter-type-card p {
+  color: #ddd;
+}
+
+.voter-type-card strong {
+  color: #fff;
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.consistency-score {
+  color: #111;
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 950;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.priority-list,
+.contradiction-list,
+.partial-party-match-list,
+.advanced-axis-list {
+  display: grid;
+  gap: 12px;
+}
+
+.priority-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fafafa;
+}
+
+.priority-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-weight: 900;
+}
+
+.priority-item strong,
+.partial-party-match strong {
+  display: block;
+  color: #111;
+  font-size: 17px;
+}
+
+.priority-item em {
+  display: block;
+  margin: 3px 0 8px;
+  color: #666;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.contradiction-warning {
+  padding: 15px;
+  border: 1px solid #e1d4a8;
+  border-radius: 16px;
+  background: #fff8df;
+  color: #332b12;
+}
+
+.partial-party-match {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fafafa;
+}
+
+.partial-party-match span {
+  color: #555;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.advanced-axis {
+  display: grid;
+  gap: 8px;
+}
+
+.advanced-axis__header,
+.advanced-axis__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.advanced-axis__header span {
+  font-weight: 900;
+}
+
+.advanced-axis__track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e5e5e5, #111);
+}
+
+.advanced-axis__track span {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: #111;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transform: translate(-50%, -50%);
+}
+
+.advanced-axis__labels em {
+  color: #555;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .complete-analysis-card {
+    padding: 20px;
+  }
+
+  .complete-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .partial-party-match {
+    display: grid;
+  }
+
+  .partial-party-match span {
+    text-align: left;
   }
 }

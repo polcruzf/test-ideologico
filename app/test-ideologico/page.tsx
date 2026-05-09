@@ -37,6 +37,23 @@ type PracticalInfo = {
   disagree: string;
 };
 
+type CompleteAxis = {
+  label: string;
+  left: string;
+  right: string;
+  value: number;
+};
+
+type CompleteAnalysis = {
+  voterType: string;
+  consistency: number;
+  deepProfile: string[];
+  priorities: { label: string; value: number; description: string }[];
+  contradictions: string[];
+  partialPartyMatches: PartyMatch[];
+  axes: CompleteAxis[];
+};
+
 const IMPORTANT_AFFINITY_THRESHOLD = 70;
 const IDEOLOGY_BLOCKS_INFO_URL = "#";
 
@@ -205,6 +222,178 @@ function generateIdeologicalProfile(
     profileDetails: topIdeologies.map((item) => getIdeologyProfileDetail(item)),
     inconsistencies,
     partySummary,
+  };
+}
+
+
+function getVoterType(topIdeologies: IdeologyResult[]) {
+  const first = topIdeologies[0]?.ideology;
+  const second = topIdeologies[1]?.ideology;
+
+  if (!first) return "Perfil político mixto";
+
+  if (first === "nacionalista" || first === "soberanista") {
+    if (second === "conservador" || second === "tradicionalista") {
+      return "Nacional-conservador";
+    }
+    return "Soberanista pragmático";
+  }
+
+  if (first === "liberal" || first === "libertario") {
+    if (second === "conservador") return "Liberal-conservador";
+    return "Liberal económico";
+  }
+
+  if (first === "socialdemocrata") return "Socialdemócrata institucional";
+  if (first === "socialista") return "Progresista intervencionista";
+  if (first === "comunista") return "Izquierda transformadora";
+  if (first === "conservador") return "Conservador institucional";
+  if (first === "progresista") return "Progresista social";
+  if (first === "tradicionalista") return "Tradicionalista cultural";
+  if (first === "globalista") return "Europeísta/globalista";
+  if (first === "multiculturalista") return "Pluralista multicultural";
+  if (first === "autoritario") return "Ordenista/autoritario";
+
+  return "Perfil político mixto";
+}
+
+function getPriorityDescription(ideology: string) {
+  const descriptions: Record<string, string> = {
+    economia:
+      "Priorizas cómo se reparten impuestos, salarios, empresa privada, ayudas públicas y servicios esenciales.",
+    nacion:
+      "Priorizas soberanía, unidad territorial, autogobierno, lengua, fronteras e identidad política.",
+    sociedad:
+      "Priorizas valores sociales, familia, igualdad, derechos civiles, educación y cambios culturales.",
+    autoridad:
+      "Priorizas seguridad, orden público, justicia, control estatal, privacidad y límites al poder político.",
+    geopolitica:
+      "Priorizas relaciones internacionales, Unión Europea, defensa, comercio exterior, energía y alianzas.",
+    identidad:
+      "Priorizas cultura, tradición, religión, símbolos, costumbres y convivencia entre formas de vida distintas.",
+  };
+
+  return descriptions[ideology] ?? "Este bloque tiene un peso importante en la forma en que interpretas la política.";
+}
+
+function getBlockAverages(results: ReturnType<typeof calculateResults>) {
+  return results.blockResults
+    .map((block) => {
+      const average =
+        block.ideologies.reduce((sum, item) => sum + item.percentage, 0) /
+        Math.max(block.ideologies.length, 1);
+
+      return {
+        block: block.block,
+        label: blockLabels[block.block] ?? block.block,
+        value: Math.round(average),
+        description: getPriorityDescription(block.block),
+      };
+    })
+    .sort((a, b) => b.value - a.value);
+}
+
+function getCompleteDeepProfile(
+  results: ReturnType<typeof calculateResults>,
+  priorities: { label: string; value: number; description: string }[]
+) {
+  const topIdeologies = results.ideologyPercentages.slice(0, 3);
+  const mainLabels = topIdeologies
+    .map((item) => `${ideologyLabels[item.ideology] ?? item.ideology} (${item.percentage}%)`)
+    .join(", ");
+
+  const mainPriority = priorities[0]?.label ?? "los bloques principales";
+  const secondPriority = priorities[1]?.label ?? "los temas secundarios";
+
+  return [
+    `Tu perfil completo combina principalmente ${mainLabels}. Esto no significa que encajes al 100% en una sola etiqueta, sino que tus respuestas dibujan una mezcla concreta de prioridades políticas.`,
+    `El bloque con más peso en tu resultado es ${mainPriority}. Esto indica que, al valorar propuestas políticas, probablemente das mucha importancia a ese ámbito antes de decidir si una medida te parece aceptable o no.`,
+    `El segundo bloque más relevante es ${secondPriority}. Esta combinación ayuda a explicar por qué puedes coincidir con un partido en unas áreas y alejarte de él en otras.`,
+    `A diferencia del test ultra rápido y del test rápido, este análisis completo no se limita a decir qué ideologías aparecen con más porcentaje: también interpreta prioridades, tensiones internas, consistencia y coincidencias parciales con partidos.`
+  ];
+}
+
+function getCompleteConsistency(inconsistencyCount: number, results: IdeologyResult[]) {
+  const top = results[0]?.percentage ?? 0;
+  const second = results[1]?.percentage ?? 0;
+  const dominance = Math.max(0, top - second);
+  const base = 82 + Math.min(10, Math.round(dominance / 2));
+  return clamp(base - inconsistencyCount * 12, 35, 96);
+}
+
+function getCompleteContradictions(results: ReturnType<typeof calculateResults>) {
+  const tensions = detectInconsistencies(results.ideologyPercentages);
+
+  if (tensions.length === 0) {
+    return [
+      "No se detectan contradicciones fuertes entre tus principales respuestas. Tu perfil mantiene una línea ideológica relativamente consistente.",
+    ];
+  }
+
+  return tensions.map((item) => {
+    const first = ideologyLabels[item.first] ?? item.first;
+    const second = ideologyLabels[item.second] ?? item.second;
+
+    return `Aparece una tensión entre ${first} (${item.firstPercentage}%) y ${second} (${item.secondPercentage}%). Esto suele ocurrir cuando una persona quiere libertad o apertura en algunos ámbitos, pero también más control, protección o intervención en otros.`;
+  });
+}
+
+function getCompleteAxes(results: IdeologyResult[]): CompleteAxis[] {
+  const axisValue = (leftIdeology: string, rightIdeology: string) => {
+    const left = getIdeologyPercentage(results, leftIdeology);
+    const right = getIdeologyPercentage(results, rightIdeology);
+    if (left + right === 0) return 50;
+    return clamp(Math.round((right / (left + right)) * 100));
+  };
+
+  return [
+    {
+      label: "Economía",
+      left: "Más Estado",
+      right: "Más mercado",
+      value: axisValue("socialista", "liberal"),
+    },
+    {
+      label: "Soberanía",
+      left: "Globalismo",
+      right: "Soberanismo",
+      value: axisValue("globalista", "soberanista"),
+    },
+    {
+      label: "Valores sociales",
+      left: "Tradición",
+      right: "Progresismo",
+      value: axisValue("tradicionalista", "progresista"),
+    },
+    {
+      label: "Poder del Estado",
+      left: "Libertad individual",
+      right: "Autoridad",
+      value: axisValue("libertario", "autoritario"),
+    },
+  ];
+}
+
+function generateCompleteAnalysis(results: ReturnType<typeof calculateResults>): CompleteAnalysis {
+  const priorities = getBlockAverages(results).slice(0, 5);
+  const contradictions = getCompleteContradictions(results);
+  const realContradictionCount = contradictions[0]?.startsWith("No se detectan") ? 0 : contradictions.length;
+  const partialPartyMatches = Object.entries(nationalPartyProfiles)
+    .map(([party, profile]) => ({
+      party,
+      percentage: Math.round(calculatePartySimilarity(results.ideologyPercentages, profile)),
+    }))
+    .sort((a, b) => b.percentage - a.percentage)
+    .slice(0, 4);
+
+  return {
+    voterType: getVoterType(results.ideologyPercentages.slice(0, 3)),
+    consistency: getCompleteConsistency(realContradictionCount, results.ideologyPercentages),
+    deepProfile: getCompleteDeepProfile(results, priorities),
+    priorities,
+    contradictions,
+    partialPartyMatches,
+    axes: getCompleteAxes(results.ideologyPercentages),
   };
 }
 
@@ -500,7 +689,11 @@ function goBackToSelector() {
       <main className="ideology-test">
         <section className="test-selector">
           <div className="test-selector__intro">
-            <h1>Test ideológico</h1>
+            <h1>Match Político</h1>
+            <div className="test-selector__subintro">
+              <h2>Descubre tu perfil ideológico</h2>
+            </div>
+            
             <p>
               Elige el nivel de profundidad del test. Cuantas más preguntas
               respondas, más detallado será el resultado.
@@ -564,7 +757,9 @@ function goBackToSelector() {
 
   if (showResults) {
     const isUltraTest = testMode === "ultra";
+    const isCompleteTest = testMode === "completo";
     const ideologicalProfile = generateIdeologicalProfile(results, testMode);
+    const completeAnalysis = isCompleteTest ? generateCompleteAnalysis(results) : null;
 
     return (
       <main className="ideology-test">
@@ -583,7 +778,7 @@ function goBackToSelector() {
           <h1>Resultado del {getTestTitle(testMode).toLowerCase()}</h1>
 
           <div className="community-selector">
-              <label htmlFor="community">Comunidad autónoma</label>
+              <label htmlFor="community">Selecciona una comunidad autónoma</label>
               <select
                 id="community"
                 value={selectedCommunity}
@@ -654,6 +849,112 @@ function goBackToSelector() {
               </p>
             )}
           </section>
+
+          {completeAnalysis && (
+            <section className="complete-analysis-card">
+              <div className="complete-analysis-card__intro">
+                <span className="complete-analysis-card__eyebrow">Solo en el test completo</span>
+                <h2>Análisis político avanzado</h2>
+                <p>
+                  Este apartado interpreta tu resultado con más profundidad que los
+                  otros tests: tipo de votante, consistencia, prioridades, tensiones
+                  internas, ejes políticos y coincidencias parciales con partidos.
+                </p>
+              </div>
+
+              <div className="complete-analysis-grid">
+                <article className="complete-analysis-panel voter-type-card">
+                  <span className="complete-analysis-panel__label">Tipo de votante</span>
+                  <strong>{completeAnalysis.voterType}</strong>
+                  <p>
+                    Esta etiqueta resume la combinación dominante de tus respuestas,
+                    no pretende encasillarte en una sola ideología cerrada.
+                  </p>
+                </article>
+
+                <article className="complete-analysis-panel consistency-card">
+                  <span className="complete-analysis-panel__label">Consistencia ideológica</span>
+                  <strong className="consistency-score">{completeAnalysis.consistency}%</strong>
+                  <p>
+                    Mide si tus respuestas siguen una línea política estable o si
+                    mezclan posiciones que normalmente aparecen separadas.
+                  </p>
+                </article>
+              </div>
+
+              <article className="complete-analysis-panel">
+                <h3>Perfil político profundo</h3>
+                {completeAnalysis.deepProfile.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </article>
+
+              <article className="complete-analysis-panel">
+                <h3>Tus prioridades ideológicas</h3>
+                <div className="priority-list">
+                  {completeAnalysis.priorities.map((priority, index) => (
+                    <div key={priority.label} className="priority-item">
+                      <span className="priority-pill">{index + 1}</span>
+                      <div>
+                        <strong>{priority.label}</strong>
+                        <em>{priority.value}% de peso aproximado</em>
+                        <p>{priority.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="complete-analysis-panel">
+                <h3>Contradicciones o tensiones internas</h3>
+                <div className="contradiction-list">
+                  {completeAnalysis.contradictions.map((contradiction) => (
+                    <p key={contradiction} className="contradiction-warning">
+                      {contradiction}
+                    </p>
+                  ))}
+                </div>
+              </article>
+
+              <article className="complete-analysis-panel">
+                <h3>Coincidencias parciales con partidos</h3>
+                <p>
+                  Un partido puede ser el más afín en conjunto, pero tu resultado
+                  puede coincidir parcialmente con otros en economía, cultura,
+                  soberanía o derechos sociales.
+                </p>
+                <div className="partial-party-match-list">
+                  {completeAnalysis.partialPartyMatches.map((match) => (
+                    <div key={match.party} className="partial-party-match">
+                      <strong>{match.party}</strong>
+                      <span>{match.percentage}% de coincidencia global aproximada</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="complete-analysis-panel">
+                <h3>Mapa ideológico avanzado</h3>
+                <div className="advanced-axis-list">
+                  {completeAnalysis.axes.map((axis) => (
+                    <div key={axis.label} className="advanced-axis">
+                      <div className="advanced-axis__header">
+                        <strong>{axis.label}</strong>
+                        <span>{axis.value}%</span>
+                      </div>
+                      <div className="advanced-axis__track">
+                        <span style={{ left: `${axis.value}%` }} />
+                      </div>
+                      <div className="advanced-axis__labels">
+                        <em>{axis.left}</em>
+                        <em>{axis.right}</em>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            </section>
+          )}
 
           <h2>Porcentaje ideológico</h2>
 

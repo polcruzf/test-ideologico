@@ -3231,3 +3231,10 @@ export const ideologyExplanations: Record<string, { title: string; description: 
       "Por ejemplo: criticar a partidos tradicionales, grandes medios o instituciones por no escuchar a la ciudadanía.",
   },
 };
+
+/* Ajuste de duración del test rápido:
+   - Ultra rápido: 8 preguntas
+   - Rápido: 30 preguntas
+   - Completo: 216 preguntas
+   Se añaden 12 preguntas del test completo para que el test rápido tenga más diferencia real respecto al ultra rápido. */
+quickIdeologicalQuestions.push(...ideologicalQuestions.slice(18, 30));
