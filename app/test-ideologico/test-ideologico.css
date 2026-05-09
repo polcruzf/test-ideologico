@@ -1637,4 +1637,7 @@ p.method-note {
 .Percentatge_ideo p.results-help {
     margin-top: 10px;
 }
+section.test-selector {
+  background-color: #f6f6f6;
+}
 }
