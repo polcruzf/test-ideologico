@@ -706,12 +706,12 @@ function goBackToSelector() {
               className="test-option-card"
               onClick={() => startTest("ultra")}
             >
-              <span>Test ultra rápido</span>
+              <span>Test Rápido</span>
               <strong>{ultraQuickIdeologicalQuestions.length} preguntas</strong>
               <p>
                 Ideal si quieres una orientación inmediata. Obtendrás tu
                 porcentaje ideológico general y el partido que más encaja con tu
-                resultado, sin análisis por bloques.
+                resultado.
               </p>
             </button>
 
@@ -720,7 +720,7 @@ function goBackToSelector() {
               className="test-option-card"
               onClick={() => startTest("rapido")}
             >
-              <span>Test rápido</span>
+              <span>Test Ideológico</span>
               <strong>{quickIdeologicalQuestions.length} preguntas</strong>
               <p>
                 Versión equilibrada. Obtendrás porcentaje ideológico, bloques
@@ -1002,8 +1002,8 @@ function goBackToSelector() {
             <div className="upgrade-result-card">
               <h2>¿Quieres un resultado mucho más completo?</h2>
               <p>
-                El test ultra rápido te da una orientación general. Si haces el
-                Test rápido o el Test completo, también podrás ver tu afinidad
+                El test Rápido te da una orientación general. Si haces el
+                Test Ideológico o el Test Completo, también podrás ver tu afinidad
                 por bloques: economía, sociedad, nación, autoridad, geopolítica
                 e identidad cultural. Así sabrás no solo “dónde encajas”, sino
                 en qué temas concretos coincides más o menos con cada tendencia.
@@ -1064,8 +1064,8 @@ function goBackToSelector() {
             <div className="upgrade-result-card">
               <h2>¿Quieres volver a elegir otro test?</h2>
               <p>
-                Puedes volver a la página inicial para hacer el test ultra rápido,
-                repetir el test rápido o realizar el test completo si quieres un
+                Puedes volver a la página inicial para hacer el test Rápido,
+                repetir el test Ideológico o realizar el test Completo si quieres un
                 análisis más detallado.
               </p>
               <button

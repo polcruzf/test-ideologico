@@ -101,7 +101,7 @@
   text-align: left;
   padding: 32px;
   min-height: 220px;
-  border: 1px solid #ddd;
+  box-shadow: 2px 2px 10px #00000021;
   border-radius: 28px;
   background: #fff;
   color: #111;
@@ -110,9 +110,7 @@
 }
 
 .test-option-card:hover {
-  transform: translateY(-4px);
-  border-color: #111;
-  background: #fafafa;
+  transform: translateY(-16px);
 }
 
 .test-option-card span {
@@ -195,7 +193,6 @@
 
 .answer-options__button {
   padding: 14px 16px;
-  border: 1px solid #ccc;
   border-radius: 999px;
   background: #f7f7f7;
   color: #111;
@@ -267,6 +264,7 @@
   border-radius: 12px;
   font-weight: 800;
   cursor: pointer;
+  margin-bottom: 24px;
 }
 
 .primary-button {
@@ -1149,6 +1147,7 @@
   border-radius: 24px;
   background: #e7f1f3;
   color: #111;
+  align-items: end;
 }
 
 .ideology-blocks-info-card--home {
