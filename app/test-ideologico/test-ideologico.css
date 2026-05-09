@@ -194,7 +194,7 @@
 .answer-options__button {
   padding: 14px 16px;
   border-radius: 999px;
-  background: #f7f7f7;
+  background: #f3f3f3;
   color: #111;
   cursor: pointer;
   font-weight: 700;
@@ -258,13 +258,12 @@
 
 .primary-button,
 .secondary-button {
-  margin-top: 0;
+  margin-top: 10px;
   padding: 10px 16px;
   border: none;
   border-radius: 12px;
   font-weight: 800;
   cursor: pointer;
-  margin-bottom: 24px;
 }
 
 .primary-button {
@@ -279,7 +278,7 @@
 }
 
 .secondary-button {
-  background: #eee;
+  background: #ffffff;
   color: #111;
 }
 
@@ -703,8 +702,8 @@
   padding: 18px 20px;
   border: 1px solid #ddd;
   border-radius: 18px;
-  background: #f7f7f7;
-  color: #444;
+  background: #3d3d3d;
+  color: #ffffff;
   line-height: 1.6;
   font-weight: 700;
 }
@@ -1182,9 +1181,9 @@
 .ideology-blocks-info-card__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 14px;
   margin: 0;
-  padding: 0;
+  padding: 20px 0px;
   list-style: none;
 }
 
@@ -1195,6 +1194,7 @@
   color: #333;
   font-size: 13px;
   font-weight: 800;
+  text-align: center;
 }
 
 .ideology-blocks-info-card__button {
@@ -1571,9 +1571,33 @@
 }
 
 main.ideology-test {
-  background-color: #fbfbfb;
+  background-color: #f6f6f6;
 }
 
 body.min-h-full.flex.flex-col {
-    background-color: #fbfbfb;
+    background-color: #f6f6f6;
+}
+
+a.ideology-blocks-info-card__button {
+    display: none;
+}
+
+.modal-actions button.secondary-button {
+  background-color: #eeeeee;
+}
+
+
+@media (max-width:700px) {
+  p.ideology-blocks-info-card__text {
+    padding-top: 15px;
+}
+section.ideology-blocks-info-card.ideology-blocks-info-card--home {
+    margin-top: 30px;
+}
+.test-selector__intro h1 {
+  font-size: 42px;
+}
+p.method-note {
+    margin-top: 15px;
+}
 }

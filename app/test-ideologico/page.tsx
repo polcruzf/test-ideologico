@@ -582,9 +582,9 @@ function getPracticalInfo(question: Question): PracticalInfo {
 }
 
 function getTestTitle(testMode: TestMode) {
-  if (testMode === "ultra") return "Test ideológico ultra rápido";
-  if (testMode === "rapido") return "Test ideológico rápido";
-  return "Test ideológico completo";
+  if (testMode === "ultra") return "Test Rápido";
+  if (testMode === "rapido") return "Test Ideológico";
+  return "Test Completo";
 }
 
 export default function IdeologicalTestPage() {
