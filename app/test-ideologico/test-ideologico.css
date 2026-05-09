@@ -1,5 +1,5 @@
 /* AJUSTES RÁPIDOS DE LAS CAJAS DE PORCENTAJE IDEOLÓGICO
-   Líneas 6-13: cambia estos valores cuando quieras modificar tamaño/altura. */
+   Cambia estos valores cuando quieras modificar tamaño/altura. */
 :root {
   --ideology-card-min-height-desktop: 92px;
   --ideology-card-min-height-mobile: 46px;
@@ -18,12 +18,23 @@
   --ideology-card-percentage-size-mobile: 16px;
 }
 
+/* Base */
 .ideology-test {
   max-width: 1100px;
   margin: 0 auto;
   padding: 48px 20px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #111;
+  color-scheme: light;
+  background: #fff;
+}
+
+main.ideology-test {
+  background-color: #f6f6f6;
+}
+
+body.min-h-full.flex.flex-col {
+  background-color: #f6f6f6;
 }
 
 .ideology-test__header {
@@ -44,6 +55,7 @@
   line-height: 1.6;
 }
 
+/* Progreso */
 .progress {
   margin-top: 24px;
 }
@@ -79,11 +91,13 @@
   text-align: right;
 }
 
+/* Selector de tests */
 .test-selector {
   min-height: 70vh;
   display: grid;
   align-content: center;
   gap: 40px;
+  background-color: #f6f6f6;
 }
 
 .test-selector__intro {
@@ -94,11 +108,6 @@
   font-size: clamp(38px, 6vw, 72px);
   letter-spacing: -0.03em;
 }
-.test-selector__subintro h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 25px;
-}
 
 .test-selector__intro p {
   margin: 0;
@@ -107,10 +116,20 @@
   line-height: 1.6;
 }
 
+.test-selector__subintro h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 25px;
+}
+
 .test-selector__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
+}
+
+.test-selector__grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .test-option-card {
@@ -154,11 +173,24 @@
   line-height: 1.5;
 }
 
+.method-note {
+  margin: -12px 0 0;
+  padding: 18px 20px;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  background: #3d3d3d;
+  color: #ffffff !important;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+/* Preguntas */
 .single-question {
   display: grid;
   gap: 20px;
   max-width: 860px;
   margin: 0 auto;
+  background-color: #f6f6f6;
 }
 
 .question-card {
@@ -196,6 +228,17 @@
   letter-spacing: -0.03em;
 }
 
+.question-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.question-header-actions .back-button {
+  margin-bottom: 0;
+}
+
 .answer-options {
   display: flex;
   flex-wrap: wrap;
@@ -203,13 +246,18 @@
 }
 
 .answer-options--single {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+
+.answer-options--single .answer-options__button {
+  flex: 1 1 170px;
 }
 
 .answer-options__button {
   padding: 14px 16px;
-  border-radius: 999px;
+  border-radius: 12px;
   background: #f3f3f3;
   color: #111;
   cursor: pointer;
@@ -227,6 +275,7 @@
 }
 
 .info-button {
+  position: relative;
   width: 34px;
   height: 34px;
   border: 1px solid #111;
@@ -235,6 +284,7 @@
   color: #111;
   font-weight: 900;
   cursor: pointer;
+  animation: subtleInfoPulse 2.5s ease-in-out infinite;
 }
 
 .info-button:hover {
@@ -242,12 +292,30 @@
   color: #fff;
 }
 
+@keyframes subtleInfoPulse {
+  0%, 78%, 100% {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  86% {
+    background: #111;
+    color: #fff;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.08);
+  }
+  94% {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
 .question-info {
   margin-top: 24px;
   padding: 22px;
+  border: 1px solid #ddd;
   border-radius: 18px;
   background: #f3f3f3;
-  border: 1px solid #ddd;
 }
 
 .question-info h3 {
@@ -272,6 +340,7 @@
   gap: 12px;
 }
 
+/* Botones */
 .primary-button,
 .secondary-button {
   margin-top: 10px;
@@ -288,7 +357,8 @@
 }
 
 .primary-button:disabled,
-.secondary-button:disabled {
+.secondary-button:disabled,
+.back-button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
@@ -313,9 +383,46 @@
   background: #f3f3f3;
 }
 
+.restart-button {
+  padding: 10px 16px;
+  border: 1px solid #111;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.restart-button:hover {
+  background: #333;
+}
+
+.primary-button--home {
+  justify-self: start;
+  margin-top: 8px;
+}
+
+.primary-button--inside-dark {
+  width: fit-content;
+  margin-top: 18px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #111;
+}
+
+.primary-button--inside-dark:hover {
+  background: #f2f2f2;
+}
+
+.modal-actions button.secondary-button {
+  background-color: #eeeeee;
+}
+
+/* Resultados */
 .results {
   display: grid;
   gap: 28px;
+  background-color: #f6f6f6;
 }
 
 .results h2 {
@@ -382,20 +489,60 @@
   line-height: 1.1;
 }
 
+.party-card em {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.upgrade-result-card {
+  padding: 26px;
+  border: 1px solid #111;
+  border-radius: 22px;
+  background: #111;
+  color: #fff;
+}
+
+.upgrade-result-card h2 {
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.upgrade-result-card p {
+  margin: 0;
+  color: #f2f2f2;
+  line-height: 1.6;
+}
+
+/* Cajas de porcentaje ideológico */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+  align-items: stretch;
 }
 
 .result-card {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 150px;
   padding: 20px;
+  overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 18px;
   background: #fff;
+}
+
+.result-card.is-open {
+  border-color: #111;
+  background: #fafafa;
 }
 
 .result-card--button {
@@ -411,178 +558,36 @@
   background: #fafafa;
 }
 
-.result-card span {
-  color: #ffffff;
-}
-
-.result-card strong {
-  font-size: 24px;
-}
-
-.ideology-explanation {
-  width: 100%;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid #ddd;
-}
-
-.ideology-explanation h3 {
-  margin: 0 0 8px;
-  font-size: 18px;
-}
-
-.ideology-explanation p {
-  margin: 0 0 8px;
-  color: #444;
-  line-height: 1.5;
-}
-
-.block-results {
-  display: grid;
-  gap: 40px;
-}
-
-.block-result-card {
-  padding: 24px;
-  border: 1px solid #ddd;
-  border-radius: 22px;
-  background: #fff;
-}
-
-.block-result-card__header {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 16px;
-}
-
-.block-result-card__header h3 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.block-party-results {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.block-party-results p {
-  margin: 0;
-  padding: 14px;
-  border-radius: 14px;
-  background: #f3f3f3;
-  color: #555;
-}
-
-.block-party-results strong {
-  display: block;
-  margin-top: 4px;
-  color: #111;
-}
-
-.ideology-bars {
-  display: grid;
-  gap: 16px;
-}
-
-.ideology-bar__top {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.ideology-bar__track {
-  height: 10px;
-  overflow: hidden;
-  background: #eee;
-  border-radius: 999px;
-}
-
-.ideology-bar__track span {
-  display: block;
-  height: 100%;
-  background: #111;
-  border-radius: 999px;
-}
-
-@media (max-width: 700px) {
-  .test-selector__grid,
-  .party-results,
-  .block-party-results {
-    grid-template-columns: 1fr;
-  }
-
-  .test-option-card {
-    min-height: auto;
-  }
-
-  .block-result-card__header {
-    display: block;
-  }
-
-  .question-navigation {
-    display: grid;
-  }
-
-  .primary-button,
-  .secondary-button {
-    width: 100%;
-  }
-}
-
-
-/* Correcciones visuales del resultado */
-
-.party-card em {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
-  font-style: normal;
-  font-weight: 800;
-}
-
-.results-grid {
-  align-items: start;
-}
-
-.result-card {
-  position: relative;
-  display: block;
-  min-height: 150px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 18px;
-  background: #fff;
-}
-
-.result-card.is-open {
-  border-color: #111;
-  background: #fafafa;
-}
-
 .result-card__top {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 16px;
   min-height: 42px;
 }
 
 .result-card__top span {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: #555;
   font-weight: 800;
 }
 
 .result-card__top strong {
-  font-size: 24px;
+  max-width: 100%;
+  font-size: clamp(28px, 5vw, 42px);
   line-height: 1;
   justify-self: end;
   text-align: right;
+  white-space: nowrap;
+}
+
+.result-card span {
+  color: #ffffff;
+}
+
+.result-card strong {
+  font-size: 24px;
 }
 
 .more-info-button {
@@ -603,7 +608,85 @@
   color: #111;
 }
 
+.result-card.is-relevant {
+  border-color: #111;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.result-card.is-relevant::after {
+  content: none;
+  display: none;
+}
+
+.result-card.is-secondary {
+  opacity: 0.62;
+  background: #fafafa;
+}
+
+.result-card.is-secondary .result-card__top strong {
+  font-size: clamp(24px, 4vw, 34px);
+}
+
+.result-card.result-ideology-card {
+  min-height: var(--ideology-card-min-height-desktop);
+  padding: var(--ideology-card-padding-y) var(--ideology-card-padding-x) 32px;
+  border-radius: 16px;
+}
+
+.result-ideology-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 128px;
+  padding: 16px 18px 44px;
+  overflow: hidden;
+}
+
+.result-ideology-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: auto;
+}
+
+.result-ideology-card__title {
+  font-size: var(--ideology-card-title-size) !important;
+  line-height: 1.12;
+}
+
+.result-ideology-card__percentage {
+  font-size: var(--ideology-card-percentage-size) !important;
+  line-height: 1;
+}
+
+.result-ideology-card__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.result-ideology-card__more-button {
+  position: absolute;
+  left: var(--ideology-card-padding-x);
+  bottom: 10px;
+  font-size: 11px;
+}
+
+.result-ideology-card.is-secondary .result-ideology-card__percentage {
+  font-size: calc(var(--ideology-card-percentage-size) - 1px);
+}
+
+/* Explicaciones y popups */
 .ideology-explanation {
+  width: 100%;
   margin: 18px 0 38px;
   padding-top: 16px;
   border-top: 1px solid #ddd;
@@ -618,130 +701,6 @@
   margin: 0 0 8px;
   color: #444;
   line-height: 1.5;
-}
-
-.block-party-results em {
-  display: inline-block;
-  margin-top: 8px;
-  color: #555;
-  font-style: normal;
-  font-weight: 800;
-}
-
-@media (max-width: 700px) {
-  .result-card {
-    min-height: 140px;
-  }
-}
-
-
-/* Ajustes de botones, confirmación y respuestas */
-
-.question-header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.question-header-actions .back-button {
-  margin-bottom: 0;
-}
-
-.restart-button {
-  padding: 10px 16px;
-  border: 1px solid #111;
-  border-radius: 12px;
-  background: #111;
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.restart-button:hover {
-  background: #333;
-}
-
-.back-button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.primary-button--home {
-  justify-self: start;
-  margin-top: 8px;
-}
-
-/* Respuestas en horizontal en PC */
-.answer-options--single {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 10px;
-}
-
-.answer-options--single .answer-options__button {
-  flex: 1 1 170px;
-}
-
-/* Respuestas menos redondeadas */
-.answer-options__button {
-  border-radius: 12px;
-}
-
-/* Mantener los controles en vertical en mobile */
-@media (max-width: 700px) {
-  .answer-options--single {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .answer-options--single .answer-options__button {
-    width: 100%;
-  }
-
-  .question-header-actions {
-    display: grid;
-  }
-
-  .restart-button,
-  .back-button {
-    width: 100%;
-  }
-}
-
-/* Nuevos ajustes: 3 tests, modales, popup informativo y mobile */
-.test-selector__grid--three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.method-note {
-  margin: -12px 0 0;
-  padding: 18px 20px;
-  border: 1px solid #ddd;
-  border-radius: 18px;
-  background: #3d3d3d;
-  color: #ffffff!important;
-  line-height: 1.6;
-  font-weight: 700;
-}
-
-.upgrade-result-card {
-  padding: 26px;
-  border: 1px solid #111;
-  border-radius: 22px;
-  background: #111;
-  color: #fff;
-}
-
-.upgrade-result-card h2 {
-  margin: 0 0 10px;
-  color: #fff;
-}
-
-.upgrade-result-card p {
-  margin: 0;
-  color: #f2f2f2;
-  line-height: 1.6;
 }
 
 .modal-overlay {
@@ -819,38 +778,111 @@
   letter-spacing: -0.03em;
 }
 
-@media (max-width: 900px) {
-  .test-selector__grid--three {
-    grid-template-columns: 1fr;
-  }
+.ideology-explanation--popup {
+  position: relative;
+  width: min(100%, 640px);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  margin: 0;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
 }
 
-@media (max-width: 700px) {
-  .question-navigation {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .question-navigation .primary-button,
-  .question-navigation .secondary-button {
-    width: auto;
-    flex: 1 1 0;
-  }
-
-  .modal-actions {
-    display: grid;
-  }
-
-  .modal-actions .primary-button,
-  .modal-actions .secondary-button {
-    width: 100%;
-  }
+.ideology-explanation--popup h3 {
+  margin: 0 44px 10px 0;
+  font-size: clamp(24px, 4vw, 34px);
+  letter-spacing: -0.04em;
 }
 
+.ideology-explanation--popup p {
+  margin: 0 0 12px;
+  color: #444;
+  line-height: 1.6;
+}
 
-/* Actualización: perfil ideológico, popup de porcentajes y pesos visuales */
+/* Resultados por bloques */
+.block-results {
+  display: grid;
+  gap: 40px;
+}
+
+.block-result-card {
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.block-result-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.block-result-card__header h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.block-party-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.block-party-results p {
+  margin: 0;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f3f3f3;
+  color: #555;
+}
+
+.block-party-results strong {
+  display: block;
+  margin-top: 4px;
+  color: #111;
+}
+
+.block-party-results em {
+  display: inline-block;
+  margin-top: 8px;
+  color: #555;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.ideology-bars {
+  display: grid;
+  gap: 16px;
+}
+
+.ideology-bar__top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ideology-bar__track {
+  height: 10px;
+  overflow: hidden;
+  background: #eee;
+  border-radius: 999px;
+}
+
+.ideology-bar__track span {
+  display: block;
+  height: 100%;
+  background: #111;
+  border-radius: 999px;
+}
+
+/* Perfil ideológico */
 .ideological-profile-card {
   display: grid;
   gap: 16px;
@@ -920,201 +952,6 @@
   font-size: 18px;
 }
 
-.result-card {
-  overflow: hidden;
-  min-width: 0;
-}
-
-.result-card__top {
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-}
-
-.result-card__top span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.result-card__top strong {
-  max-width: 100%;
-  font-size: clamp(28px, 5vw, 42px);
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.result-card.is-relevant {
-  border-color: #111;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
-}
-
-.result-card.is-relevant::after {
-  content: "Afinidad relevante";
-  display: inline-flex;
-  margin-top: 20px;
-  margin-bottom: 28px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.result-card.is-secondary {
-  opacity: 0.62;
-  background: #fafafa;
-}
-
-.result-card.is-secondary .result-card__top strong {
-  font-size: clamp(24px, 4vw, 34px);
-}
-
-.ideology-explanation--popup {
-  position: relative;
-  width: min(100%, 640px);
-  max-height: min(86vh, 760px);
-  overflow: auto;
-  margin: 0;
-  padding: clamp(24px, 5vw, 36px);
-  border: 1px solid #ddd;
-  border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
-}
-
-.ideology-explanation--popup h3 {
-  margin: 0 44px 10px 0;
-  font-size: clamp(24px, 4vw, 34px);
-  letter-spacing: -0.04em;
-}
-
-.ideology-explanation--popup p {
-  margin: 0 0 12px;
-  color: #444;
-  line-height: 1.6;
-}
-
-.info-button {
-  position: relative;
-  animation: subtleInfoPulse 2.5s ease-in-out infinite;
-}
-
-@keyframes subtleInfoPulse {
-  0%, 78%, 100% {
-    background: #fff;
-    color: #111;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-  86% {
-    background: #111;
-    color: #fff;
-    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.08);
-  }
-  94% {
-    background: #fff;
-    color: #111;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-}
-
-.primary-button--inside-dark {
-  width: fit-content;
-  margin-top: 18px;
-  border: 1px solid #fff;
-  background: #fff;
-  color: #111;
-}
-
-.primary-button--inside-dark:hover {
-  background: #f2f2f2;
-}
-
-.question-navigation {
-  justify-content: space-between;
-}
-
-@media (max-width: 700px) {
-  .question-navigation {
-    justify-content: flex-start;
-  }
-
-  .question-navigation .secondary-button {
-    width: auto;
-    flex: 0 0 auto;
-  }
-
-  .result-card__top {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 10px;
-  }
-
-  .result-card__top strong {
-    font-size: clamp(26px, 9vw, 38px);
-  }
-
-  .profile-highlight-list {
-    display: grid;
-  }
-
-  .primary-button--inside-dark {
-    width: 100%;
-  }
-}
-
-/* Ajuste final de cajas de porcentaje ideológico */
-.results-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  align-items: stretch;
-}
-
-.result-ideology-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 128px;
-  padding: 16px 18px 44px;
-  overflow: hidden;
-}
-
-.result-ideology-card__top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: auto;
-}
-
-
-
-.result-ideology-card__badge {
-  display: inline-flex;
-  align-self: flex-start;
-  margin-top: 16px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.result-card.is-relevant::after {
-  content: none;
-  display: none;
-}
-
-.result-ideology-card__more-button {
-  position: absolute;
-  left: 18px;
-  bottom: 14px;
-  font-size: 13px;
-}
-
-.result-ideology-card.is-secondary .result-ideology-card__percentage {
-  font-size: clamp(17px, 1.35vw, 20px);
-}
-
 /* Elementos independientes del perfil ideológico */
 .results-profile-card {}
 .results-profile-title {}
@@ -1124,47 +961,22 @@
 .results-profile-detail-list {}
 .results-profile-detail-item {}
 .results-profile-party-context {}
-.profile-inconsistencies {}
-.profile-no-inconsistencies {}
 
 .results-profile-detail-item {
   margin: 0 0 12px;
   line-height: 1.55;
 }
 
-@media (max-width: 700px) {
-  .results-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .result-ideology-card {
-    min-height: 122px;
-  }
-
-  .result-ideology-card__top {
-    gap: 10px;
-  }
-
-  .result-ideology-card__title {
-    font-size: 18px;
-  }
-
-  .result-ideology-card__percentage {
-    font-size: 15px;
-  }
-}
-
 /* Bloque informativo de bloques ideológicos */
 .ideology-blocks-info-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
+  align-items: end;
   gap: 24px;
   padding: 24px;
   border-radius: 24px;
-  background: #e7f1f3!important;
+  background: #e7f1f3 !important;
   color: #111;
-  align-items: end;
 }
 
 .ideology-blocks-info-card--home {
@@ -1233,141 +1045,8 @@
   background: #333;
 }
 
-/* Forzar apariencia clara también en móviles y navegadores con modo oscuro */
-.ideology-test {
-  color-scheme: light;
-  background: #fff;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ideology-test,
-  .test-selector,
-  .single-question,
-  .results {
-    background: #fff;
-    color: #111;
-  }
-
-  .test-option-card,
-  .question-card,
-  .community-selector,
-  .result-card,
-  .block-result-card,
-  .ideology-blocks-info-card,
-  .ideology-explanation--popup,
-  .confirmation-modal {
-    background: #fff;
-    color: #111;
-    border-color: #ddd;
-  }
-
-  .test-selector__intro p,
-  .method-note,
-  .results-help,
-  .community-selector p,
-  .ideology-blocks-info-card__text,
-  .question-info p,
-  .ideology-explanation p,
-  .result-ideology-card__title,
-  .result-card span {
-    color: #555;
-  }
-
-  .answer-options__button,
-  .secondary-button,
-  .back-button,
-  .restart-button {
-    background: #f7f7f7;
-    color: #111;
-    border-color: #ddd;
-  }
-}
-
-@media (max-width: 700px) {
-  .ideology-test {
-    background: #fff;
-    color: #111;
-  }
-
-  .ideology-blocks-info-card {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 22px;
-  }
-
-  .ideology-blocks-info-card__button {
-    width: 100%;
-  }
-
-  .ideology-blocks-info-card__list {
-    display: grid;
-  }
-}
-
-
-/* Ajuste editable final: cajas de porcentaje ideológico más compactas
-   Cambia las variables de las líneas 6-13 para ajustar altura y tipografía. */
-.results-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.result-card.result-ideology-card {
-  min-height: var(--ideology-card-min-height-desktop);
-  padding: var(--ideology-card-padding-y) var(--ideology-card-padding-x) 32px;
-  border-radius: 16px;
-}
-
-.result-ideology-card__top {
-  gap: 8px;
-}
-
-.result-ideology-card__title {
-  font-size: var(--ideology-card-title-size) !important;
-  line-height: 1.12;
-}
-
-.result-ideology-card__percentage {
-  font-size: var(--ideology-card-percentage-size) !important;
-  line-height: 1;
-}
-
-.result-ideology-card__badge {
-  margin-top: 10px;
-  padding: 5px 8px;
-  font-size: 10px;
-}
-
-.result-ideology-card__more-button {
-  left: var(--ideology-card-padding-x);
-  bottom: 10px;
-  font-size: 11px;
-}
-
-.result-ideology-card.is-secondary .result-ideology-card__percentage {
-  font-size: calc(var(--ideology-card-percentage-size) - 1px);
-}
-
-@media (max-width: 700px) {
-  .results-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 20px;
-  }
-
-  .result-card.result-ideology-card {
-    min-height: var(--ideology-card-min-height-mobile);
-    padding: 12px 14px 32px;
-  }
-
-  .result-ideology-card__title {
-    font-size: var(--ideology-card-title-size-mobile)!important;
-  }
-
-  .result-ideology-card__percentage {
-    font-size: var(--ideology-card-percentage-size-mobile)!important;
-  }
+a.ideology-blocks-info-card__button {
+  display: none;
 }
 
 /* Análisis avanzado exclusivo del test completo */
@@ -1573,7 +1252,222 @@
   font-weight: 800;
 }
 
+/* Modo oscuro del navegador: forzar apariencia clara */
+@media (prefers-color-scheme: dark) {
+  .ideology-test,
+  .test-selector,
+  .single-question,
+  .results {
+    background: #fff;
+    color: #111;
+  }
+
+  .test-option-card,
+  .question-card,
+  .community-selector,
+  .result-card,
+  .block-result-card,
+  .ideology-blocks-info-card,
+  .ideology-explanation--popup,
+  .confirmation-modal {
+    background: #fff;
+    color: #111;
+    border-color: #ddd;
+  }
+
+  .test-selector__intro p,
+  .method-note,
+  .results-help,
+  .community-selector p,
+  .ideology-blocks-info-card__text,
+  .question-info p,
+  .ideology-explanation p,
+  .result-ideology-card__title,
+  .result-card span {
+    color: #555;
+  }
+
+  .answer-options__button,
+  .secondary-button,
+  .back-button,
+  .restart-button {
+    background: #f7f7f7;
+    color: #111;
+    border-color: #ddd;
+  }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .test-selector__grid--three {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
 @media (max-width: 700px) {
+  .ideology-test {
+    background: #fff;
+    color: #111;
+  }
+
+  .test-selector__grid,
+  .party-results,
+  .block-party-results {
+    grid-template-columns: 1fr;
+  }
+
+  .test-option-card {
+    min-height: auto;
+  }
+
+  .test-selector__intro h1 {
+    font-size: 42px;
+  }
+
+  .block-result-card__header {
+    display: block;
+  }
+
+  .question-navigation {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .question-navigation .primary-button,
+  .question-navigation .secondary-button {
+    width: auto;
+    flex: 1 1 0;
+  }
+
+  .question-navigation .secondary-button {
+    flex: 0 0 auto;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .answer-options--single {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .answer-options--single .answer-options__button {
+    width: 100%;
+  }
+
+  .question-header-actions {
+    display: grid;
+  }
+
+  .restart-button,
+  .back-button {
+    width: 100%;
+  }
+
+  .modal-actions {
+    display: grid;
+  }
+
+  .modal-actions .primary-button,
+  .modal-actions .secondary-button {
+    width: 100%;
+  }
+
+  .result-card {
+    min-height: 140px;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .result-card.result-ideology-card {
+    min-height: var(--ideology-card-min-height-mobile);
+    padding: 12px 14px 32px;
+  }
+
+  .result-ideology-card__top {
+    gap: 10px;
+  }
+
+  .result-ideology-card__title {
+    font-size: var(--ideology-card-title-size-mobile) !important;
+  }
+
+  .result-ideology-card__percentage {
+    font-size: var(--ideology-card-percentage-size-mobile) !important;
+  }
+
+  .result-card__top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .result-card__top strong {
+    font-size: clamp(26px, 9vw, 38px);
+  }
+
+  .profile-highlight-list {
+    display: grid;
+  }
+
+  .primary-button--inside-dark {
+    width: 100%;
+  }
+
+  .ideology-blocks-info-card {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 22px;
+  }
+
+  .ideology-blocks-info-card__button {
+    width: 100%;
+  }
+
+  .ideology-blocks-info-card__list {
+    display: grid;
+  }
+
+  p.ideology-blocks-info-card__text {
+    padding-top: 15px;
+  }
+
+  section.ideology-blocks-info-card.ideology-blocks-info-card--home {
+    margin-top: 30px;
+  }
+
+  p.method-note {
+    margin-top: 15px;
+  }
+
+  .party-card_results {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .party-card em {
+    margin-top: 0px;
+  }
+
+  .Percentatge_ideo {
+    margin-top: 20px;
+  }
+
+  .Percentatge_ideo p.results-help {
+    margin-top: 10px;
+  }
+
   .complete-analysis-card {
     padding: 20px;
   }
@@ -1589,52 +1483,28 @@
   .partial-party-match span {
     text-align: left;
   }
-  p.ideology-blocks-info-card__text {
-    padding-top: 15px;
-}
-section.ideology-blocks-info-card.ideology-blocks-info-card--home {
-    margin-top: 30px;
-}
-.test-selector__intro h1 {
-  font-size: 42px;
-}
-p.method-note {
-    margin-top: 15px;
-}
-.party-card_results {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 15px;
-    flex-direction: column;
-}
-.party-card em{
-  margin-top: 0px;
-}
-.Percentatge_ideo {
-    margin-top: 20px;
-}
-.Percentatge_ideo p.results-help {
-    margin-top: 10px;
-}
 }
 
+/* Overrides finales conservados del archivo original */
 main.ideology-test {
   background-color: #f6f6f6;
 }
 
 body.min-h-full.flex.flex-col {
-    background-color: #f6f6f6;
+  background-color: #f6f6f6;
 }
+
 section.test-selector {
   background-color: #f6f6f6;
 }
-section.single-question, section.results {
+
+section.single-question,
+section.results {
   background-color: #f6f6f6;
 }
 
 a.ideology-blocks-info-card__button {
-    display: none;
+  display: none;
 }
 
 .modal-actions button.secondary-button {
