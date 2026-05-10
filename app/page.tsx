@@ -29,6 +29,9 @@ type IdeologyResult = {
 type PartyMatch = {
   party: string;
   percentage: number;
+  isClearMatch?: boolean;
+  closestParty?: string;
+  explanation?: string;
 };
 
 type PracticalInfo = {
@@ -55,6 +58,7 @@ type CompleteAnalysis = {
 };
 
 const IMPORTANT_AFFINITY_THRESHOLD = 70;
+const MIN_CLEAR_PARTY_MATCH = 58;
 const IDEOLOGY_BLOCKS_INFO_URL = "#";
 
 const ANONYMOUS_USER_STORAGE_KEY = "matchpolitico_anonymous_user_id";
@@ -80,6 +84,167 @@ function getOrCreateAnonymousUserId() {
   window.localStorage.setItem(ANONYMOUS_USER_STORAGE_KEY, newUserId);
 
   return newUserId;
+}
+
+
+type ElectoralProgramFile = {
+  label: string;
+  href: string;
+};
+
+const nationalElectoralProgramFiles: ElectoralProgramFile[] = [
+  { label: "Generales_PSOE.pdf", href: "/programas-electorales/Generales_PSOE.pdf" },
+  { label: "Generales_PP.pdf", href: "/programas-electorales/Generales_PP.pdf" },
+  { label: "Generales_VOX.pdf", href: "/programas-electorales/Generales_VOX.pdf" },
+  { label: "Generales_SUMAR.pdf", href: "/programas-electorales/Generales_SUMAR.pdf" },
+  { label: "Generales_PODEMOS.pdf", href: "/programas-electorales/Generales_PODEMOS.pdf" },
+  { label: "Generales_CIUDADANOS.pdf", href: "/programas-electorales/Generales_CIUDADANOS.pdf" },
+  { label: "Generales_PACMA.pdf", href: "/programas-electorales/Generales_PACMA.pdf" },
+  { label: "Generales_RECORTE_CERO.pdf", href: "/programas-electorales/Generales_RECORTE_CERO.pdf" },
+  { label: "Generales_FRENTE_OBRERO.pdf", href: "/programas-electorales/Generales_FRENTE_OBRERO.pdf" },
+  { label: "Generales_FALANGE_ESPANOLA.pdf", href: "/programas-electorales/Generales_FALANGE_ESPANOLA.pdf" },
+  { label: "Generales_PCTE.pdf", href: "/programas-electorales/Generales_PCTE.pdf" },
+  { label: "Generales_PCPE.pdf", href: "/programas-electorales/Generales_PCPE.pdf" },
+  { label: "Generales_ERC.pdf", href: "/programas-electorales/Generales_ERC.pdf" },
+  { label: "Generales_JUNTS.pdf", href: "/programas-electorales/Generales_JUNTS.pdf" },
+  { label: "Generales_CUP.pdf", href: "/programas-electorales/Generales_CUP.pdf" },
+  { label: "Generales_PNV.pdf", href: "/programas-electorales/Generales_PNV.pdf" },
+  { label: "Generales_EH_BILDU.pdf", href: "/programas-electorales/Generales_EH_BILDU.pdf" },
+  { label: "Generales_BNG.pdf", href: "/programas-electorales/Generales_BNG.pdf" },
+  { label: "Generales_COALICION_CANARIA.pdf", href: "/programas-electorales/Generales_COALICION_CANARIA.pdf" },
+  { label: "Generales_UPN.pdf", href: "/programas-electorales/Generales_UPN.pdf" },
+  { label: "Generales_COMPROMIS.pdf", href: "/programas-electorales/Generales_COMPROMIS.pdf" },
+];
+
+const regionalElectoralProgramFiles: ElectoralProgramFile[] = [
+  { label: "Autonomicas_Andalucia_PP-A.pdf", href: "/programas-electorales/Autonomicas_Andalucia_PP-A.pdf" },
+  { label: "Autonomicas_Andalucia_PSOE-A.pdf", href: "/programas-electorales/Autonomicas_Andalucia_PSOE-A.pdf" },
+  { label: "Autonomicas_Andalucia_VOX_ANDALUCIA.pdf", href: "/programas-electorales/Autonomicas_Andalucia_VOX_ANDALUCIA.pdf" },
+  { label: "Autonomicas_Andalucia_POR_ANDALUCIA.pdf", href: "/programas-electorales/Autonomicas_Andalucia_POR_ANDALUCIA.pdf" },
+  { label: "Autonomicas_Andalucia_ADELANTE_ANDALUCIA.pdf", href: "/programas-electorales/Autonomicas_Andalucia_ADELANTE_ANDALUCIA.pdf" },
+  { label: "Autonomicas_Aragon_PP_ARAGON.pdf", href: "/programas-electorales/Autonomicas_Aragon_PP_ARAGON.pdf" },
+  { label: "Autonomicas_Aragon_PSOE_ARAGON.pdf", href: "/programas-electorales/Autonomicas_Aragon_PSOE_ARAGON.pdf" },
+  { label: "Autonomicas_Aragon_VOX_ARAGON.pdf", href: "/programas-electorales/Autonomicas_Aragon_VOX_ARAGON.pdf" },
+  { label: "Autonomicas_Aragon_CHA.pdf", href: "/programas-electorales/Autonomicas_Aragon_CHA.pdf" },
+  { label: "Autonomicas_Aragon_ARAGON_EXISTE.pdf", href: "/programas-electorales/Autonomicas_Aragon_ARAGON_EXISTE.pdf" },
+  { label: "Autonomicas_Asturias_PSOE_ASTURIAS.pdf", href: "/programas-electorales/Autonomicas_Asturias_PSOE_ASTURIAS.pdf" },
+  { label: "Autonomicas_Asturias_PP_ASTURIAS.pdf", href: "/programas-electorales/Autonomicas_Asturias_PP_ASTURIAS.pdf" },
+  { label: "Autonomicas_Asturias_VOX_ASTURIAS.pdf", href: "/programas-electorales/Autonomicas_Asturias_VOX_ASTURIAS.pdf" },
+  { label: "Autonomicas_Asturias_IU_CONVOCATORIA_POR_ASTURIAS.pdf", href: "/programas-electorales/Autonomicas_Asturias_IU_CONVOCATORIA_POR_ASTURIAS.pdf" },
+  { label: "Autonomicas_Asturias_FORO_ASTURIAS.pdf", href: "/programas-electorales/Autonomicas_Asturias_FORO_ASTURIAS.pdf" },
+  { label: "Autonomicas_Baleares_PP_BALEARS.pdf", href: "/programas-electorales/Autonomicas_Baleares_PP_BALEARS.pdf" },
+  { label: "Autonomicas_Baleares_PSIB-PSOE.pdf", href: "/programas-electorales/Autonomicas_Baleares_PSIB-PSOE.pdf" },
+  { label: "Autonomicas_Baleares_VOX_BALEARES.pdf", href: "/programas-electorales/Autonomicas_Baleares_VOX_BALEARES.pdf" },
+  { label: "Autonomicas_Baleares_MES_PER_MALLORCA.pdf", href: "/programas-electorales/Autonomicas_Baleares_MES_PER_MALLORCA.pdf" },
+  { label: "Autonomicas_Baleares_UNIDAS_PODEMOS_BALEARES.pdf", href: "/programas-electorales/Autonomicas_Baleares_UNIDAS_PODEMOS_BALEARES.pdf" },
+  { label: "Autonomicas_Canarias_COALICION_CANARIA.pdf", href: "/programas-electorales/Autonomicas_Canarias_COALICION_CANARIA.pdf" },
+  { label: "Autonomicas_Canarias_PSOE_CANARIAS.pdf", href: "/programas-electorales/Autonomicas_Canarias_PSOE_CANARIAS.pdf" },
+  { label: "Autonomicas_Canarias_PP_CANARIAS.pdf", href: "/programas-electorales/Autonomicas_Canarias_PP_CANARIAS.pdf" },
+  { label: "Autonomicas_Canarias_VOX_CANARIAS.pdf", href: "/programas-electorales/Autonomicas_Canarias_VOX_CANARIAS.pdf" },
+  { label: "Autonomicas_Canarias_NUEVA_CANARIAS.pdf", href: "/programas-electorales/Autonomicas_Canarias_NUEVA_CANARIAS.pdf" },
+  { label: "Autonomicas_Cantabria_PP_CANTABRIA.pdf", href: "/programas-electorales/Autonomicas_Cantabria_PP_CANTABRIA.pdf" },
+  { label: "Autonomicas_Cantabria_PRC.pdf", href: "/programas-electorales/Autonomicas_Cantabria_PRC.pdf" },
+  { label: "Autonomicas_Cantabria_PSOE_CANTABRIA.pdf", href: "/programas-electorales/Autonomicas_Cantabria_PSOE_CANTABRIA.pdf" },
+  { label: "Autonomicas_Cantabria_VOX_CANTABRIA.pdf", href: "/programas-electorales/Autonomicas_Cantabria_VOX_CANTABRIA.pdf" },
+  { label: "Autonomicas_Castilla-La_Mancha_PSOE_CASTILLA-LA_MANCHA.pdf", href: "/programas-electorales/Autonomicas_Castilla-La_Mancha_PSOE_CASTILLA-LA_MANCHA.pdf" },
+  { label: "Autonomicas_Castilla-La_Mancha_PP_CASTILLA-LA_MANCHA.pdf", href: "/programas-electorales/Autonomicas_Castilla-La_Mancha_PP_CASTILLA-LA_MANCHA.pdf" },
+  { label: "Autonomicas_Castilla-La_Mancha_VOX_CASTILLA-LA_MANCHA.pdf", href: "/programas-electorales/Autonomicas_Castilla-La_Mancha_VOX_CASTILLA-LA_MANCHA.pdf" },
+  { label: "Autonomicas_Castilla_y_Leon_PP_CASTILLA_Y_LEON.pdf", href: "/programas-electorales/Autonomicas_Castilla_y_Leon_PP_CASTILLA_Y_LEON.pdf" },
+  { label: "Autonomicas_Castilla_y_Leon_PSOE_CASTILLA_Y_LEON.pdf", href: "/programas-electorales/Autonomicas_Castilla_y_Leon_PSOE_CASTILLA_Y_LEON.pdf" },
+  { label: "Autonomicas_Castilla_y_Leon_VOX_CASTILLA_Y_LEON.pdf", href: "/programas-electorales/Autonomicas_Castilla_y_Leon_VOX_CASTILLA_Y_LEON.pdf" },
+  { label: "Autonomicas_Castilla_y_Leon_UPL.pdf", href: "/programas-electorales/Autonomicas_Castilla_y_Leon_UPL.pdf" },
+  { label: "Autonomicas_Castilla_y_Leon_SORIA_YA.pdf", href: "/programas-electorales/Autonomicas_Castilla_y_Leon_SORIA_YA.pdf" },
+  { label: "Autonomicas_Cataluna_PSC.pdf", href: "/programas-electorales/Autonomicas_Cataluna_PSC.pdf" },
+  { label: "Autonomicas_Cataluna_JUNTS.pdf", href: "/programas-electorales/Autonomicas_Cataluna_JUNTS.pdf" },
+  { label: "Autonomicas_Cataluna_ERC.pdf", href: "/programas-electorales/Autonomicas_Cataluna_ERC.pdf" },
+  { label: "Autonomicas_Cataluna_VOX_CATALUNA.pdf", href: "/programas-electorales/Autonomicas_Cataluna_VOX_CATALUNA.pdf" },
+  { label: "Autonomicas_Cataluna_PP_CATALUNA.pdf", href: "/programas-electorales/Autonomicas_Cataluna_PP_CATALUNA.pdf" },
+  { label: "Autonomicas_Cataluna_COMUNS.pdf", href: "/programas-electorales/Autonomicas_Cataluna_COMUNS.pdf" },
+  { label: "Autonomicas_Cataluna_CUP.pdf", href: "/programas-electorales/Autonomicas_Cataluna_CUP.pdf" },
+  { label: "Autonomicas_Cataluna_ALIANCA_CATALANA.pdf", href: "/programas-electorales/Autonomicas_Cataluna_ALIANCA_CATALANA.pdf" },
+  { label: "Autonomicas_Comunidad_Valenciana_PP_COMUNITAT_VALENCIANA.pdf", href: "/programas-electorales/Autonomicas_Comunidad_Valenciana_PP_COMUNITAT_VALENCIANA.pdf" },
+  { label: "Autonomicas_Comunidad_Valenciana_PSPV-PSOE.pdf", href: "/programas-electorales/Autonomicas_Comunidad_Valenciana_PSPV-PSOE.pdf" },
+  { label: "Autonomicas_Comunidad_Valenciana_VOX_COMUNIDAD_VALENCIANA.pdf", href: "/programas-electorales/Autonomicas_Comunidad_Valenciana_VOX_COMUNIDAD_VALENCIANA.pdf" },
+  { label: "Autonomicas_Comunidad_Valenciana_COMPROMIS.pdf", href: "/programas-electorales/Autonomicas_Comunidad_Valenciana_COMPROMIS.pdf" },
+  { label: "Autonomicas_Extremadura_PP_EXTREMADURA.pdf", href: "/programas-electorales/Autonomicas_Extremadura_PP_EXTREMADURA.pdf" },
+  { label: "Autonomicas_Extremadura_PSOE_EXTREMADURA.pdf", href: "/programas-electorales/Autonomicas_Extremadura_PSOE_EXTREMADURA.pdf" },
+  { label: "Autonomicas_Extremadura_VOX_EXTREMADURA.pdf", href: "/programas-electorales/Autonomicas_Extremadura_VOX_EXTREMADURA.pdf" },
+  { label: "Autonomicas_Extremadura_UNIDAS_POR_EXTREMADURA.pdf", href: "/programas-electorales/Autonomicas_Extremadura_UNIDAS_POR_EXTREMADURA.pdf" },
+  { label: "Autonomicas_Galicia_PPDEG.pdf", href: "/programas-electorales/Autonomicas_Galicia_PPDEG.pdf" },
+  { label: "Autonomicas_Galicia_PSDEG-PSOE.pdf", href: "/programas-electorales/Autonomicas_Galicia_PSDEG-PSOE.pdf" },
+  { label: "Autonomicas_Galicia_BNG.pdf", href: "/programas-electorales/Autonomicas_Galicia_BNG.pdf" },
+  { label: "Autonomicas_Galicia_VOX_GALICIA.pdf", href: "/programas-electorales/Autonomicas_Galicia_VOX_GALICIA.pdf" },
+  { label: "Autonomicas_La_Rioja_PP_LA_RIOJA.pdf", href: "/programas-electorales/Autonomicas_La_Rioja_PP_LA_RIOJA.pdf" },
+  { label: "Autonomicas_La_Rioja_PSOE_LA_RIOJA.pdf", href: "/programas-electorales/Autonomicas_La_Rioja_PSOE_LA_RIOJA.pdf" },
+  { label: "Autonomicas_La_Rioja_VOX_LA_RIOJA.pdf", href: "/programas-electorales/Autonomicas_La_Rioja_VOX_LA_RIOJA.pdf" },
+  { label: "Autonomicas_Madrid_PP_MADRID.pdf", href: "/programas-electorales/Autonomicas_Madrid_PP_MADRID.pdf" },
+  { label: "Autonomicas_Madrid_MAS_MADRID.pdf", href: "/programas-electorales/Autonomicas_Madrid_MAS_MADRID.pdf" },
+  { label: "Autonomicas_Madrid_PSOE_MADRID.pdf", href: "/programas-electorales/Autonomicas_Madrid_PSOE_MADRID.pdf" },
+  { label: "Autonomicas_Madrid_VOX_MADRID.pdf", href: "/programas-electorales/Autonomicas_Madrid_VOX_MADRID.pdf" },
+  { label: "Autonomicas_Murcia_PP_REGION_DE_MURCIA.pdf", href: "/programas-electorales/Autonomicas_Murcia_PP_REGION_DE_MURCIA.pdf" },
+  { label: "Autonomicas_Murcia_PSOE_MURCIA.pdf", href: "/programas-electorales/Autonomicas_Murcia_PSOE_MURCIA.pdf" },
+  { label: "Autonomicas_Murcia_VOX_MURCIA.pdf", href: "/programas-electorales/Autonomicas_Murcia_VOX_MURCIA.pdf" },
+  { label: "Autonomicas_Murcia_PODEMOS-IU_MURCIA.pdf", href: "/programas-electorales/Autonomicas_Murcia_PODEMOS-IU_MURCIA.pdf" },
+  { label: "Autonomicas_Navarra_UPN.pdf", href: "/programas-electorales/Autonomicas_Navarra_UPN.pdf" },
+  { label: "Autonomicas_Navarra_PSN-PSOE.pdf", href: "/programas-electorales/Autonomicas_Navarra_PSN-PSOE.pdf" },
+  { label: "Autonomicas_Navarra_EH_BILDU_NAVARRA.pdf", href: "/programas-electorales/Autonomicas_Navarra_EH_BILDU_NAVARRA.pdf" },
+  { label: "Autonomicas_Navarra_GEROA_BAI.pdf", href: "/programas-electorales/Autonomicas_Navarra_GEROA_BAI.pdf" },
+  { label: "Autonomicas_Navarra_PP_NAVARRA.pdf", href: "/programas-electorales/Autonomicas_Navarra_PP_NAVARRA.pdf" },
+  { label: "Autonomicas_Navarra_VOX_NAVARRA.pdf", href: "/programas-electorales/Autonomicas_Navarra_VOX_NAVARRA.pdf" },
+  { label: "Autonomicas_Pais_Vasco_PNV.pdf", href: "/programas-electorales/Autonomicas_Pais_Vasco_PNV.pdf" },
+  { label: "Autonomicas_Pais_Vasco_EH_BILDU.pdf", href: "/programas-electorales/Autonomicas_Pais_Vasco_EH_BILDU.pdf" },
+  { label: "Autonomicas_Pais_Vasco_PSE-EE.pdf", href: "/programas-electorales/Autonomicas_Pais_Vasco_PSE-EE.pdf" },
+  { label: "Autonomicas_Pais_Vasco_PP_PAIS_VASCO.pdf", href: "/programas-electorales/Autonomicas_Pais_Vasco_PP_PAIS_VASCO.pdf" },
+  { label: "Autonomicas_Pais_Vasco_VOX_PAIS_VASCO.pdf", href: "/programas-electorales/Autonomicas_Pais_Vasco_VOX_PAIS_VASCO.pdf" },
+];
+
+function ElectoralProgramsCard() {
+  return (
+    <section className="electoral-programs-card">
+      <div className="electoral-programs-card__intro">
+        <h2>Programas electorales utilizados como referencia</h2>
+        <p>
+          Puedes consultar los programas electorales que sirven como base documental
+          para ajustar la afinidad política del test. Los enlaces son archivos PDF
+          colocados en la carpeta <strong>/public/programas-electorales/</strong>.
+        </p>
+      </div>
+
+      <div className="electoral-programs-card__section">
+        <h3>Elecciones generales</h3>
+        <ul className="electoral-programs-card__list">
+          {nationalElectoralProgramFiles.map((file) => (
+            <li key={file.href}>
+              <a href={file.href} target="_blank" rel="noreferrer">
+                {file.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <details className="electoral-programs-card__details">
+        <summary>Ver programas autonómicos</summary>
+        <ul className="electoral-programs-card__list electoral-programs-card__list--regional">
+          {regionalElectoralProgramFiles.map((file) => (
+            <li key={file.href}>
+              <a href={file.href} target="_blank" rel="noreferrer">
+                {file.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <p className="electoral-programs-card__legal-note">
+        Nota de transparencia: el resultado es orientativo. El algoritmo compara tus
+        respuestas con perfiles ideológicos elaborados a partir de programas
+        electorales, medidas públicas y posicionamientos políticos generales. Esta
+        web no representa a ningún partido político ni implica afiliación,
+        recomendación oficial o verificación por parte de las formaciones citadas.
+      </p>
+    </section>
+  );
 }
 
 
@@ -262,7 +427,7 @@ function getPartyAlignedVoterType(
   consistency: number,
   nationalParty: PartyMatch
 ) {
-  if (consistency < 60 || nationalParty.percentage < 64) return null;
+  if (!nationalParty.isClearMatch || consistency < 60 || nationalParty.percentage < 64) return null;
 
   const has = (ideology: string, minimum = 55) =>
     topIdeologies.some((item) => item.ideology === ideology && item.percentage >= minimum);
@@ -669,9 +834,23 @@ function findClosestParty(
     }
   });
 
+  const percentage = Math.round(bestSimilarity);
+
+  if (percentage < MIN_CLEAR_PARTY_MATCH) {
+    return {
+      party: "Sin partido claramente afín",
+      percentage,
+      isClearMatch: false,
+      closestParty: bestParty,
+      explanation:
+        "Tu perfil ideológico no encaja de forma suficientemente clara con ningún partido incluido. Esto puede ocurrir cuando combinas posiciones que los programas electorales actuales no suelen reunir en una misma candidatura.",
+    };
+  }
+
   return {
     party: bestParty,
-    percentage: Math.round(bestSimilarity),
+    percentage,
+    isClearMatch: true,
   };
 }
 
@@ -1020,6 +1199,8 @@ function goBackToSelector() {
             electorales, medidas públicas y declaraciones políticas de los partidos
             incluidos.
           </p>
+
+          <ElectoralProgramsCard />
         </section>
       </main>
     );
@@ -1084,13 +1265,25 @@ function goBackToSelector() {
                   <div className="party-card_title"><span>Elecciones generales en España</span></div>
                   <div className="party-card_results"><div className="party-card_finalresult"><strong>{results.finalNationalParty.party}</strong></div>
                   <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
-                </div></div>
+                </div>
+                {!results.finalNationalParty.isClearMatch && (
+                  <p className="party-card_explanation">
+                    {results.finalNationalParty.explanation} El partido estatal más cercano sería {results.finalNationalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
+                  </p>
+                )}
+                </div>
 
                 <div className="party-card">
                   <div className="party-card_title"><span>Elecciones autonómicas en {selectedCommunityName}</span></div>
                   <div className="party-card_results"><div className="party-card_finalresult"><strong>{results.finalRegionalParty.party}</strong></div>
                   <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
-                </div></div>
+                </div>
+                {!results.finalRegionalParty.isClearMatch && (
+                  <p className="party-card_explanation">
+                    {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
+                  </p>
+                )}
+                </div>
           </div>
 
           <section className="ideological-profile-card results-profile-card">

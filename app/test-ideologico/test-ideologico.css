@@ -679,83 +679,6 @@ body.min-h-full.flex.flex-col {
   font-size: calc(var(--ideology-card-percentage-size) - 1px);
 }
 
-
-/* Bloque específico: porcentaje ideológico destacado */
-.Percentatge_ideo {
-  display: grid;
-  gap: 14px;
-  margin: 0 0 6px;
-  padding: 26px;
-  border: 1px solid #e0e0e0;
-  border-radius: 26px;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.035);
-}
-
-.Percentatge_ideo h2 {
-  margin: 0;
-  font-size: clamp(24px, 3vw, 34px);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-}
-
-.Percentatge_ideo .results-help {
-  margin: -6px 0 2px;
-  color: #555;
-  font-size: 16px;
-  line-height: 1.45;
-}
-
-.Percentatge_ideo .results-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 8px;
-}
-
-.Percentatge_ideo .result-card.result-ideology-card {
-  min-height: 112px;
-  padding: 18px 18px 42px;
-  border: 1px solid #111;
-  border-radius: 18px;
-  background: #fff;
-  opacity: 1;
-}
-
-.Percentatge_ideo .result-ideology-card__top {
-  gap: 16px;
-}
-
-.Percentatge_ideo .result-ideology-card__title {
-  color: #444;
-  font-size: 17px !important;
-  font-weight: 900;
-}
-
-.Percentatge_ideo .result-ideology-card__percentage {
-  color: #111;
-  font-size: 22px !important;
-  font-weight: 950;
-}
-
-.Percentatge_ideo .result-ideology-card__badge {
-  margin-top: 14px;
-  padding: 7px 11px;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.Percentatge_ideo .result-ideology-card__more-button {
-  left: 18px;
-  bottom: 14px;
-  color: #555;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.Percentatge_ideo .result-ideology-card__more-button:hover {
-  color: #111;
-}
-
 /* Explicaciones y popups */
 .ideology-explanation {
   width: 100%;
@@ -1325,6 +1248,87 @@ a.ideology-blocks-info-card__button {
 }
 
 
+/* Programas electorales utilizados como referencia */
+.electoral-programs-card {
+  display: grid;
+  gap: 22px;
+  padding: 26px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.electoral-programs-card__intro {
+  display: grid;
+  gap: 10px;
+}
+
+.electoral-programs-card h2,
+.electoral-programs-card h3 {
+  margin: 0;
+  color: #111;
+}
+
+.electoral-programs-card h2 {
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.electoral-programs-card h3 {
+  font-size: 18px;
+}
+
+.electoral-programs-card p {
+  margin: 0;
+  color: #444;
+  line-height: 1.6;
+}
+
+.electoral-programs-card__section,
+.electoral-programs-card__details {
+  display: grid;
+  gap: 12px;
+}
+
+.electoral-programs-card__details summary {
+  width: fit-content;
+  color: #111;
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.electoral-programs-card__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.electoral-programs-card__list a {
+  color: #111;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.electoral-programs-card__list a:hover {
+  color: #555;
+}
+
+.electoral-programs-card__legal-note {
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fafafa;
+  font-size: 14px;
+}
+
+
 /* Tablet */
 @media (max-width: 900px) {
   .test-selector__grid--three {
@@ -1539,30 +1543,35 @@ a.ideology-blocks-info-card__button {
   background-color: #eeeeee;
 }
 
+
 @media (max-width: 700px) {
-  .Percentatge_ideo {
-    gap: 12px;
-    margin-top: 0;
+  .electoral-programs-card {
     padding: 20px;
     border-radius: 22px;
   }
 
-  .Percentatge_ideo .results-grid {
+  .electoral-programs-card__list {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 8px;
+    gap: 9px;
   }
+}
 
-  .Percentatge_ideo .result-card.result-ideology-card {
-    min-height: 108px;
-    padding: 16px 16px 42px;
-  }
+/* Explicación específica cuando no existe partido claramente afín */
+.party-card_explanation {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f2f2f2;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.55;
+}
 
-  .Percentatge_ideo .result-ideology-card__title {
-    font-size: 16px !important;
-  }
-
-  .Percentatge_ideo .result-ideology-card__percentage {
-    font-size: 20px !important;
+@media (max-width: 700px) {
+  .party-card_explanation {
+    margin-top: 16px;
+    font-size: 13px;
   }
 }
