@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   answerOptions,
   autonomousCommunities,
   blockLabels,
-  ideologicalQuestions,
   ideologyExplanations,
   ideologyLabels,
+  completeIdeologicalQuestions,
   nationalPartyProfiles,
   quickIdeologicalQuestions,
   regionalPartyProfiles,
@@ -56,6 +56,31 @@ type CompleteAnalysis = {
 
 const IMPORTANT_AFFINITY_THRESHOLD = 70;
 const IDEOLOGY_BLOCKS_INFO_URL = "#";
+
+const ANONYMOUS_USER_STORAGE_KEY = "matchpolitico_anonymous_user_id";
+
+function createAnonymousUserId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return `anon_${crypto.randomUUID()}`;
+  }
+
+  return `anon_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+}
+
+function getOrCreateAnonymousUserId() {
+  if (typeof window === "undefined") return null;
+
+  const existingUserId = window.localStorage.getItem(ANONYMOUS_USER_STORAGE_KEY);
+
+  if (existingUserId) {
+    return existingUserId;
+  }
+
+  const newUserId = createAnonymousUserId();
+  window.localStorage.setItem(ANONYMOUS_USER_STORAGE_KEY, newUserId);
+
+  return newUserId;
+}
 
 
 const oppositeIdeologyPairs: [string, string][] = [
@@ -157,11 +182,17 @@ function getIdeologyProfileDetail(item: IdeologyResult) {
       "muestras preferencia por la cooperación internacional, la integración europea, los acuerdos multilaterales y soluciones compartidas ante problemas globales.",
     multiculturalista:
       "valoras la convivencia entre culturas, la integración de minorías y una sociedad abierta a distintas identidades, orígenes y formas de vida.",
+    institucionalista:
+      "das importancia a la estabilidad del sistema, el respeto a las normas, las instituciones, los procedimientos legales y los acuerdos que evitan cambios bruscos o decisiones improvisadas.",
+    neutralista:
+      "prefieres una política exterior prudente, con menos dependencia de bloques internacionales o alianzas automáticas. Este perfil suele dar prioridad a evitar conflictos externos y mantener margen propio de decisión.",
+    populista:
+      "tiendes a desconfiar de élites políticas, económicas o mediáticas y a valorar propuestas que dicen representar de forma directa a la gente común frente al sistema establecido.",
     ecologista:
       "das mucha importancia a la transición energética, la protección ambiental, la sostenibilidad y la intervención pública frente al cambio climático.",
   };
 
-  return `${label} (${item.percentage}%): ${details[item.ideology] ?? "esta tendencia aparece de forma destacada en tus respuestas y marca una parte importante de tu orientación política."}`;
+  return `${label} (${item.percentage}%): ${details[item.ideology] ?? "tu resultado muestra que esta orientación influye en tu forma de entender la política. Significa que varias de tus respuestas coinciden con las ideas centrales de este perfil, aunque no tenga por qué definirte por completo."}`;
 }
 
 function getIdeologyPercentage(results: IdeologyResult[], ideology: string) {
@@ -190,7 +221,7 @@ function detectInconsistencies(results: IdeologyResult[]) {
 
 function getProfileIntro(testMode: TestMode) {
   if (testMode === "ultra") {
-    return "Perfil orientativo muy breve. Este test tiene solo 8 preguntas, por lo que sirve para detectar una tendencia general, pero no permite leer con precisión todos los matices de economía, sociedad, nación o autoridad.";
+    return "Perfil orientativo muy breve. Este test tiene solo 10 preguntas, por lo que sirve para detectar una tendencia general, pero no permite leer con precisión todos los matices de economía, sociedad, nación o autoridad.";
   }
 
   if (testMode === "rapido") {
@@ -226,35 +257,177 @@ function generateIdeologicalProfile(
 }
 
 
-function getVoterType(topIdeologies: IdeologyResult[]) {
-  const first = topIdeologies[0]?.ideology;
-  const second = topIdeologies[1]?.ideology;
+function getPartyAlignedVoterType(
+  topIdeologies: IdeologyResult[],
+  consistency: number,
+  nationalParty: PartyMatch
+) {
+  if (consistency < 60 || nationalParty.percentage < 64) return null;
 
-  if (!first) return "Perfil político mixto";
+  const has = (ideology: string, minimum = 55) =>
+    topIdeologies.some((item) => item.ideology === ideology && item.percentage >= minimum);
 
-  if (first === "nacionalista" || first === "soberanista") {
-    if (second === "conservador" || second === "tradicionalista") {
+  const party = nationalParty.party;
+
+  if (party === "VOX") {
+    if (has("liberal") || has("libertario")) return "Nacional-liberal conservador";
+    if (has("autoritario")) return "Nacional-conservador de orden";
+    return "Nacional-conservador";
+  }
+
+  if (party === "PP") {
+    if (has("liberal") && has("conservador")) return "Liberal-conservador institucional";
+    if (has("nacionalista") || has("soberanista")) return "Conservador nacional institucional";
+    if (has("socialdemocrata")) return "Centro reformista institucional";
+    return "Conservador institucional";
+  }
+
+  if (party === "PSOE") {
+    if (has("progresista") && has("globalista")) return "Socialdemócrata progresista europeísta";
+    if (has("institucionalista")) return "Socialdemócrata institucional";
+    if (has("soberanista") || has("nacionalista")) return "Socialdemócrata soberanista";
+    return "Socialdemócrata reformista";
+  }
+
+  if (party === "Sumar") {
+    if (has("ecologista")) return "Ecosocial progresista";
+    if (has("multiculturalista") || has("globalista")) return "Progresista ecosocial cosmopolita";
+    return "Izquierda progresista";
+  }
+
+  if (party === "Podemos") {
+    if (has("comunista")) return "Izquierda transformadora";
+    if (has("soberanista") || has("nacionalista")) return "Izquierda soberanista";
+    return "Izquierda intervencionista progresista";
+  }
+
+  return null;
+}
+
+function getVoterType(
+  topIdeologies: IdeologyResult[],
+  consistency: number,
+  nationalParty: PartyMatch
+) {
+  const top = topIdeologies.slice(0, 5);
+  const first = top[0];
+  const second = top[1];
+
+  if (!first) return "Perfil político no determinado";
+
+  const partyAlignedType = getPartyAlignedVoterType(top, consistency, nationalParty);
+  if (partyAlignedType) return partyAlignedType;
+
+  const has = (ideology: string, minimum = 55) =>
+    top.some((item) => item.ideology === ideology && item.percentage >= minimum);
+
+  const firstIdeology = first.ideology;
+  const secondIdeology = second?.ideology;
+  const firstLabel = ideologyLabels[firstIdeology] ?? firstIdeology;
+
+  if (consistency < 60) {
+    return "Perfil ideológico transversal";
+  }
+
+  if (has("nacionalista") || has("soberanista")) {
+    if (has("progresista") || has("socialista") || has("socialdemocrata")) {
+      return has("nacionalista") ? "Nacional-progresista" : "Soberanista progresista";
+    }
+
+    if (has("conservador") || has("tradicionalista")) {
       return "Nacional-conservador";
     }
+
+    if (has("liberal") || has("libertario")) {
+      return "Liberal soberanista";
+    }
+
+    if (has("autoritario")) {
+      return "Nacional-ordenista";
+    }
+
+    if (has("neutralista")) {
+      return "Soberanista neutralista";
+    }
+
     return "Soberanista pragmático";
   }
 
-  if (first === "liberal" || first === "libertario") {
-    if (second === "conservador") return "Liberal-conservador";
-    return "Liberal económico";
+  if (has("socialdemocrata")) {
+    if (has("globalista") || has("institucionalista")) return "Socialdemócrata institucional";
+    if (has("progresista")) return "Socialdemócrata progresista";
+    if (has("conservador")) return "Socialdemócrata moderado";
+    return "Socialdemócrata reformista";
   }
 
-  if (first === "socialdemocrata") return "Socialdemócrata institucional";
-  if (first === "socialista") return "Progresista intervencionista";
-  if (first === "comunista") return "Izquierda transformadora";
-  if (first === "conservador") return "Conservador institucional";
-  if (first === "progresista") return "Progresista social";
-  if (first === "tradicionalista") return "Tradicionalista cultural";
-  if (first === "globalista") return "Europeísta/globalista";
-  if (first === "multiculturalista") return "Pluralista multicultural";
-  if (first === "autoritario") return "Ordenista/autoritario";
+  if (has("socialista")) {
+    if (has("progresista") || has("multiculturalista")) return "Socialista progresista";
+    if (has("comunista")) return "Izquierda transformadora";
+    if (has("institucionalista")) return "Socialista institucional";
+    return "Socialista intervencionista";
+  }
 
-  return "Perfil político mixto";
+  if (has("comunista")) {
+    if (has("progresista")) return "Izquierda transformadora progresista";
+    if (has("soberanista")) return "Izquierda soberanista";
+    return "Izquierda transformadora";
+  }
+
+  if (has("liberal") || has("libertario")) {
+    if (has("conservador")) return "Liberal-conservador";
+    if (has("globalista")) return "Liberal cosmopolita";
+    if (has("progresista")) return "Liberal progresista";
+    if (has("institucionalista")) return "Liberal institucional";
+    return has("libertario") ? "Libertario liberal" : "Liberal económico";
+  }
+
+  if (has("conservador") || has("tradicionalista")) {
+    if (has("autoritario")) return "Conservador de orden";
+    if (has("institucionalista")) return "Conservador institucional";
+    return has("tradicionalista") ? "Tradicionalista cultural" : "Conservador social";
+  }
+
+  if (has("progresista")) {
+    if (has("globalista") || has("multiculturalista")) return "Progresista cosmopolita";
+    if (has("institucionalista")) return "Progresista institucional";
+    return "Progresista social";
+  }
+
+  if (has("globalista")) {
+    if (has("multiculturalista")) return "Cosmopolita multicultural";
+    if (has("institucionalista")) return "Europeísta institucional";
+    return "Europeísta/globalista";
+  }
+
+  if (has("multiculturalista")) {
+    return "Pluralista multicultural";
+  }
+
+  if (has("autoritario")) {
+    if (has("institucionalista")) return "Ordenista institucional";
+    return "Ordenista/autoritario";
+  }
+
+  if (has("institucionalista")) {
+    return "Reformista institucional";
+  }
+
+  if (has("neutralista")) {
+    return "Neutralista pragmático";
+  }
+
+  if (has("populista")) {
+    if (secondIdeology === "socialista" || secondIdeology === "socialdemocrata") return "Populista social";
+    if (secondIdeology === "nacionalista" || secondIdeology === "soberanista") return "Populista nacional";
+    return "Populista anti-élite";
+  }
+
+  if (second && Math.abs(first.percentage - second.percentage) <= 6) {
+    const secondLabel = ideologyLabels[second.ideology] ?? second.ideology;
+    return `${firstLabel}-${secondLabel}`;
+  }
+
+  return `${firstLabel} pragmático`;
 }
 
 function getPriorityDescription(ideology: string) {
@@ -386,9 +559,11 @@ function generateCompleteAnalysis(results: ReturnType<typeof calculateResults>):
     .sort((a, b) => b.percentage - a.percentage)
     .slice(0, 4);
 
+  const consistency = getCompleteConsistency(realContradictionCount, results.ideologyPercentages);
+
   return {
-    voterType: getVoterType(results.ideologyPercentages.slice(0, 3)),
-    consistency: getCompleteConsistency(realContradictionCount, results.ideologyPercentages),
+    voterType: getVoterType(results.ideologyPercentages.slice(0, 5), consistency, results.finalNationalParty),
+    consistency,
     deepProfile: getCompleteDeepProfile(results, priorities),
     priorities,
     contradictions,
@@ -597,13 +772,15 @@ export default function IdeologicalTestPage() {
   const [openIdeology, setOpenIdeology] = useState<string | null>(null);
   const [confirmationType, setConfirmationType] = useState<ConfirmationType>(null);
   const [isAdvancingQuestion, setIsAdvancingQuestion] = useState(false);
+  const savedResultSignatureRef = useRef<string | null>(null);
+  const testStartedAtRef = useRef<string | null>(null);
 
   const activeQuestions =
     testMode === "ultra"
       ? ultraQuickIdeologicalQuestions
       : testMode === "rapido"
         ? quickIdeologicalQuestions
-        : ideologicalQuestions;
+        : completeIdeologicalQuestions;
 
   const currentQuestion = activeQuestions[currentQuestionIndex];
   const currentAnswer =
@@ -652,6 +829,8 @@ export default function IdeologicalTestPage() {
     setOpenIdeology(null);
     setConfirmationType(null);
     setIsAdvancingQuestion(false);
+    savedResultSignatureRef.current = null;
+    testStartedAtRef.current = new Date().toISOString();
 
     window.setTimeout(() => {
       window.scrollTo({
@@ -671,6 +850,8 @@ function goBackToSelector() {
   setOpenIdeology(null);
   setConfirmationType(null);
   setIsAdvancingQuestion(false);
+  savedResultSignatureRef.current = null;
+  testStartedAtRef.current = null;
 
   setTimeout(() => {
     window.scrollTo({
@@ -717,6 +898,61 @@ function goBackToSelector() {
     confirmationType === "restart"
       ? "Se perderán las respuestas actuales y volverás a la página principal de selección de tests."
       : "Se perderán las respuestas de este test y volverás a la página principal de selección.";
+
+  useEffect(() => {
+    if (!showResults || testMode === "selector") return;
+    if (activeQuestions.length === 0) return;
+
+    const answeredQuestionCount = activeQuestions.filter(
+      (question) => answers[question.id] !== undefined
+    ).length;
+
+    if (answeredQuestionCount !== activeQuestions.length) return;
+
+    const completeAnalysisForSave =
+      testMode === "completo" ? generateCompleteAnalysis(results) : null;
+
+    const resultSignature = `${testMode}-${selectedCommunity}-${activeQuestions
+      .map((question) => `${question.id}:${answers[question.id]}`)
+      .join("|")}`;
+
+    if (savedResultSignatureRef.current === resultSignature) return;
+
+    savedResultSignatureRef.current = resultSignature;
+
+    const anonymousUserId = getOrCreateAnonymousUserId();
+    const completedAt = new Date().toISOString();
+    const startedAt = testStartedAtRef.current ?? completedAt;
+    const durationSeconds = Math.max(
+      0,
+      Math.round((new Date(completedAt).getTime() - new Date(startedAt).getTime()) / 1000)
+    );
+
+    fetch("/api/save-results", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        anonymousUserId,
+        startedAt,
+        completedAt,
+        durationSeconds,
+        testMode,
+        selectedCommunity,
+        finalNationalParty: results.finalNationalParty,
+        finalRegionalParty: results.finalRegionalParty,
+        ideologyPercentages: results.ideologyPercentages,
+        voterType: completeAnalysisForSave?.voterType ?? null,
+        consistency: completeAnalysisForSave?.consistency ?? null,
+        answers,
+        questions: activeQuestions,
+      }),
+    }).catch((error) => {
+      console.error("Error guardando resultado del test", error);
+      savedResultSignatureRef.current = null;
+    });
+  }, [showResults, testMode, selectedCommunity, activeQuestions, answers, results]);
 
   if (testMode === "selector") {
     return (
@@ -768,7 +1004,7 @@ function goBackToSelector() {
               onClick={() => startTest("completo")}
             >
               <span>Test Completo</span>
-              <strong>{ideologicalQuestions.length} preguntas</strong>
+              <strong>{completeIdeologicalQuestions.length} preguntas</strong>
               <p>
                 Versión más precisa. Analiza más matices para afinar resultados
                 por economía, sociedad, nación, autoridad, geopolítica e identidad.
@@ -794,6 +1030,17 @@ function goBackToSelector() {
     const isCompleteTest = testMode === "completo";
     const ideologicalProfile = generateIdeologicalProfile(results, testMode);
     const completeAnalysis = isCompleteTest ? generateCompleteAnalysis(results) : null;
+    const visibleIdeologies = results.ideologyPercentages.slice(0, 12);
+    const relevantVisibleIdeologies = visibleIdeologies.filter(
+      (item) => item.percentage >= IMPORTANT_AFFINITY_THRESHOLD
+    );
+    const highlightedIdeologies =
+      relevantVisibleIdeologies.length >= 3
+        ? relevantVisibleIdeologies
+        : visibleIdeologies.slice(0, 3);
+    const highlightedIdeologyIds = new Set(
+      highlightedIdeologies.map((item) => item.ideology)
+    );
 
     return (
       <main className="ideology-test">
@@ -809,7 +1056,7 @@ function goBackToSelector() {
             ← Volver a la última pregunta
           </button>
 
-          <h1>Resultado del {getTestTitle(testMode).toLowerCase()}</h1>
+          <h1>Resultado del {getTestTitle(testMode)}</h1>
 
           <div className="community-selector">
               <label htmlFor="community">Selecciona una comunidad autónoma</label>
@@ -884,6 +1131,47 @@ function goBackToSelector() {
             )}
           </section>
 
+          <div className="Percentatge_ideo"><h2>Porcentaje ideológico</h2>
+
+          <p className="results-help">
+            Cada tendencia incluye una explicación sencilla. Pulsa “Más información”.
+          </p>
+
+          <div className="results-grid">
+            {highlightedIdeologies.map((item) => {
+              const isRelevant = highlightedIdeologyIds.has(item.ideology);
+
+              return (
+                <article
+                  key={item.ideology}
+                  className={`result-card result-ideology-card ${isRelevant ? "is-relevant" : "is-secondary"}`}
+                >
+                  <div className="result-card__top result-ideology-card__top">
+                    <span className="result-ideology-card__title">{ideologyLabels[item.ideology] ?? item.ideology}</span>
+                    <strong className="result-ideology-card__percentage">{item.percentage}%</strong>
+                  </div>
+
+                  {isRelevant && (
+                    <span className="result-ideology-card__badge">Afinidad relevante</span>
+                  )}
+
+                  <button
+                    type="button"
+                    className="more-info-button result-ideology-card__more-button"
+                    onClick={() =>
+                      setOpenIdeology((current) =>
+                        current === item.ideology ? null : item.ideology
+                      )
+                    }
+                  >
+                    Más información
+                  </button>
+                </article>
+              );
+            })}
+          </div></div>
+
+
           {completeAnalysis && (
             <section className="complete-analysis-card">
               <div className="complete-analysis-card__intro">
@@ -901,8 +1189,9 @@ function goBackToSelector() {
                   <span className="complete-analysis-panel__label">Tipo de votante</span>
                   <strong>{completeAnalysis.voterType}</strong>
                   <p>
-                    Esta etiqueta resume la combinación dominante de tus respuestas,
-                    no pretende encasillarte en una sola ideología cerrada.
+                    Esta etiqueta cruza tus ideologías dominantes con la consistencia
+                    del resultado y el partido nacional más afín, para evitar un
+                    arquetipo político desconectado de la coincidencia electoral.
                   </p>
                 </article>
 
@@ -990,47 +1279,7 @@ function goBackToSelector() {
             </section>
           )}
 
-          <div className="Percentatge_ideo"><h2>Porcentaje ideológico</h2>
-
-          <p className="results-help">
-            Cada tendencia incluye una explicación sencilla. Pulsa “Más información”.
-          </p>
-
-          <div className="results-grid">
-            {results.ideologyPercentages.slice(0, 12).map((item) => {
-              const isRelevant = item.percentage >= IMPORTANT_AFFINITY_THRESHOLD;
-
-              return (
-                <article
-                  key={item.ideology}
-                  className={`result-card result-ideology-card ${isRelevant ? "is-relevant" : "is-secondary"}`}
-                >
-                  <div className="result-card__top result-ideology-card__top">
-                    <span className="result-ideology-card__title">{ideologyLabels[item.ideology] ?? item.ideology}</span>
-                    <strong className="result-ideology-card__percentage">{item.percentage}%</strong>
-                  </div>
-
-                  {isRelevant && (
-                    <span className="result-ideology-card__badge">Afinidad relevante</span>
-                  )}
-
-                  <button
-                    type="button"
-                    className="more-info-button result-ideology-card__more-button"
-                    onClick={() =>
-                      setOpenIdeology((current) =>
-                        current === item.ideology ? null : item.ideology
-                      )
-                    }
-                  >
-                    Más información
-                  </button>
-                </article>
-              );
-            })}
-          </div></div>
-
-          <IdeologyBlocksInfoCard variant="results" />
+          {isUltraTest && <IdeologyBlocksInfoCard variant="results" />}
 
           {isUltraTest && (
             <div className="upgrade-result-card">

@@ -3238,3 +3238,39 @@ export const ideologyExplanations: Record<string, { title: string; description: 
    - Completo: 216 preguntas
    Se añaden 12 preguntas del test completo para que el test rápido tenga más diferencia real respecto al ultra rápido. */
 quickIdeologicalQuestions.push(...ideologicalQuestions.slice(18, 30));
+
+/* Selección final de preguntas:
+   - Test Rápido: se amplía a 10 preguntas.
+   - Test Ideológico: se mantiene en 30 preguntas.
+   - Test Completo: se reduce a 60 preguntas seleccionadas desde el banco completo de 216.
+   No se elimina el banco completo original para poder reutilizarlo en futuras versiones o analíticas. */
+function cloneQuestionByOriginalId(sourceId: number, newId: number): Question {
+  const question = ideologicalQuestions.find((item) => item.id === sourceId);
+
+  if (!question) {
+    throw new Error(`No se ha encontrado la pregunta original ${sourceId}`);
+  }
+
+  return {
+    ...question,
+    id: newId,
+  };
+}
+
+ultraQuickIdeologicalQuestions.push(
+  cloneQuestionByOriginalId(11, 9),
+  cloneQuestionByOriginalId(129, 10)
+);
+
+const completeIdeologicalQuestionIds = [
+  1, 2, 3, 4, 5, 7, 11, 12, 15, 21,
+  37, 38, 40, 41, 46, 48, 52, 53, 60, 72,
+  73, 74, 75, 76, 78, 84, 88, 91, 93, 97,
+  109, 110, 111, 112, 116, 120, 123, 127, 129, 144,
+  145, 146, 148, 151, 153, 157, 164, 165, 173, 177,
+  181, 182, 183, 184, 185, 186, 190, 196, 200, 216,
+];
+
+export const completeIdeologicalQuestions: Question[] = completeIdeologicalQuestionIds.map(
+  (sourceId, index) => cloneQuestionByOriginalId(sourceId, index + 1)
+);

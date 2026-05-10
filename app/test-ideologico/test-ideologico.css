@@ -679,6 +679,83 @@ body.min-h-full.flex.flex-col {
   font-size: calc(var(--ideology-card-percentage-size) - 1px);
 }
 
+
+/* Bloque específico: porcentaje ideológico destacado */
+.Percentatge_ideo {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 6px;
+  padding: 26px;
+  border: 1px solid #e0e0e0;
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.035);
+}
+
+.Percentatge_ideo h2 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.Percentatge_ideo .results-help {
+  margin: -6px 0 2px;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.Percentatge_ideo .results-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.Percentatge_ideo .result-card.result-ideology-card {
+  min-height: 112px;
+  padding: 18px 18px 42px;
+  border: 1px solid #111;
+  border-radius: 18px;
+  background: #fff;
+  opacity: 1;
+}
+
+.Percentatge_ideo .result-ideology-card__top {
+  gap: 16px;
+}
+
+.Percentatge_ideo .result-ideology-card__title {
+  color: #444;
+  font-size: 17px !important;
+  font-weight: 900;
+}
+
+.Percentatge_ideo .result-ideology-card__percentage {
+  color: #111;
+  font-size: 22px !important;
+  font-weight: 950;
+}
+
+.Percentatge_ideo .result-ideology-card__badge {
+  margin-top: 14px;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.Percentatge_ideo .result-ideology-card__more-button {
+  left: 18px;
+  bottom: 14px;
+  color: #555;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.Percentatge_ideo .result-ideology-card__more-button:hover {
+  color: #111;
+}
+
 /* Explicaciones y popups */
 .ideology-explanation {
   width: 100%;
@@ -1460,4 +1537,32 @@ a.ideology-blocks-info-card__button {
 
 .modal-actions button.secondary-button {
   background-color: #eeeeee;
+}
+
+@media (max-width: 700px) {
+  .Percentatge_ideo {
+    gap: 12px;
+    margin-top: 0;
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .Percentatge_ideo .results-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .Percentatge_ideo .result-card.result-ideology-card {
+    min-height: 108px;
+    padding: 16px 16px 42px;
+  }
+
+  .Percentatge_ideo .result-ideology-card__title {
+    font-size: 16px !important;
+  }
+
+  .Percentatge_ideo .result-ideology-card__percentage {
+    font-size: 20px !important;
+  }
 }
