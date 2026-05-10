@@ -596,6 +596,7 @@ export default function IdeologicalTestPage() {
   const [selectedCommunity, setSelectedCommunity] = useState("cataluna");
   const [openIdeology, setOpenIdeology] = useState<string | null>(null);
   const [confirmationType, setConfirmationType] = useState<ConfirmationType>(null);
+  const [isAdvancingQuestion, setIsAdvancingQuestion] = useState(false);
 
   const activeQuestions =
     testMode === "ultra"
@@ -632,6 +633,16 @@ export default function IdeologicalTestPage() {
     });
   }, [testMode, showResults]);
 
+  useEffect(() => {
+    if (testMode === "selector" || showResults) return;
+    if (totalQuestions <= 0) return;
+
+    if (currentQuestionIndex > totalQuestions - 1) {
+      setCurrentQuestionIndex(totalQuestions - 1);
+      setIsAdvancingQuestion(false);
+    }
+  }, [currentQuestionIndex, showResults, testMode, totalQuestions]);
+
   function startTest(mode: "ultra" | "rapido" | "completo") {
     setTestMode(mode);
     setAnswers({});
@@ -640,6 +651,7 @@ export default function IdeologicalTestPage() {
     setInfoOpen(false);
     setOpenIdeology(null);
     setConfirmationType(null);
+    setIsAdvancingQuestion(false);
 
     window.setTimeout(() => {
       window.scrollTo({
@@ -658,6 +670,7 @@ function goBackToSelector() {
   setInfoOpen(false);
   setOpenIdeology(null);
   setConfirmationType(null);
+  setIsAdvancingQuestion(false);
 
   setTimeout(() => {
     window.scrollTo({
@@ -677,6 +690,7 @@ function goBackToSelector() {
   function goToPreviousQuestion() {
     setCurrentQuestionIndex((current) => Math.max(0, current - 1));
     setInfoOpen(false);
+    setIsAdvancingQuestion(false);
   }
 
   function goToNextQuestion() {
@@ -689,7 +703,7 @@ function goBackToSelector() {
       return;
     }
 
-    setCurrentQuestionIndex((current) => current + 1);
+    setCurrentQuestionIndex((current) => Math.min(current + 1, totalQuestions - 1));
     setInfoOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1151,7 +1165,28 @@ function goBackToSelector() {
     );
   }
 
-  if (!currentQuestion) return null;
+  if (!currentQuestion) {
+    return (
+      <main className="ideology-test">
+        <section className="single-question">
+          <article className="question-card question-card--single">
+            <h2>No se ha podido cargar esta pregunta</h2>
+            <p>
+              Ha ocurrido un desfase al avanzar entre preguntas. Puedes volver a la
+              selección de tests y empezar de nuevo.
+            </p>
+            <button
+              type="button"
+              className="restart-button"
+              onClick={goBackToSelector}
+            >
+              Volver a la selección de tests
+            </button>
+          </article>
+        </section>
+      </main>
+    );
+  }
 
   const practicalInfo = getPracticalInfo(currentQuestion);
 
@@ -1212,7 +1247,11 @@ function goBackToSelector() {
                     ? "answer-options__button is-active"
                     : "answer-options__button"
                 }
+                disabled={isAdvancingQuestion}
                 onClick={() => {
+                  if (isAdvancingQuestion) return;
+
+                  setIsAdvancingQuestion(true);
                   setAnswers((prev) => ({
                     ...prev,
                     [currentQuestion.id]: option.value,
@@ -1222,12 +1261,16 @@ function goBackToSelector() {
                     if (currentQuestionIndex >= totalQuestions - 1) {
                       setShowResults(true);
                       setInfoOpen(false);
+                      setIsAdvancingQuestion(false);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                       return;
                     }
 
-                    setCurrentQuestionIndex((current) => current + 1);
+                    setCurrentQuestionIndex((current) =>
+                      Math.min(current + 1, totalQuestions - 1)
+                    );
                     setInfoOpen(false);
+                    setIsAdvancingQuestion(false);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }, 220);
                 }}
