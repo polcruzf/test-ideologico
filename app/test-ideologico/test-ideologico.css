@@ -327,6 +327,18 @@ body.min-h-full.flex.flex-col {
   font-size: 15px;
 }
 
+.question-info__response-title {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 13px !important;
+  font-weight: 900;
+}
+
 .question-info p {
   margin: 0;
   color: #444;
@@ -436,7 +448,8 @@ body.min-h-full.flex.flex-col {
   color: #555;
 }
 
-.community-selector {
+.community-selector,
+.territorial-reference-selector {
   display: grid;
   gap: 8px;
   padding: 22px;
@@ -445,11 +458,13 @@ body.min-h-full.flex.flex-col {
   background: #fff;
 }
 
-.community-selector label {
+.community-selector label,
+.territorial-reference-selector label {
   font-weight: 800;
 }
 
-.community-selector select {
+.community-selector select,
+.territorial-reference-selector select {
   width: min(100%, 420px);
   padding: 12px 14px;
   border: 1px solid #ccc;
@@ -458,7 +473,8 @@ body.min-h-full.flex.flex-col {
   font-weight: 700;
 }
 
-.community-selector p {
+.community-selector p,
+.territorial-reference-selector p {
   margin: 0;
   color: #555;
   line-height: 1.5;
@@ -1574,4 +1590,315 @@ a.ideology-blocks-info-card__button {
     margin-top: 16px;
     font-size: 13px;
   }
+}
+
+/* Popup informativo de partido afín */
+.party-card__more-button {
+  width: fit-content;
+  margin-top: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.party-card__more-button:hover {
+  color: #ddd;
+}
+
+.party-info-popup {
+  position: relative;
+  width: min(100%, 680px);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.party-info-popup__eyebrow {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.party-info-popup h3 {
+  margin: 0 44px 12px 0;
+  font-size: clamp(24px, 4vw, 34px);
+  letter-spacing: -0.04em;
+}
+
+.party-info-popup h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.party-info-popup p {
+  margin: 0 0 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.party-info-popup__section {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.party-info-popup__list,
+.party-info-popup__pill-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.party-info-popup__list li {
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fafafa;
+}
+
+.party-info-popup__list strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #111;
+}
+
+.party-info-popup__list span {
+  color: #555;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.party-info-popup__pill-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.party-info-popup__pill-list li {
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.party-info-popup__note {
+  margin-top: 18px !important;
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fafafa;
+  font-size: 14px;
+}
+
+/* Refuerzo visual y funcional del popup de partido */
+.modal-overlay {
+  z-index: 9999;
+}
+
+.party-card {
+  position: relative;
+}
+
+.party-card__more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: 18px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.party-card__more-button:hover {
+  background: #fff;
+  color: #111;
+}
+
+
+/* Alternativas por bloques cuando no hay partido estatal claramente afín */
+.party-card_no-clear-match {
+  display: grid;
+  gap: 16px;
+}
+
+.party-block-alternatives {
+  margin-top: 2px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.party-block-alternatives__intro {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.party-block-alternatives__intro strong {
+  display: block;
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.15;
+}
+
+.party-block-alternatives__intro p {
+  margin: 0;
+  color: #e8e8e8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.party-block-alternatives__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.party-block-alternative-card {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.party-block-alternative-card span {
+  margin: 0;
+  color: #d7d7d7;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.party-block-alternative-card strong {
+  color: #fff;
+  font-size: clamp(18px, 2vw, 23px);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.party-block-alternative-card em {
+  width: fit-content;
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 850;
+  font-style: normal;
+}
+
+@media (max-width: 700px) {
+  .party-block-alternatives {
+    padding: 14px;
+  }
+
+  .party-block-alternatives__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Selector de alternativa estatal por bloques */
+.party-block-alternatives__label {
+  display: block;
+  margin: 14px 0 7px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.party-block-alternatives__select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: #fff;
+  color: #111;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.party-block-alternative-featured {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 16px;
+  background: #fff;
+  color: #111;
+}
+
+.party-block-alternative-featured span {
+  margin: 0;
+  color: #555;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.party-block-alternative-featured strong {
+  color: #111;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.05;
+}
+
+.party-block-alternative-featured em {
+  width: fit-content;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.party-block-alternative-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.party-block-alternative-card.is-active {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.party-block-alternative-card:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.16);
 }

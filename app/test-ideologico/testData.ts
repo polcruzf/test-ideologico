@@ -3608,16 +3608,16 @@ export const ideologyExplanations: Record<string, { title: string; description: 
   nacionalista: {
     title: "Nacionalista",
     description:
-      "Da mucha importancia a la nación, la cultura propia, la lengua, los símbolos y la prioridad de la comunidad nacional.",
+      "Da mucha importancia a la nación, la cultura propia, la lengua, los símbolos y la prioridad de la comunidad nacional. En comunidades con partidos soberanistas, esta etiqueta debe interpretarse según la nación de referencia: España o la comunidad seleccionada.",
     example:
-      "Por ejemplo: proteger la lengua propia, controlar más la inmigración o priorizar los intereses del país o territorio.",
+      "Proteger la lengua propia, controlar más la inmigración o priorizar los intereses del país o territorio de referencia.",
   },
   soberanista: {
     title: "Soberanista",
     description:
-      "Quiere que las decisiones importantes se tomen dentro del país o territorio, sin depender tanto de organismos externos.",
+      "Quiere que las decisiones importantes se tomen dentro del país o territorio, sin depender tanto de organismos externos. Puede significar soberanía española, más autogobierno territorial o independentismo, según la referencia elegida por el usuario.",
     example:
-      "Por ejemplo: que España, Cataluña, Euskadi u otra comunidad tenga más capacidad para decidir leyes, economía o fronteras.",
+      "Que España, Cataluña, Euskadi u otra comunidad tenga más capacidad para decidir leyes, economía o fronteras.",
   },
   globalista: {
     title: "Globalista",
