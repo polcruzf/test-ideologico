@@ -1288,7 +1288,6 @@ a.ideology-blocks-info-card__button {
 .electoral-programs-card__section,
 .electoral-programs-card__details {
   display: grid;
-  gap: 12px;
 }
 
 .electoral-programs-card__details summary {
@@ -2198,7 +2197,6 @@ section.test-selector {
 }
 
 .test-option-card p {
-  max-width: 260px;
   margin: 0;
   color: #222;
   font-size: clamp(15px, 1.35vw, 17px);
@@ -2262,7 +2260,7 @@ section.test-selector {
   background: #ebe9dc;
   color: #111;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -2310,7 +2308,7 @@ section.test-selector {
   width: auto;
   color: #111;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -2400,7 +2398,7 @@ section.test-selector {
     max-width: 290px;
     font-size: 18px;
     font-weight: 400;
-    margin-top: 50px;
+    margin-top: 60px;
   }
 
   .test-selector__subintro {
@@ -2415,19 +2413,18 @@ section.test-selector {
   }
 
   .test-option-card span {
-    font-size: 22px;
+    font-size: 23px;
     letter-spacing: -0.045em;
   }
 
   .test-option-card strong {
     margin-bottom: 22px;
     padding: 5px 14px;
-    font-size: 11px;
+    font-size: 14px;
   }
 
   .test-option-card p {
-    max-width: 245px;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.35;
   }
 
@@ -2437,13 +2434,13 @@ section.test-selector {
 
   .ideology-blocks-info-card__title,
   .electoral-programs-card h2 {
-    font-size: 22px;
-    line-height: 0.98;
+    font-size: 28px;
+    line-height: 1.2;
   }
 
   .ideology-blocks-info-card__text,
   .electoral-programs-card p {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.34;
   }
 
@@ -2451,7 +2448,7 @@ section.test-selector {
     min-height: 30px;
     padding: 8px 10px;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: 18px;
   }
 
   .electoral-programs-card {
@@ -2463,14 +2460,14 @@ section.test-selector {
   }
 
   .electoral-programs-card__details summary {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   .electoral-programs-card__legal-note {
     margin-top: 54px !important;
     padding: 28px 24px;
     border-radius: 14px;
-    font-size: 12px !important;
+    font-size: 18px !important;
     line-height: 1.35 !important;
   }
 }
