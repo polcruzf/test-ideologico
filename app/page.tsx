@@ -21,7 +21,21 @@ type Answers = Record<number, number>;
 type TestMode = "selector" | "ultra" | "rapido" | "completo";
 type ConfirmationType = "restart" | "home" | null;
 type TerritorialReference = "spain" | "selectedCommunity" | "mixed";
-type PartyInfoTarget = "national" | "regional" | null;
+type IndependencePosition =
+  | "independence"
+  | "right_to_decide"
+  | "autonomy_inside_spain"
+  | "against_independence"
+  | "unclear";
+
+type CompositeIdeologyResult = {
+  id: string;
+  label: string;
+  percentage: number;
+  description: string;
+  components: string[];
+  isHistoricalCategory?: boolean;
+};
 
 type IdeologyResult = {
   ideology: string;
@@ -64,74 +78,12 @@ const MIN_CLEAR_PARTY_MATCH = 58;
 const MIN_BLOCK_PARTY_MATCH = 55;
 const IDEOLOGY_BLOCKS_INFO_URL = "#";
 
-const TERRITORIALLY_SENSITIVE_COMMUNITIES = new Set([
+const INDEPENDENCE_QUESTION_COMMUNITIES = new Set([
   "cataluna",
   "pais-vasco",
-  "galicia",
   "navarra",
-  "baleares",
-  "comunidad-valenciana",
-  "canarias",
-  "andalucia",
-  "aragon",
-]);
-
-const HARD_TERRITORIAL_CONFLICT_COMMUNITIES = new Set([
-  "cataluna",
-  "pais-vasco",
   "galicia",
-  "navarra",
 ]);
-
-const SPANISH_UNIONIST_PARTY_KEYWORDS = [
-  "vox",
-  "pp",
-  "ciudadanos",
-  "falange",
-  "upn",
-  "psoe",
-  "psc",
-  "pse-ee",
-  "psn",
-  "psib",
-  "pspv",
-  "psdeg",
-];
-
-const REGIONAL_SOVEREIGNIST_PARTY_KEYWORDS = [
-  "erc",
-  "junts",
-  "cup",
-  "aliança",
-  "alianca",
-  "pdecat",
-  "pnv",
-  "eh bildu",
-  "bildu",
-  "bng",
-  "compromís",
-  "compromis",
-  "més",
-  "mes",
-  "geroa bai",
-  "nueva canarias",
-  "coalición canaria",
-  "coalicion canaria",
-  "cha",
-  "adelante andalucía",
-  "adelante andalucia",
-];
-
-const REGIONAL_AUTONOMIST_PARTY_KEYWORDS = [
-  "teruel existe",
-  "aragón existe",
-  "aragon existe",
-  "foro asturias",
-  "prc",
-  "upl",
-  "soria ya",
-  "par",
-];
 
 const COMMON_GENERAL_ELECTION_PARTIES = [
   "PSOE",
@@ -140,17 +92,6 @@ const COMMON_GENERAL_ELECTION_PARTIES = [
   "Sumar",
   "Podemos",
   "Ciudadanos",
-];
-
-const INDEPENDENTIST_OR_SEPARATIST_PARTY_KEYWORDS = [
-  "aliança",
-  "alianca",
-  "junts",
-  "erc",
-  "cup",
-  "eh bildu",
-  "bildu",
-  "bng",
 ];
 
 const HARD_SPANISH_UNIONIST_GENERAL_PARTIES = new Set([
@@ -162,142 +103,42 @@ const MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES = new Set([
   "PP",
 ]);
 
-const LEFT_TRANSFORMATIVE_GENERAL_PARTIES = new Set([
-  "Sumar",
-  "Podemos",
-  "PCTE",
-  "PCPE",
-]);
-
-const COMMUNIST_GENERAL_PARTIES = new Set([
-  "PCTE",
-  "PCPE",
-]);
-
-const CONSERVATIVE_GENERAL_PARTIES = new Set([
-  "PP",
-  "VOX",
-  "Ciudadanos",
-]);
-
-type PartyIdeologicalFamily =
-  | "territorial_identitarian_conservative"
-  | "territorial_liberal_conservative"
-  | "territorial_progressive"
-  | "territorial_anticapitalist"
-  | "regional_autonomist"
-  | "unionist_conservative"
-  | "unionist_socialdemocrat"
-  | "state_left_transformative"
-  | "state_communist"
-  | "state_liberal"
-  | "state_other";
-
-function getPartyIdeologicalFamily(partyName?: string): PartyIdeologicalFamily {
-  if (!partyName) return "state_other";
-
-  const normalizedPartyName = normalizePartyName(partyName);
-
-  // Independentismo o separatismo territorial fuerte.
-  // Estos partidos sí pueden provocar incompatibilidades territoriales duras
-  // en generales, porque su proyecto de soberanía choca con partidos
-  // centralistas o unionistas estatales.
-  if (normalizedPartyName.includes("alianca") || normalizedPartyName.includes("alianza")) {
-    return "territorial_identitarian_conservative";
-  }
-
-  if (
-    normalizedPartyName.includes("junts") ||
-    normalizedPartyName.includes("pdecat")
-  ) {
-    return "territorial_liberal_conservative";
-  }
-
-  if (
-    normalizedPartyName.includes("cup") ||
-    normalizedPartyName.includes("eh bildu") ||
-    normalizedPartyName.includes("bildu")
-  ) {
-    return "territorial_anticapitalist";
-  }
-
-  if (
-    normalizedPartyName.includes("erc") ||
-    normalizedPartyName.includes("bng")
-  ) {
-    return "territorial_progressive";
-  }
-
-  // Regionalismo, autonomismo o nacionalismo no necesariamente independentista.
-  // Estos partidos pueden ser muy territorialistas, pero no deben bloquear
-  // automáticamente el resultado de generales ni tratarse como separatistas.
-  if (
-    normalizedPartyName.includes("pnv") ||
-    normalizedPartyName.includes("compromis") ||
-    normalizedPartyName.includes("mes") ||
-    normalizedPartyName.includes("geroa bai") ||
-    normalizedPartyName.includes("nueva canarias") ||
-    normalizedPartyName.includes("coalicion canaria") ||
-    normalizedPartyName.includes("teruel existe") ||
-    normalizedPartyName.includes("aragon existe") ||
-    normalizedPartyName.includes("foro asturias") ||
-    normalizedPartyName.includes("prc") ||
-    normalizedPartyName.includes("upl") ||
-    normalizedPartyName.includes("soria ya") ||
-    normalizedPartyName.includes("par") ||
-    normalizedPartyName.includes("cha") ||
-    normalizedPartyName.includes("adelante andalucia")
-  ) {
-    return "regional_autonomist";
-  }
-
-  if (normalizedPartyName === "vox" || normalizedPartyName.includes("falange")) {
-    return "unionist_conservative";
-  }
-
-  if (normalizedPartyName === "pp" || normalizedPartyName.includes("ciudadanos")) {
-    return "state_liberal";
-  }
-
-  if (normalizedPartyName === "psoe") {
-    return "unionist_socialdemocrat";
-  }
-
-  if (normalizedPartyName === "sumar" || normalizedPartyName === "podemos") {
-    return "state_left_transformative";
-  }
-
-  if (normalizedPartyName === "pcte" || normalizedPartyName === "pcpe") {
-    return "state_communist";
-  }
-
-  return "state_other";
-}
-
-function isHardGeneralIdeologicalIncompatibility(
-  generalPartyName: string,
-  regionalPartyName?: string
-) {
-  const regionalFamily = getPartyIdeologicalFamily(regionalPartyName);
-
-  if (regionalFamily === "territorial_identitarian_conservative") {
-    return LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(generalPartyName);
-  }
-
-  if (regionalFamily === "territorial_liberal_conservative") {
-    return COMMUNIST_GENERAL_PARTIES.has(generalPartyName);
-  }
-
-  if (regionalFamily === "territorial_anticapitalist") {
-    return CONSERVATIVE_GENERAL_PARTIES.has(generalPartyName);
-  }
-
-  if (regionalFamily === "unionist_conservative" || regionalFamily === "state_liberal") {
-    return LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(generalPartyName) || COMMUNIST_GENERAL_PARTIES.has(generalPartyName);
-  }
-
-  return false;
-}
+const independencePositionOptions: {
+  value: IndependencePosition;
+  label: string;
+  description: string;
+}[] = [
+  {
+    value: "independence",
+    label: "A favor de la independencia",
+    description:
+      "El resultado interpretará el nacionalismo como soberanía de la comunidad seleccionada y penalizará partidos estatales incompatibles con esa posición.",
+  },
+  {
+    value: "right_to_decide",
+    label: "Derecho a decidir",
+    description:
+      "El resultado dará peso al autogobierno y reducirá la afinidad con partidos muy centralistas.",
+  },
+  {
+    value: "autonomy_inside_spain",
+    label: "Más autogobierno",
+    description:
+      "El resultado interpretará tu posición como autonomista o federalizante, no como independentista.",
+  },
+  {
+    value: "against_independence",
+    label: "En contra",
+    description:
+      "El resultado permitirá partidos estatales constitucionalistas o unionistas si encajan con el resto de tu perfil.",
+  },
+  {
+    value: "unclear",
+    label: "No lo tengo claro",
+    description:
+      "El resultado aplicará un ajuste territorial suave para evitar conclusiones demasiado tajantes.",
+  },
+];
 
 const ANONYMOUS_USER_STORAGE_KEY = "matchpolitico_anonymous_user_id";
 
@@ -484,6 +325,7 @@ function ElectoralProgramsCard() {
   );
 }
 
+
 const oppositeIdeologyPairs: [string, string][] = [
   ["liberal", "socialista"],
   ["liberal", "comunista"],
@@ -576,9 +418,9 @@ function getIdeologyProfileDetail(item: IdeologyResult) {
     autoritario:
       "tiendes a aceptar más control, disciplina institucional y medidas firmes cuando lo consideras necesario para mantener orden, seguridad o estabilidad.",
     nacionalista:
-      "sitúas la identidad nacional, la soberanía y la protección de los intereses propios por encima de enfoques más globales. En comunidades con nacionalismo territorial, este resultado se interpreta según la referencia territorial elegida: España o la comunidad seleccionada.",
+      "sitúas la identidad nacional, la soberanía, la unidad del país y la protección de los intereses propios por encima de enfoques más globales o supranacionales.",
     soberanista:
-      "das prioridad a que las decisiones importantes se tomen dentro del propio país o territorio. En comunidades con partidos soberanistas, el cálculo distingue si esa soberanía la interpretas como española, autonómica o independentista.",
+      "das prioridad a que las decisiones importantes se tomen dentro del propio país o territorio, limitando la dependencia de organismos externos.",
     globalista:
       "muestras preferencia por la cooperación internacional, la integración europea, los acuerdos multilaterales y soluciones compartidas ante problemas globales.",
     multiculturalista:
@@ -862,6 +704,7 @@ function getBlockAverages(results: ReturnType<typeof calculateResults>) {
         label: blockLabels[block.block] ?? block.block,
         value: Math.round(average),
         description: getPriorityDescription(block.block),
+        nationalParty: block.nationalParty,
       };
     })
     .sort((a, b) => b.value - a.value);
@@ -948,29 +791,14 @@ function getCompleteAxes(results: IdeologyResult[]): CompleteAxis[] {
   ];
 }
 
-function generateCompleteAnalysis(
-  results: ReturnType<typeof calculateResults>,
-  selectedCommunity: string,
-  territorialReference: TerritorialReference
-): CompleteAnalysis {
+function generateCompleteAnalysis(results: ReturnType<typeof calculateResults>): CompleteAnalysis {
   const priorities = getBlockAverages(results).slice(0, 5);
   const contradictions = getCompleteContradictions(results);
   const realContradictionCount = contradictions[0]?.startsWith("No se detectan") ? 0 : contradictions.length;
-  const partialPartyMatches = Object.entries(
-    getEligibleNationalPartyProfiles(selectedCommunity, results.finalRegionalParty.party)
-  )
+  const partialPartyMatches = Object.entries(nationalPartyProfiles)
     .map(([party, profile]) => ({
       party,
-      percentage: Math.round(
-        calculatePartySimilarity(
-          results.ideologyPercentages,
-          profile,
-          party,
-          selectedCommunity,
-          territorialReference,
-          results.finalRegionalParty.party
-        )
-      ),
+      percentage: Math.round(calculatePartySimilarityPure(results.ideologyPercentages, profile)),
     }))
     .sort((a, b) => b.percentage - a.percentage)
     .slice(0, 4);
@@ -992,16 +820,264 @@ function clamp(value: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
 
+
+function isIndependenceQuestionCommunity(selectedCommunity: string) {
+  return INDEPENDENCE_QUESTION_COMMUNITIES.has(selectedCommunity);
+}
+
+function getEffectiveIndependencePosition(
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
+): IndependencePosition {
+  if (!isIndependenceQuestionCommunity(selectedCommunity)) return "unclear";
+  return independencePosition;
+}
+
+function getTerritorialReferenceFromIndependence(
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
+): TerritorialReference {
+  if (!isIndependenceQuestionCommunity(selectedCommunity)) return "spain";
+
+  if (independencePosition === "independence" || independencePosition === "right_to_decide") {
+    return "selectedCommunity";
+  }
+
+  if (independencePosition === "autonomy_inside_spain") {
+    return "mixed";
+  }
+
+  if (independencePosition === "against_independence") {
+    return "spain";
+  }
+
+  return "mixed";
+}
+
+function getTerritorialReferenceLabel(
+  territorialReference: TerritorialReference,
+  selectedCommunityName: string
+) {
+  if (territorialReference === "selectedCommunity") return selectedCommunityName;
+  if (territorialReference === "mixed") return `España y ${selectedCommunityName}`;
+  return "España";
+}
+
+function getIndependencePositionLabel(independencePosition: IndependencePosition) {
+  return (
+    independencePositionOptions.find((option) => option.value === independencePosition)?.label ??
+    "No tengo una posición clara"
+  );
+}
+
+function getIdeologyValue(userProfile: IdeologyResult[], ideology: string) {
+  return userProfile.find((item) => item.ideology === ideology)?.percentage ?? 50;
+}
+
+type CompositeIdeologyDefinition = {
+  id: string;
+  label: string;
+  description: string;
+  positive: Record<string, number>;
+  negative?: Record<string, number>;
+  minimumSignals?: Record<string, number>;
+  components: string[];
+  isHistoricalCategory?: boolean;
+};
+
+const compositeIdeologyDefinitions: CompositeIdeologyDefinition[] = [
+  {
+    id: "socialdemocracia",
+    label: "Socialdemocracia",
+    description:
+      "Corriente reformista que combina economía de mercado, servicios públicos fuertes, redistribución moderada, derechos sociales e institucionalismo democrático.",
+    positive: { socialdemocrata: 3, progresista: 1.4, institucionalista: 1.2, ecologista: 0.7 },
+    negative: { libertario: 0.8, comunista: 0.5 },
+    components: ["socialdemocrata", "progresista", "institucionalista"],
+  },
+  {
+    id: "liberalismo_clasico",
+    label: "Liberalismo clásico",
+    description:
+      "Corriente centrada en libertad individual, propiedad privada, mercado, límites al poder estatal y seguridad jurídica.",
+    positive: { liberal: 3, libertario: 1.8, institucionalista: 1, globalista: 0.5 },
+    negative: { comunista: 1.4, socialista: 1.1, autoritario: 0.8 },
+    components: ["liberal", "libertario", "institucionalista"],
+  },
+  {
+    id: "nacional_conservadurismo",
+    label: "Nacional-conservadurismo",
+    description:
+      "Corriente que combina identidad nacional, soberanía, orden, tradición, control migratorio y una visión conservadora de la sociedad.",
+    positive: { nacionalista: 2.5, soberanista: 1.8, conservador: 2, tradicionalista: 1.4, autoritario: 0.8 },
+    negative: { globalista: 1.5, multiculturalista: 1.4, progresista: 0.9 },
+    components: ["nacionalista", "soberanista", "conservador", "tradicionalista"],
+  },
+  {
+    id: "marxismo",
+    label: "Marxismo",
+    description:
+      "Corriente socialista centrada en crítica al capitalismo, conflicto de clases, propiedad colectiva o pública, redistribución profunda e intervención estructural en la economía.",
+    positive: { comunista: 2.6, socialista: 2.2, progresista: 0.8, soberanista: 0.5 },
+    negative: { liberal: 1.8, libertario: 1.1, conservador: 0.7 },
+    minimumSignals: { comunista: 55, socialista: 58 },
+    components: ["comunista", "socialista", "antiliberalismo económico"],
+  },
+  {
+    id: "bolchevismo",
+    label: "Bolchevismo",
+    description:
+      "Categoría histórica derivada del marxismo revolucionario: combina comunismo, economía planificada, centralización política, partido de vanguardia y autoridad estatal fuerte.",
+    positive: { comunista: 2.4, socialista: 1.8, autoritario: 1.8, soberanista: 0.8, populista: 0.6 },
+    negative: { liberal: 1.8, libertario: 1.5, globalista: 0.5 },
+    minimumSignals: { comunista: 62, autoritario: 55 },
+    components: ["comunista", "socialista", "autoritario", "centralista"],
+    isHistoricalCategory: true,
+  },
+  {
+    id: "nacional_socialismo",
+    label: "Nacional-socialismo (categoría histórica)",
+    description:
+      "Categoría histórica extremadamente específica. No equivale a nacionalismo + socialismo: exige autoritarismo fuerte, ultranacionalismo, identitarismo excluyente, antiliberalismo, antiglobalismo y rechazo del pluralismo.",
+    positive: {
+      nacionalista: 2.8,
+      autoritario: 2.3,
+      tradicionalista: 1.6,
+      conservador: 1.5,
+      soberanista: 1.4,
+      populista: 0.8,
+      socialista: 0.4,
+    },
+    negative: { globalista: 2.2, multiculturalista: 2.4, liberal: 1.2, libertario: 1.7, progresista: 1.5, comunista: 1.0 },
+    minimumSignals: { nacionalista: 72, autoritario: 62, multiculturalista: 0, globalista: 0 },
+    components: ["ultranacionalismo", "autoritarismo", "identitarismo excluyente", "antiglobalismo"],
+    isHistoricalCategory: true,
+  },
+  {
+    id: "tercera_posicion",
+    label: "Tercera posición",
+    description:
+      "Categoría político-histórica específica que rechaza tanto el liberalismo económico puro como el socialismo internacionalista. Solo debe aparecer cuando se combinan con mucha intensidad soberanismo, nacionalismo, anti-globalismo, populismo e intervencionismo económico.",
+    positive: { nacionalista: 2.2, soberanista: 2.2, populista: 1.6, conservador: 1, socialista: 0.6 },
+    negative: { globalista: 2, liberal: 1, multiculturalista: 1.4 },
+    minimumSignals: { nacionalista: 72, soberanista: 72, globalista: 0, multiculturalista: 0 },
+    components: ["nacionalista", "soberanista", "populista", "intervencionismo"],
+    isHistoricalCategory: true,
+  },
+  {
+    id: "ecosocialismo",
+    label: "Ecosocialismo",
+    description:
+      "Corriente que une ecologismo, redistribución, derechos sociales, intervención pública y transformación del modelo productivo.",
+    positive: { ecologista: 2.4, socialista: 1.8, progresista: 1.6, socialdemocrata: 0.9, multiculturalista: 0.6 },
+    negative: { liberal: 1.1, conservador: 1.1, tradicionalista: 0.6 },
+    components: ["ecologista", "socialista", "progresista"],
+  },
+  {
+    id: "soberanismo_identitario",
+    label: "Soberanismo identitario",
+    description:
+      "Corriente que prioriza autogobierno, identidad cultural, protección de la comunidad política propia y resistencia a poderes externos.",
+    positive: { soberanista: 2.5, nacionalista: 2.2, tradicionalista: 0.9, conservador: 0.8 },
+    negative: { globalista: 1.8, multiculturalista: 1.1 },
+    components: ["soberanista", "nacionalista", "identidad cultural"],
+  },
+];
+
+function calculateCompositeIdeologies(userProfile: IdeologyResult[]): CompositeIdeologyResult[] {
+  const value = (ideology: string) => getIdeologyValue(userProfile, ideology);
+
+  return compositeIdeologyDefinitions
+    .map((definition) => {
+      let weightedScore = 0;
+      let totalWeight = 0;
+
+      Object.entries(definition.positive).forEach(([ideology, weight]) => {
+        weightedScore += value(ideology) * weight;
+        totalWeight += weight;
+      });
+
+      Object.entries(definition.negative ?? {}).forEach(([ideology, weight]) => {
+        weightedScore += (100 - value(ideology)) * weight;
+        totalWeight += weight;
+      });
+
+      let percentage = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 0;
+      let passesMinimumSignals = true;
+
+      if (definition.minimumSignals) {
+        Object.entries(definition.minimumSignals).forEach(([ideology, minimum]) => {
+          if (minimum > 0 && value(ideology) < minimum) {
+            passesMinimumSignals = false;
+            percentage = Math.min(percentage, Math.max(0, value(ideology) - 12));
+          }
+
+          if (minimum === 0 && value(ideology) > 28) {
+            passesMinimumSignals = false;
+            percentage = Math.min(percentage, 52);
+          }
+        });
+      }
+
+      if (definition.isHistoricalCategory && (!passesMinimumSignals || percentage < 85)) {
+        percentage = Math.min(percentage, 49);
+      }
+
+      return {
+        id: definition.id,
+        label: definition.label,
+        percentage: clamp(percentage),
+        description: definition.description,
+        components: definition.components,
+        isHistoricalCategory: definition.isHistoricalCategory,
+      };
+    })
+    .filter((item) => (item.isHistoricalCategory ? item.percentage >= 85 : item.percentage >= 50))
+    .sort((a, b) => b.percentage - a.percentage);
+}
+
+function getCompositeIdeologyLevel(percentage: number) {
+  if (percentage >= 75) return "Afinidad alta";
+  if (percentage >= 62) return "Afinidad media";
+  if (percentage >= 50) return "Afinidad parcial";
+  return "Afinidad baja";
+}
+function getCompositeComponentPercentage(userProfile: IdeologyResult[], component: string) {
+  const exactValue = userProfile.find((item) => item.ideology === component)?.percentage;
+
+  if (exactValue !== undefined) {
+    return `${ideologyLabels[component] ?? component}: ${exactValue}%`;
+  }
+
+  return component;
+}
+
+function getCompositeIdeologyInfo(item: CompositeIdeologyResult | undefined) {
+  if (!item) return null;
+
+  return {
+    title: item.label,
+    description: item.description,
+    percentage: item.percentage,
+    level: getCompositeIdeologyLevel(item.percentage),
+    components: item.components,
+    isHistoricalCategory: item.isHistoricalCategory,
+  };
+}
 function calculateResults(
   answers: Answers,
   questions: Question[],
   selectedCommunity: string,
-  territorialReference: TerritorialReference
+  independencePosition: IndependencePosition
 ) {
   const ideologyScore: Record<string, number> = {};
   const ideologyMax: Record<string, number> = {};
   const blockScore: Record<string, Record<string, number>> = {};
   const blockMax: Record<string, Record<string, number>> = {};
+  const territorialReference = getTerritorialReferenceFromIndependence(
+    selectedCommunity,
+    independencePosition
+  );
 
   questions.forEach((question) => {
     const answer = answers[question.id];
@@ -1038,22 +1114,9 @@ function calculateResults(
     })
     .sort((a, b) => b.percentage - a.percentage);
 
-  const baseNationalProfiles = getEligibleNationalPartyProfiles(selectedCommunity);
   const regionalProfiles =
-    regionalPartyProfiles[selectedCommunity] ?? baseNationalProfiles;
-
-  const finalRegionalParty = findClosestParty(
-    ideologyPercentages,
-    regionalProfiles,
-    selectedCommunity,
-    territorialReference
-  );
-
-  const nationalProfiles = getEligibleNationalPartyProfiles(
-    selectedCommunity,
-    finalRegionalParty.party
-  );
-  const blockNationalProfiles = getGeneralElectionPartyProfilesForBlock();
+    regionalPartyProfiles[selectedCommunity] ?? nationalPartyProfiles;
+  const nationalProfiles = getEligibleNationalPartyProfiles();
 
   const blockResults = Object.entries(blockScore).map(([block, scores]) => {
     const ideologies = Object.entries(scores)
@@ -1073,13 +1136,17 @@ function calculateResults(
       ideologies: ideologies.slice(0, 6),
       nationalParty: findClosestPartyByBlock(
         ideologies,
-        blockNationalProfiles
+        nationalProfiles,
+        block,
+        selectedCommunity,
+        independencePosition
       ),
       regionalParty: findClosestParty(
         ideologies,
         regionalProfiles,
         selectedCommunity,
-        territorialReference
+        independencePosition,
+        false
       ),
     };
   });
@@ -1091,54 +1158,20 @@ function calculateResults(
       ideologyPercentages,
       nationalProfiles,
       selectedCommunity,
-      territorialReference,
-      finalRegionalParty.party
+      independencePosition,
+      true
     ),
-    finalRegionalParty,
+    finalRegionalParty: findClosestParty(
+      ideologyPercentages,
+      regionalProfiles,
+      selectedCommunity,
+      independencePosition,
+      false
+    ),
   };
 }
 
-function isIndependentistOrSeparatistParty(partyName?: string) {
-  if (!partyName || partyName === "Sin partido claramente afín") return false;
-
-  return partyNameIncludes(partyName, INDEPENDENTIST_OR_SEPARATIST_PARTY_KEYWORDS);
-}
-
-function getEligibleNationalPartyProfiles(
-  selectedCommunity: string,
-  regionalPartyName?: string
-) {
-  // Para el resultado de generales solo se comparan partidos de ámbito estatal.
-  // Los partidos territoriales se reservan para la caja autonómica.
-  // Además de la compatibilidad territorial, se aplican familias ideológicas para
-  // evitar cruces incoherentes: por ejemplo, un partido autonómico nacionalista
-  // identitario/conservador no debe derivar en una opción comunista o de izquierda
-  // transformadora en generales.
-  const regionalPartyIsIndependentist = isIndependentistOrSeparatistParty(regionalPartyName);
-
-  const eligiblePartyNames = COMMON_GENERAL_ELECTION_PARTIES.filter((party) => {
-    if (regionalPartyIsIndependentist && HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(party)) {
-      return false;
-    }
-
-    if (isHardGeneralIdeologicalIncompatibility(party, regionalPartyName)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  return Object.fromEntries(
-    Object.entries(nationalPartyProfiles).filter(([party]) =>
-      eligiblePartyNames.includes(party)
-    )
-  );
-}
-
-function getGeneralElectionPartyProfilesForBlock() {
-  // Para alternativas por bloques no se aplican bloqueos territoriales fuertes.
-  // La finalidad es mostrar qué partido estatal se acerca más en ese bloque concreto
-  // aunque exista incompatibilidad global en el resultado general.
+function getEligibleNationalPartyProfiles() {
   return Object.fromEntries(
     Object.entries(nationalPartyProfiles).filter(([party]) =>
       COMMON_GENERAL_ELECTION_PARTIES.includes(party)
@@ -1146,163 +1179,12 @@ function getGeneralElectionPartyProfilesForBlock() {
   );
 }
 
-function getPartyProfileForInfo(
-  partyName: string,
-  scope: Exclude<PartyInfoTarget, null>,
-  selectedCommunity: string
-) {
-  if (!partyName || partyName === "Sin partido claramente afín") return null;
-
-  if (scope === "regional") {
-    return regionalPartyProfiles[selectedCommunity]?.[partyName] ?? null;
-  }
-
-  return getEligibleNationalPartyProfiles(selectedCommunity)[partyName] ?? null;
-}
-
-function getTopPartyTraits(partyProfile: Record<string, number> | null) {
-  if (!partyProfile) return [];
-
-  return Object.entries(partyProfile)
-    .sort(([, firstValue], [, secondValue]) => secondValue - firstValue)
-    .slice(0, 4)
-    .map(([ideology, value]) => ({
-      label: ideologyLabels[ideology] ?? ideology,
-      value,
-    }));
-}
-
-function getSharedPartyTraits(
-  userProfile: IdeologyResult[],
-  partyProfile: Record<string, number> | null
-) {
-  if (!partyProfile) return [];
-
-  return userProfile
-    .slice(0, 8)
-    .map((item) => {
-      const expected = partyProfile[item.ideology] ?? 50;
-      return {
-        label: ideologyLabels[item.ideology] ?? item.ideology,
-        userValue: item.percentage,
-        partyValue: expected,
-        distance: Math.abs(item.percentage - expected),
-      };
-    })
-    .filter((item) => item.distance <= 18)
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, 4);
-}
-
-const partyShortSummaries: Record<string, string> = {
-  PSOE:
-    "Partido socialdemócrata y progresista de ámbito estatal. Suele defender servicios públicos fuertes, políticas de igualdad, europeísmo, transición ecológica y reformas dentro del marco institucional.",
-  PP:
-    "Partido de centro-derecha y derecha institucional. Suele combinar economía de mercado, bajadas o moderación fiscal, defensa de la unidad de España, seguridad jurídica y posiciones sociales moderadamente conservadoras.",
-  VOX:
-    "Partido de derecha nacional-conservadora. Su perfil se centra en unidad de España, control migratorio, seguridad, crítica al globalismo, valores tradicionales y reducción del peso político-administrativo del Estado.",
-  Sumar:
-    "Espacio de izquierda progresista y ecosocial. Suele priorizar derechos laborales, feminismo, ecologismo, intervención pública en vivienda y energía, redistribución y cooperación internacional.",
-  Podemos:
-    "Partido de izquierda transformadora. Suele defender más intervención pública, redistribución, derechos sociales, crítica a las élites económicas y ampliación de servicios públicos.",
-  Ciudadanos:
-    "Partido liberal e institucionalista. Su perfil combina economía de mercado, reformas administrativas, europeísmo, derechos civiles y defensa de un marco territorial común en España.",
-  PACMA:
-    "Partido centrado en la protección animal y el ecologismo. Su perfil se acerca a posiciones progresistas, animalistas, medioambientales y de sensibilidad social.",
-  "Recortes Cero":
-    "Formación de izquierdas con énfasis en redistribución, soberanía económica, defensa de servicios públicos y crítica a la concentración de riqueza y poder.",
-  "Frente Obrero":
-    "Formación obrerista y soberanista. Combina discurso social y de clase con posiciones críticas hacia el globalismo, la inmigración masiva y las élites políticas.",
-  "Falange Española":
-    "Formación nacionalista y tradicionalista. Su perfil se basa en soberanía nacional, unidad política, valores tradicionales, autoridad y una visión crítica del liberalismo y del globalismo.",
-  PCTE:
-    "Partido comunista de orientación marxista-leninista. Prioriza clase trabajadora, propiedad pública, planificación económica, soberanía popular y crítica al capitalismo.",
-  PCPE:
-    "Partido comunista centrado en socialización económica, defensa de la clase trabajadora, antiimperialismo y ruptura con el modelo capitalista.",
-  PDeCAT:
-    "Formación catalanista liberal y soberanista. Combina autogobierno o soberanía catalana con economía de mercado, institucionalismo y posiciones de centro o centro-derecha.",
-  ERC:
-    "Partido independentista catalán de izquierdas. Combina soberanismo catalán, republicanismo, políticas sociales, progresismo, lengua y cultura catalanas.",
-  Junts:
-    "Partido independentista catalán de perfil transversal, liberal y soberanista. Prioriza la autodeterminación, el autogobierno catalán, identidad nacional catalana y economía de mercado.",
-  CUP:
-    "Formación independentista catalana anticapitalista. Combina soberanismo, municipalismo, socialismo, ecologismo, feminismo y ruptura con el marco estatal español.",
-  PNV:
-    "Partido nacionalista vasco de perfil institucional y pragmático. Combina autogobierno vasco, economía social de mercado, gestión institucional y defensa de identidad vasca.",
-  "EH Bildu":
-    "Coalición soberanista vasca de izquierdas. Prioriza autogobierno o independencia, políticas sociales, progresismo, ecologismo y reconocimiento nacional vasco.",
-  BNG:
-    "Formación nacionalista gallega de izquierdas. Defiende autogobierno, identidad y lengua gallega, políticas sociales, ecologismo y soberanía política para Galicia.",
-  "Coalición Canaria":
-    "Partido nacionalista canario de perfil autonomista y pragmático. Prioriza los intereses de Canarias, financiación territorial, autogobierno, servicios públicos y singularidad insular.",
-  "Nueva Canarias":
-    "Formación canarista de centro-izquierda. Defiende autogobierno, financiación justa para Canarias, políticas sociales, sostenibilidad y reconocimiento de la realidad insular.",
-  UPN:
-    "Partido navarro de derecha regionalista y constitucionalista. Combina defensa del régimen foral navarro, unidad de España, conservadurismo e institucionalismo.",
-  "Compromís":
-    "Coalición valencianista, progresista y ecologista. Prioriza autogobierno valenciano, políticas sociales, lengua y cultura valencianas, sostenibilidad y transparencia.",
-  "Teruel Existe":
-    "Formación territorial centrada en la España interior. Su perfil se basa en descentralización, infraestructuras, equilibrio territorial y defensa de servicios públicos en zonas despobladas.",
-  "Por Un Mundo Más Justo":
-    "Partido de orientación social, humanitaria y globalista. Prioriza justicia social, cooperación internacional, derechos humanos, migración e igualdad de oportunidades.",
-};
-
-function getPartyShortSummary(partyName: string) {
-  return partyShortSummaries[partyName] ?? "Partido o candidatura incluida en el cálculo del test. Su resumen específico todavía no está cargado, pero la afinidad se calcula comparando tus respuestas con su perfil ideológico dentro del sistema.";
-}
-
-function getPartyInfoIntro(
-  partyMatch: PartyMatch,
-  scope: Exclude<PartyInfoTarget, null>,
-  selectedCommunityName: string
-) {
-  if (!partyMatch.isClearMatch) {
-    return partyMatch.explanation ?? "No hay una afinidad suficientemente clara con ningún partido incluido en este ámbito.";
-  }
-
-  if (scope === "regional") {
-    return `Es el partido autonómico que más se acerca a tus respuestas dentro de ${selectedCommunityName}. El cálculo compara tu perfil con los partidos disponibles en esa comunidad.`;
-  }
-
-  return "Es el partido de ámbito estatal que más se acerca a tus respuestas. Los partidos territoriales se reservan para el resultado autonómico. Las penalizaciones territoriales fuertes solo se aplican cuando el resultado autonómico es independentista o separatista, no cuando es regionalista o autonomista no independentista.";
-}
-
-function getPartyInfoPopupData(
-  partyMatch: PartyMatch,
-  scope: Exclude<PartyInfoTarget, null>,
-  userProfile: IdeologyResult[],
-  selectedCommunity: string,
-  selectedCommunityName: string,
-  territorialReferenceLabel: string
-) {
-  const partyProfile = getPartyProfileForInfo(partyMatch.party, scope, selectedCommunity);
-  const partyTraits = getTopPartyTraits(partyProfile);
-  const sharedTraits = getSharedPartyTraits(userProfile, partyProfile);
-  const scopeLabel = scope === "regional" ? `autonómicas en ${selectedCommunityName}` : "generales";
-
-  return {
-    title:
-      partyMatch.party === "Sin partido claramente afín"
-        ? "Sin partido claramente afín"
-        : `${partyMatch.party} · ${partyMatch.percentage}%`,
-    scopeLabel,
-    intro: getPartyInfoIntro(partyMatch, scope, selectedCommunityName),
-    partySummary: getPartyShortSummary(partyMatch.party),
-    partyTraits,
-    sharedTraits,
-    territorialNote:
-      scope === "national"
-        ? `Para las generales se muestran partidos de ámbito estatal. Los partidos territoriales se reservan para el resultado autonómico. Las penalizaciones territoriales fuertes solo se aplican si el resultado autonómico es independentista o separatista; el regionalismo o autonomismo no independentista no bloquea automáticamente partidos estatales. La referencia territorial del test es: ${territorialReferenceLabel}.`
-        : `Para las autonómicas se ha comparado tu resultado con los partidos cargados para ${selectedCommunityName}. La referencia territorial del test es: ${territorialReferenceLabel}.`,
-  };
-}
-
 function findClosestParty(
   userProfile: IdeologyResult[],
   partyProfiles: Record<string, Record<string, number>>,
   selectedCommunity: string,
-  territorialReference: TerritorialReference,
-  regionalPartyName?: string
+  independencePosition: IndependencePosition,
+  isNationalResult: boolean
 ): PartyMatch {
   let bestParty = "";
   let bestSimilarity = -Infinity;
@@ -1313,8 +1195,8 @@ function findClosestParty(
       profile,
       party,
       selectedCommunity,
-      territorialReference,
-      regionalPartyName
+      independencePosition,
+      isNationalResult
     );
 
     if (similarity > bestSimilarity) {
@@ -1345,13 +1227,23 @@ function findClosestParty(
 
 function findClosestPartyByBlock(
   userProfile: IdeologyResult[],
-  partyProfiles: Record<string, Record<string, number>>
+  partyProfiles: Record<string, Record<string, number>>,
+  block: string,
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
 ): PartyMatch {
   let bestParty = "";
   let bestSimilarity = -Infinity;
 
   Object.entries(partyProfiles).forEach(([party, profile]) => {
-    const similarity = calculatePartySimilarityPure(userProfile, profile);
+    const similarity =
+      calculatePartySimilarityPure(userProfile, profile) +
+      calculateBlockTerritorialCompatibilityAdjustment(
+        party,
+        block,
+        selectedCommunity,
+        independencePosition
+      );
 
     if (similarity > bestSimilarity) {
       bestSimilarity = similarity;
@@ -1359,7 +1251,7 @@ function findClosestPartyByBlock(
     }
   });
 
-  const percentage = Math.round(bestSimilarity);
+  const percentage = Math.round(clamp(bestSimilarity));
 
   if (percentage < MIN_BLOCK_PARTY_MATCH) {
     return {
@@ -1399,198 +1291,161 @@ function calculatePartySimilarityPure(
 function calculatePartySimilarity(
   userProfile: IdeologyResult[],
   partyProfile: Record<string, number>,
-  partyName?: string,
-  selectedCommunity?: string,
-  territorialReference: TerritorialReference = "spain",
-  regionalPartyName?: string
+  partyName: string,
+  selectedCommunity: string,
+  independencePosition: IndependencePosition,
+  isNationalResult: boolean
 ) {
-  if (userProfile.length === 0) return 0;
+  const baseSimilarity = calculatePartySimilarityPure(userProfile, partyProfile);
 
-  let totalDistance = 0;
-
-  userProfile.forEach((item) => {
-    const expected = partyProfile[item.ideology] ?? 50;
-    totalDistance += Math.abs(item.percentage - expected);
-  });
-
-  const averageDistance = totalDistance / userProfile.length;
-  const baseSimilarity = 100 - averageDistance;
-  const territorialAdjustment = calculateTerritorialPartyAdjustment(
-    userProfile,
-    partyName,
-    selectedCommunity,
-    territorialReference
-  );
-
-  const nationalCompatibilityAdjustment = calculateNationalTerritorialCompatibilityAdjustment(
-    partyName,
-    regionalPartyName
-  );
-
-  const ideologicalCompatibilityAdjustment = calculateNationalIdeologicalCompatibilityAdjustment(
-    partyName,
-    regionalPartyName,
-    userProfile
-  );
+  if (isNationalResult) {
+    return clamp(
+      baseSimilarity +
+        calculateNationalTerritorialCompatibilityAdjustment(
+          partyName,
+          selectedCommunity,
+          independencePosition
+        )
+    );
+  }
 
   return clamp(
     baseSimilarity +
-      territorialAdjustment +
-      nationalCompatibilityAdjustment +
-      ideologicalCompatibilityAdjustment
+      calculateRegionalTerritorialCompatibilityAdjustment(
+        partyName,
+        selectedCommunity,
+        independencePosition
+      )
   );
 }
 
 function calculateNationalTerritorialCompatibilityAdjustment(
-  partyName?: string,
-  regionalPartyName?: string
+  partyName: string,
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
 ) {
-  if (!partyName || !isIndependentistOrSeparatistParty(regionalPartyName)) return 0;
+  const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
 
-  if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) {
-    return -100;
+  if (effectivePosition === "independence") {
+    if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -100;
+    if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -45;
+    if (partyName === "PSOE") return -8;
+    return 0;
   }
 
-  if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) {
-    return -24;
+  if (effectivePosition === "right_to_decide") {
+    if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -70;
+    if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -25;
+    return 0;
+  }
+
+  if (effectivePosition === "autonomy_inside_spain") {
+    if (partyName === "VOX" || partyName === "Ciudadanos") return -12;
+    return 0;
+  }
+
+  if (effectivePosition === "against_independence") {
+    if (partyName === "PP" || partyName === "VOX" || partyName === "Ciudadanos") return 6;
+    return 0;
   }
 
   return 0;
 }
 
-function calculateNationalIdeologicalCompatibilityAdjustment(
-  partyName?: string,
-  regionalPartyName?: string,
-  userProfile: IdeologyResult[] = []
-) {
-  if (!partyName || !regionalPartyName) return 0;
-
-  const regionalFamily = getPartyIdeologicalFamily(regionalPartyName);
-
-  // Un resultado autonómico regionalista/autonomista no debe tratarse como
-  // independentista. En estos casos el partido estatal se elige por afinidad
-  // ideológica normal, sin bloqueos territoriales ni penalizaciones fuertes.
-  if (regionalFamily === "regional_autonomist") return 0;
-
-  const communism = getIdeologyValue(userProfile, "comunista");
-  const socialism = getIdeologyValue(userProfile, "socialista");
-  const progressivism = getIdeologyValue(userProfile, "progresista");
-  const conservatism = getIdeologyValue(userProfile, "conservador");
-  const traditionalism = getIdeologyValue(userProfile, "tradicionalista");
-  const liberalism = getIdeologyValue(userProfile, "liberal");
-
-  if (regionalFamily === "territorial_identitarian_conservative") {
-    if (partyName === "PSOE") return -22;
-    if (partyName === "PP") return -8;
-    if (LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(partyName)) return -80;
-  }
-
-  if (regionalFamily === "territorial_liberal_conservative") {
-    if (LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(partyName)) return -26;
-    if (partyName === "PSOE" && conservatism + liberalism > socialism + progressivism) return -14;
-  }
-
-  if (regionalFamily === "territorial_progressive") {
-    if (partyName === "PP" && progressivism + socialism > conservatism + liberalism) return -18;
-    if (LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(partyName) && conservatism + traditionalism > progressivism + socialism) return -22;
-  }
-
-  if (regionalFamily === "territorial_anticapitalist") {
-    if (partyName === "PP" || partyName === "Ciudadanos" || partyName === "VOX") return -80;
-    if (partyName === "PSOE" && communism >= 70) return -18;
-  }
-
-  if ((regionalFamily === "unionist_conservative" || regionalFamily === "state_liberal") && LEFT_TRANSFORMATIVE_GENERAL_PARTIES.has(partyName)) {
-    return -60;
-  }
-
-  return 0;
-}
-
-function getIdeologyValue(userProfile: IdeologyResult[], ideology: string) {
-  return userProfile.find((item) => item.ideology === ideology)?.percentage ?? 50;
-}
-
-function normalizePartyName(partyName: string) {
-  return partyName
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-}
-
-function partyNameIncludes(partyName: string, keywords: string[]) {
-  const normalizedPartyName = normalizePartyName(partyName);
-
-  return keywords.some((keyword) =>
-    normalizedPartyName.includes(normalizePartyName(keyword))
+function isHardSpanishUnionistRegionalParty(partyName: string) {
+  const normalizedPartyName = partyName.toLowerCase();
+  return (
+    normalizedPartyName.includes("vox") ||
+    normalizedPartyName.includes("ciudadanos")
   );
 }
 
-function getTerritorialReferenceLabel(
-  territorialReference: TerritorialReference,
-  selectedCommunityName: string
-) {
-  if (territorialReference === "selectedCommunity") {
-    return selectedCommunityName;
-  }
-
-  if (territorialReference === "mixed") {
-    return "España y la comunidad seleccionada";
-  }
-
-  return "España";
+function isModerateSpanishUnionistRegionalParty(partyName: string) {
+  const normalizedPartyName = partyName.toLowerCase();
+  return normalizedPartyName.includes("pp");
 }
 
-function calculateTerritorialPartyAdjustment(
-  userProfile: IdeologyResult[],
-  partyName?: string,
-  selectedCommunity?: string,
-  territorialReference: TerritorialReference = "spain"
-) {
-  if (!partyName || !selectedCommunity) return 0;
-
-  // El ajuste territorial fuerte solo se aplica en comunidades donde el eje
-  // soberanismo/independencia puede chocar de forma estructural con partidos
-  // estatales centralistas o unionistas. En comunidades con regionalismo o
-  // autonomismo no independentista, como Andalucía, Aragón, Canarias, Baleares
-  // o Comunidad Valenciana, no se penalizan automáticamente los partidos
-  // estatales por un resultado nacionalista/autonomista alto.
-  if (!HARD_TERRITORIAL_CONFLICT_COMMUNITIES.has(selectedCommunity)) return 0;
-
-  const nationalism = Math.max(
-    getIdeologyValue(userProfile, "nacionalista"),
-    getIdeologyValue(userProfile, "soberanista")
+function isSoftSpanishUnionistRegionalParty(partyName: string) {
+  const normalizedPartyName = partyName.toLowerCase();
+  return (
+    normalizedPartyName.includes("psoe") ||
+    normalizedPartyName.includes("psc") ||
+    normalizedPartyName.includes("pse") ||
+    normalizedPartyName.includes("psn") ||
+    normalizedPartyName.includes("psdeg") ||
+    normalizedPartyName.includes("pspv") ||
+    normalizedPartyName.includes("psib")
   );
+}
 
-  const isStrongNationalOrSovereignist = nationalism >= 64;
-  const isSpanishUnionist = partyNameIncludes(partyName, SPANISH_UNIONIST_PARTY_KEYWORDS);
-  const isRegionalSovereignist = partyNameIncludes(partyName, REGIONAL_SOVEREIGNIST_PARTY_KEYWORDS);
-  const isRegionalAutonomist = partyNameIncludes(partyName, REGIONAL_AUTONOMIST_PARTY_KEYWORDS);
+function calculateRegionalTerritorialCompatibilityAdjustment(
+  partyName: string,
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
+) {
+  const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
 
-  if (!isStrongNationalOrSovereignist) return 0;
-
-  if (territorialReference === "selectedCommunity") {
-    if (isSpanishUnionist) return -34;
-    if (isRegionalSovereignist) return 14;
-    if (isRegionalAutonomist) return 6;
+  if (effectivePosition === "independence") {
+    if (isHardSpanishUnionistRegionalParty(partyName)) return -100;
+    if (isModerateSpanishUnionistRegionalParty(partyName)) return -45;
+    if (isSoftSpanishUnionistRegionalParty(partyName)) return -8;
+    return 0;
   }
 
-  if (territorialReference === "spain") {
-    if (isRegionalSovereignist) return -30;
-    if (isRegionalAutonomist) return -8;
-    if (isSpanishUnionist) return 8;
+  if (effectivePosition === "right_to_decide") {
+    if (isHardSpanishUnionistRegionalParty(partyName)) return -70;
+    if (isModerateSpanishUnionistRegionalParty(partyName)) return -25;
+    return 0;
   }
 
-  if (territorialReference === "mixed") {
-    if (isRegionalSovereignist || isRegionalAutonomist) return 4;
-    if (isSpanishUnionist) return -4;
+  if (effectivePosition === "autonomy_inside_spain") {
+    if (isHardSpanishUnionistRegionalParty(partyName)) return -12;
+    return 0;
+  }
+
+  if (effectivePosition === "against_independence") {
+    if (
+      isHardSpanishUnionistRegionalParty(partyName) ||
+      isModerateSpanishUnionistRegionalParty(partyName)
+    ) {
+      return 6;
+    }
+
+    if (isSoftSpanishUnionistRegionalParty(partyName)) return 3;
   }
 
   return 0;
 }
 
-function cleanIdeologyExample(example: string) {
-  return example.replace(/^Por ejemplo:\s*/i, "");
+
+function calculateBlockTerritorialCompatibilityAdjustment(
+  partyName: string,
+  block: string,
+  selectedCommunity: string,
+  independencePosition: IndependencePosition
+) {
+  const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
+
+  if (effectivePosition !== "independence" && effectivePosition !== "right_to_decide") {
+    return 0;
+  }
+
+  if (block !== "nacion" && block !== "identidad" && block !== "geopolitica") {
+    return 0;
+  }
+
+  if (effectivePosition === "independence") {
+    if (partyName === "VOX" || partyName === "Ciudadanos") return -100;
+    if (partyName === "PP") return -45;
+    if (partyName === "PSOE") return -10;
+  }
+
+  if (effectivePosition === "right_to_decide") {
+    if (partyName === "VOX" || partyName === "Ciudadanos") return -70;
+    if (partyName === "PP") return -25;
+  }
+
+  return 0;
 }
 
 function getPracticalInfo(question: Question): PracticalInfo {
@@ -1669,11 +1524,11 @@ export default function IdeologicalTestPage() {
   const [showResults, setShowResults] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [infoOpen, setInfoOpen] = useState(false);
-  const [selectedCommunity, setSelectedCommunity] = useState("cataluna");
-  const [territorialReference, setTerritorialReference] = useState<TerritorialReference>("selectedCommunity");
+  const [selectedCommunity, setSelectedCommunity] = useState("");
+  const [independencePosition, setIndependencePosition] = useState<IndependencePosition | null>(null);
+  const [isPreTestSetup, setIsPreTestSetup] = useState(false);
   const [openIdeology, setOpenIdeology] = useState<string | null>(null);
-  const [openPartyInfo, setOpenPartyInfo] = useState<PartyInfoTarget>(null);
-  const [selectedNationalAlternativeBlock, setSelectedNationalAlternativeBlock] = useState("economia");
+  const [openCompositeIdeology, setOpenCompositeIdeology] = useState<string | null>(null);
   const [confirmationType, setConfirmationType] = useState<ConfirmationType>(null);
   const [isAdvancingQuestion, setIsAdvancingQuestion] = useState(false);
   const savedResultSignatureRef = useRef<string | null>(null);
@@ -1694,15 +1549,31 @@ export default function IdeologicalTestPage() {
     autonomousCommunities.find((item) => item.id === selectedCommunity)?.name ??
     "la comunidad elegida";
 
-  const isTerritoriallySensitiveCommunity = HARD_TERRITORIAL_CONFLICT_COMMUNITIES.has(selectedCommunity);
+  const hasSelectedCommunity = selectedCommunity !== "";
+  const isIndependenceSetupRequired = hasSelectedCommunity && isIndependenceQuestionCommunity(selectedCommunity);
+  const effectiveIndependencePosition = getEffectiveIndependencePosition(
+    selectedCommunity,
+    independencePosition ?? "unclear"
+  );
+  const canShowPoliticalResults = hasSelectedCommunity &&
+    (!isIndependenceSetupRequired || independencePosition !== null);
+  const territorialReference = getTerritorialReferenceFromIndependence(
+    selectedCommunity,
+    effectiveIndependencePosition
+  );
   const territorialReferenceLabel = getTerritorialReferenceLabel(
-    isTerritoriallySensitiveCommunity ? territorialReference : "spain",
+    territorialReference,
     selectedCommunityName
   );
 
   const results = useMemo(
-    () => calculateResults(answers, activeQuestions, selectedCommunity, territorialReference),
-    [answers, activeQuestions, selectedCommunity, territorialReference]
+    () => calculateResults(
+      answers,
+      activeQuestions,
+      selectedCommunity,
+      effectiveIndependencePosition
+    ),
+    [answers, activeQuestions, selectedCommunity, effectiveIndependencePosition]
   );
 
   const totalQuestions = activeQuestions.length;
@@ -1737,11 +1608,12 @@ export default function IdeologicalTestPage() {
     setCurrentQuestionIndex(0);
     setInfoOpen(false);
     setOpenIdeology(null);
-    setOpenPartyInfo(null);
-    setSelectedNationalAlternativeBlock("economia");
-    setTerritorialReference(HARD_TERRITORIAL_CONFLICT_COMMUNITIES.has(selectedCommunity) ? "selectedCommunity" : "spain");
+    setOpenCompositeIdeology(null);
+    setSelectedCommunity("");
+    setIndependencePosition(null);
     setConfirmationType(null);
     setIsAdvancingQuestion(false);
+    setIsPreTestSetup(false);
     savedResultSignatureRef.current = null;
     testStartedAtRef.current = new Date().toISOString();
 
@@ -1754,6 +1626,23 @@ export default function IdeologicalTestPage() {
     }, 0);
   }
 
+  function beginTestAfterSetup() {
+    setIsPreTestSetup(false);
+    setAnswers({});
+    setShowResults(false);
+    setCurrentQuestionIndex(0);
+    setInfoOpen(false);
+    setOpenIdeology(null);
+    setConfirmationType(null);
+    setIsAdvancingQuestion(false);
+    savedResultSignatureRef.current = null;
+    testStartedAtRef.current = new Date().toISOString();
+
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }, 0);
+  }
+
 function goBackToSelector() {
   setTestMode("selector");
   setAnswers({});
@@ -1761,8 +1650,10 @@ function goBackToSelector() {
   setCurrentQuestionIndex(0);
   setInfoOpen(false);
   setOpenIdeology(null);
-  setOpenPartyInfo(null);
-  setSelectedNationalAlternativeBlock("economia");
+  setOpenCompositeIdeology(null);
+  setSelectedCommunity("");
+  setIndependencePosition(null);
+  setIsPreTestSetup(false);
   setConfirmationType(null);
   setIsAdvancingQuestion(false);
   savedResultSignatureRef.current = null;
@@ -1815,7 +1706,7 @@ function goBackToSelector() {
       : "Se perderán las respuestas de este test y volverás a la página principal de selección.";
 
   useEffect(() => {
-    if (!showResults || testMode === "selector") return;
+    if (!showResults || testMode === "selector" || !canShowPoliticalResults) return;
     if (activeQuestions.length === 0) return;
 
     const answeredQuestionCount = activeQuestions.filter(
@@ -1825,9 +1716,9 @@ function goBackToSelector() {
     if (answeredQuestionCount !== activeQuestions.length) return;
 
     const completeAnalysisForSave =
-      testMode === "completo" ? generateCompleteAnalysis(results, selectedCommunity, territorialReference) : null;
+      testMode === "completo" ? generateCompleteAnalysis(results) : null;
 
-    const resultSignature = `${testMode}-${selectedCommunity}-${activeQuestions
+    const resultSignature = `${testMode}-${selectedCommunity}-${effectiveIndependencePosition}-${activeQuestions
       .map((question) => `${question.id}:${answers[question.id]}`)
       .join("|")}`;
 
@@ -1855,7 +1746,8 @@ function goBackToSelector() {
         durationSeconds,
         testMode,
         selectedCommunity,
-        territorialReference: isTerritoriallySensitiveCommunity ? territorialReference : "spain",
+        independencePosition: effectiveIndependencePosition,
+        territorialReference,
         finalNationalParty: results.finalNationalParty,
         finalRegionalParty: results.finalRegionalParty,
         ideologyPercentages: results.ideologyPercentages,
@@ -1868,7 +1760,7 @@ function goBackToSelector() {
       console.error("Error guardando resultado del test", error);
       savedResultSignatureRef.current = null;
     });
-  }, [showResults, testMode, selectedCommunity, activeQuestions, answers, results]);
+  }, [showResults, testMode, selectedCommunity, effectiveIndependencePosition, territorialReference, activeQuestions, answers, results, canShowPoliticalResults]);
 
   if (testMode === "selector") {
     return (
@@ -1947,41 +1839,15 @@ function goBackToSelector() {
     const isUltraTest = testMode === "ultra";
     const isCompleteTest = testMode === "completo";
     const ideologicalProfile = generateIdeologicalProfile(results, testMode);
-    const completeAnalysis = isCompleteTest ? generateCompleteAnalysis(results, selectedCommunity, territorialReference) : null;
-    const visibleIdeologies = results.ideologyPercentages.slice(0, 12);
-    const relevantVisibleIdeologies = visibleIdeologies.filter(
-      (item) => item.percentage >= IMPORTANT_AFFINITY_THRESHOLD
+    const completeAnalysis = isCompleteTest ? generateCompleteAnalysis(results) : null;
+    const compositeIdeologies = calculateCompositeIdeologies(results.ideologyPercentages);
+    const highlightedCompositeIdeologies = compositeIdeologies
+      .filter((item) => item.percentage >= 50)
+      .slice(0, 8);
+    const blockAffinityAlternatives = getBlockAverages(results).slice(0, 4);
+    const openCompositeIdeologyData = getCompositeIdeologyInfo(
+      compositeIdeologies.find((item) => item.id === openCompositeIdeology)
     );
-    const highlightedIdeologies =
-      relevantVisibleIdeologies.length >= 3
-        ? relevantVisibleIdeologies
-        : visibleIdeologies.slice(0, 3);
-    const highlightedIdeologyIds = new Set(
-      highlightedIdeologies.map((item) => item.ideology)
-    );
-    const nationalBlockAlternatives = results.blockResults.filter(
-      (block) => block.nationalParty.party !== "Sin partido claramente afín"
-    );
-    const selectedNationalBlockAlternative =
-      nationalBlockAlternatives.find(
-        (block) => block.block === selectedNationalAlternativeBlock
-      ) ?? nationalBlockAlternatives[0] ?? null;
-    const openPartyMatch =
-      openPartyInfo === "national"
-        ? results.finalNationalParty
-        : openPartyInfo === "regional"
-          ? results.finalRegionalParty
-          : null;
-    const openPartyInfoData = openPartyInfo && openPartyMatch
-      ? getPartyInfoPopupData(
-          openPartyMatch,
-          openPartyInfo,
-          results.ideologyPercentages,
-          selectedCommunity,
-          selectedCommunityName,
-          territorialReferenceLabel
-        )
-      : null;
 
     return (
       <main className="ideology-test">
@@ -2000,278 +1866,224 @@ function goBackToSelector() {
           <h1>Resultado del {getTestTitle(testMode)}</h1>
 
           <div className="community-selector">
-              <label htmlFor="community">Selecciona una comunidad autónoma</label>
-              <select
-                id="community"
-                value={selectedCommunity}
-                onChange={(event) => {
-                  const nextCommunity = event.target.value;
-                  setSelectedCommunity(nextCommunity);
-                  setOpenPartyInfo(null);
-                  setSelectedNationalAlternativeBlock("economia");
-                  setTerritorialReference(
-                    HARD_TERRITORIAL_CONFLICT_COMMUNITIES.has(nextCommunity)
-                      ? "selectedCommunity"
-                      : "spain"
-                  );
-                }}
-              >
-                {autonomousCommunities.map((community) => (
-                  <option key={community.id} value={community.id}>
-                    {community.name}
-                  </option>
-                ))}
-              </select>
-              <p>
-                Al cambiar la comunidad, el partido autonómico más afín se
-                actualiza automáticamente.
-              </p>
-            </div>
-
-          {isTerritoriallySensitiveCommunity && (
-            <div className="territorial-reference-selector">
-              <label htmlFor="territorial-reference">
-                ¿Cómo interpretaste las preguntas sobre nación, soberanía e identidad?
-              </label>
-              <select
-                id="territorial-reference"
-                value={territorialReference}
-                onChange={(event) => {
-                  setOpenPartyInfo(null);
-                  setTerritorialReference(event.target.value as TerritorialReference);
-                }}
-              >
-                <option value="selectedCommunity">
-                  Pensando principalmente en {selectedCommunityName}
+            <label htmlFor="community">Selecciona una comunidad autónoma</label>
+            <select
+              id="community"
+              value={selectedCommunity}
+              onChange={(event) => {
+                setSelectedCommunity(event.target.value);
+                setIndependencePosition(null);
+              }}
+            >
+              <option value="">Selecciona tu comunidad</option>
+              {autonomousCommunities.map((community) => (
+                <option key={community.id} value={community.id}>
+                  {community.name}
                 </option>
-                <option value="spain">Pensando principalmente en España</option>
-                <option value="mixed">Como una mezcla de ambas referencias</option>
-              </select>
-              <p>
-                Este ajuste solo aparece en comunidades donde el eje territorial puede generar
-                incompatibilidades fuertes entre soberanía española y soberanía territorial. Tu resultado se está interpretando con referencia a
-                <strong> {territorialReferenceLabel}</strong>.
-              </p>
-            </div>
+              ))}
+            </select>
+            <p>
+              El resultado de partido se mostrará cuando selecciones una comunidad autónoma.
+            </p>
+          </div>
+
+          {hasSelectedCommunity && isIndependenceSetupRequired && independencePosition === null && (
+            <article className="question-card question-card--single territorial-question-card--results">
+              <div className="question-card__top">
+                <span className="question-card__block">Pregunta territorial</span>
+              </div>
+
+              <h2>¿Qué posición tienes sobre la independencia o el autogobierno de {selectedCommunityName}?</h2>
+
+              <div className="answer-options answer-options--single territorial-answer-options">
+                {independencePositionOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className="answer-options__button"
+                    onClick={() => setIndependencePosition(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </article>
           )}
 
-          <h2>Partido político más afín</h2>
+          {!hasSelectedCommunity && (
+            <section className="results-pending-card">
+              <h2>Selecciona tu comunidad para ver partidos afines</h2>
+              <p>
+                Los porcentajes ideológicos ya se han calculado, pero los resultados de partido dependen de la comunidad autónoma y, en algunos territorios, de tu posición sobre autodeterminación.
+              </p>
+            </section>
+          )}
 
-          <div className="party-results">
-            <div className="party-card">
-              <div className="party-card_title">
-                <span>Elecciones generales en España</span>
-              </div>
+          {hasSelectedCommunity && isIndependenceSetupRequired && independencePosition === null && (
+            <section className="results-pending-card">
+              <h2>Responde la pregunta territorial para ver los resultados</h2>
+              <p>
+                En {selectedCommunityName}, esta respuesta evita confundir nacionalismo español con nacionalismo territorial o independentista.
+              </p>
+            </section>
+          )}
 
-              <div className="party-card_results">
-                <div className="party-card_finalresult">
-                  <strong>{results.finalNationalParty.party}</strong>
-                </div>
-                <div className="party-card_percentatge">
-                  <em>{results.finalNationalParty.percentage}% de coincidencia</em>
-                </div>
-              </div>
+          {canShowPoliticalResults && (
+            <>
+              <h2>Partido político más afín</h2>
 
-              {!results.finalNationalParty.isClearMatch && (
-                <div className="party-card_no-clear-match">
-                  <p className="party-card_explanation">
-                    {results.finalNationalParty.explanation} El partido estatal más cercano sería {results.finalNationalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
-                  </p>
+              <div className="party-results">
+                <div className="party-card">
+                  <div className="party-card_title"><span>Elecciones generales en España</span></div>
+                  <div className="party-card_results">
+                    <div className="party-card_finalresult"><strong>{results.finalNationalParty.party}</strong></div>
+                    <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
+                  </div>
+                  {!results.finalNationalParty.isClearMatch && (
+                    <>
+                      <p className="party-card_explanation">
+                        {results.finalNationalParty.explanation} El partido estatal más cercano sería {results.finalNationalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
+                      </p>
 
-                  {nationalBlockAlternatives.length > 0 && (
-                    <div className="party-block-alternatives">
-                      <div className="party-block-alternatives__intro">
-                        <strong>Alternativa estatal por bloques</strong>
-                        <p>
-                          Aunque no haya un partido estatal claramente afín en conjunto,
-                          puedes elegir un bloque concreto para ver qué partido se acerca
-                          más en ese tema. En esta alternativa no se aplican los bloqueos
-                          territoriales fuertes del resultado general.
-                        </p>
-                      </div>
+                      {blockAffinityAlternatives.length > 0 && (
+                        <div className="party-card_alternatives">
+                          <strong>Bloques más afines</strong>
+                          <p>
+                            Aunque no haya un partido estatal claramente afín en conjunto,
+                            estos son los bloques ideológicos con más afinidad en tu resultado.
+                          </p>
 
-                      <label
-                        className="party-block-alternatives__label"
-                        htmlFor="national-block-alternative"
-                      >
-                        Elige el bloque que quieras priorizar
-                      </label>
-
-                      <select
-                        id="national-block-alternative"
-                        className="party-block-alternatives__select"
-                        value={selectedNationalBlockAlternative?.block ?? ""}
-                        onChange={(event) =>
-                          setSelectedNationalAlternativeBlock(event.target.value)
-                        }
-                      >
-                        {nationalBlockAlternatives.map((block) => (
-                          <option key={block.block} value={block.block}>
-                            {blockLabels[block.block] ?? block.block}
-                          </option>
-                        ))}
-                      </select>
-
-                      {selectedNationalBlockAlternative && (
-                        <div className="party-block-alternative-featured">
-                          <span>
-                            Si priorizas {blockLabels[selectedNationalBlockAlternative.block] ?? selectedNationalBlockAlternative.block}
-                          </span>
-                          <strong>{selectedNationalBlockAlternative.nationalParty.party}</strong>
-                          <em>{selectedNationalBlockAlternative.nationalParty.percentage}% de coincidencia</em>
+                          <div className="party-card_alternatives-grid">
+                            {blockAffinityAlternatives.map((block) => (
+                              <div key={block.block} className="party-card_alternative-item">
+                                <span>{block.label}</span>
+                                <strong>{block.value}%</strong>
+                                <em>
+                                  Partido más afín: {block.nationalParty.isClearMatch
+                                    ? block.nationalParty.party
+                                    : block.nationalParty.closestParty ?? block.nationalParty.party}
+                                </em>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
+                    </>
+                  )}
+                </div>
 
-                      <div className="party-block-alternatives__grid">
-                        {nationalBlockAlternatives.map((block) => (
-                          <button
-                            key={block.block}
-                            type="button"
-                            className={
-                              block.block === selectedNationalBlockAlternative?.block
-                                ? "party-block-alternative-card is-active"
-                                : "party-block-alternative-card"
-                            }
-                            onClick={() => setSelectedNationalAlternativeBlock(block.block)}
-                          >
-                            <span>{blockLabels[block.block] ?? block.block}</span>
-                            <strong>{block.nationalParty.party}</strong>
-                            <em>{block.nationalParty.percentage}%</em>
-                          </button>
+                <div className="party-card">
+                  <div className="party-card_title"><span>Elecciones autonómicas en {selectedCommunityName}</span></div>
+                  <div className="party-card_results">
+                    <div className="party-card_finalresult"><strong>{results.finalRegionalParty.party}</strong></div>
+                    <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
+                  </div>
+                  {!results.finalRegionalParty.isClearMatch && (
+                    <p className="party-card_explanation">
+                      {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <section className="ideological-profile-card results-profile-card">
+                <h2 className="results-profile-title">Perfil ideológico resumido</h2>
+                <p className="results-profile-intro">{ideologicalProfile.intro}</p>
+
+                <div className="profile-highlight-list results-profile-highlight-list">
+                  {ideologicalProfile.ideologies.map((item) => (
+                    <span key={item.ideology} className="results-profile-highlight-item">
+                      {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
+                    </span>
+                  ))}
+                </div>
+
+                <div className="profile-definition-list results-profile-detail-list">
+                  {ideologicalProfile.profileDetails.map((detail) => (
+                    <p key={detail} className="results-profile-detail-item">{detail}</p>
+                  ))}
+                </div>
+
+                {ideologicalProfile.partySummary && (
+                  <p className="profile-party-context results-profile-party-context">{ideologicalProfile.partySummary}</p>
+                )}
+
+                {ideologicalProfile.inconsistencies.length > 0 ? (
+                  <div className="profile-inconsistencies">
+                    <h3>Posibles incoherencias o tensiones internas</h3>
+                    {ideologicalProfile.inconsistencies.map((item) => (
+                      <p key={`${item.first}-${item.second}`}>
+                        Aparece una tensión entre <strong>{ideologyLabels[item.first] ?? item.first}</strong> ({item.firstPercentage}%) y <strong>{ideologyLabels[item.second] ?? item.second}</strong> ({item.secondPercentage}%). Esto suele pasar cuando una persona defiende libertad o apertura en unos temas, pero prefiere más control, protección o intervención en otros. No significa que el resultado sea inválido; indica que tu perfil mezcla prioridades distintas según el asunto.
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="profile-no-inconsistencies">
+                    No se detectan incoherencias fuertes entre las respuestas. Tu perfil muestra una orientación bastante coherente dentro de las tendencias principales.
+                  </p>
+                )}
+              </section>
+            </>
+          )}
+
+          {highlightedCompositeIdeologies.length > 0 && (
+            <section className="composite-ideology-card">
+              <div className="composite-ideology-card__intro">
+                <span>Lectura avanzada</span>
+                <h2>Corrientes ideológicas compuestas</h2>
+                <p>
+                  Estas corrientes agrupan varias señales de tu resultado para detectar familias políticas amplias y categorías históricas cuando el patrón es suficientemente marcado.
+                </p>
+              </div>
+
+              <div className="composite-ideology-grid">
+                {highlightedCompositeIdeologies.map((item) => (
+                  <article
+                    key={item.id}
+                    className={
+                      item.isHistoricalCategory
+                        ? "composite-ideology-item result-card result-ideology-card is-historical"
+                        : "composite-ideology-item result-card result-ideology-card"
+                    }
+                  >
+                    <div className="result-card__top result-ideology-card__top composite-ideology-item__top">
+                      <span className="result-ideology-card__title">{item.label}</span>
+                      <strong className="result-ideology-card__percentage">{item.percentage}%</strong>
+                    </div>
+
+                    <span className="result-ideology-card__badge">{getCompositeIdeologyLevel(item.percentage)}</span>
+
+                    <div className="composite-ideology-item__traits">
+                      <h3>Rasgos detectados</h3>
+                      <div className="composite-ideology-item__components">
+                        {item.components.map((component) => (
+                          <em key={component}>
+                            {getCompositeComponentPercentage(results.ideologyPercentages, component)}
+                          </em>
                         ))}
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
 
-              <button
-                type="button"
-                className="party-card__more-button"
-                onClick={() => setOpenPartyInfo("national")}
-              >
-                Más información
-              </button>
-            </div>
-
-            <div className="party-card">
-              <div className="party-card_title">
-                <span>Elecciones autonómicas en {selectedCommunityName}</span>
-              </div>
-
-              <div className="party-card_results">
-                <div className="party-card_finalresult">
-                  <strong>{results.finalRegionalParty.party}</strong>
-                </div>
-                <div className="party-card_percentatge">
-                  <em>{results.finalRegionalParty.percentage}% de coincidencia</em>
-                </div>
-              </div>
-
-              {!results.finalRegionalParty.isClearMatch && (
-                <p className="party-card_explanation">
-                  {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
-                </p>
-              )}
-
-              <button
-                type="button"
-                className="party-card__more-button"
-                onClick={() => setOpenPartyInfo("regional")}
-              >
-                Más información
-              </button>
-            </div>
-          </div>
-
-          <section className="ideological-profile-card results-profile-card">
-            <h2 className="results-profile-title">Perfil ideológico resumido</h2>
-            <p className="results-profile-intro">{ideologicalProfile.intro}</p>
-
-            <div className="profile-highlight-list results-profile-highlight-list">
-              {ideologicalProfile.ideologies.map((item) => (
-                <span key={item.ideology} className="results-profile-highlight-item">
-                  {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
-                </span>
-              ))}
-            </div>
-
-            <div className="profile-definition-list results-profile-detail-list">
-              {ideologicalProfile.profileDetails.map((detail) => (
-                <p key={detail} className="results-profile-detail-item">{detail}</p>
-              ))}
-            </div>
-
-            {ideologicalProfile.partySummary && (
-              <p className="profile-party-context results-profile-party-context">{ideologicalProfile.partySummary}</p>
-            )}
-
-            {ideologicalProfile.inconsistencies.length > 0 ? (
-              <div className="profile-inconsistencies">
-                <h3>Posibles incoherencias o tensiones internas</h3>
-                {ideologicalProfile.inconsistencies.map((item) => (
-                  <p key={`${item.first}-${item.second}`}>
-                    Aparece una tensión entre <strong>{ideologyLabels[item.first] ?? item.first}</strong> ({item.firstPercentage}%) y <strong>{ideologyLabels[item.second] ?? item.second}</strong> ({item.secondPercentage}%). Esto suele pasar cuando una persona defiende libertad o apertura en unos temas, pero prefiere más control, protección o intervención en otros. No significa que el resultado sea inválido; indica que tu perfil mezcla prioridades distintas según el asunto.
-                  </p>
+                    <button
+                      type="button"
+                      className="more-info-button result-ideology-card__more-button"
+                      onClick={() => setOpenCompositeIdeology(item.id)}
+                    >
+                      Más información
+                    </button>
+                  </article>
                 ))}
               </div>
-            ) : (
-              <p className="profile-no-inconsistencies">
-                No se detectan incoherencias fuertes entre las respuestas. Tu perfil muestra una orientación bastante coherente dentro de las tendencias principales.
-              </p>
-            )}
-          </section>
+            </section>
+          )}
 
-          <div className="Percentatge_ideo"><h2>Porcentaje ideológico</h2>
-
-          <p className="results-help">
-            Cada tendencia incluye una explicación sencilla. Pulsa “Más información”.
-          </p>
-
-          <div className="results-grid">
-            {highlightedIdeologies.map((item) => {
-              const isRelevant = highlightedIdeologyIds.has(item.ideology);
-
-              return (
-                <article
-                  key={item.ideology}
-                  className={`result-card result-ideology-card ${isRelevant ? "is-relevant" : "is-secondary"}`}
-                >
-                  <div className="result-card__top result-ideology-card__top">
-                    <span className="result-ideology-card__title">{ideologyLabels[item.ideology] ?? item.ideology}</span>
-                    <strong className="result-ideology-card__percentage">{item.percentage}%</strong>
-                  </div>
-
-                  {isRelevant && (
-                    <span className="result-ideology-card__badge">Afinidad relevante</span>
-                  )}
-
-                  <button
-                    type="button"
-                    className="more-info-button result-ideology-card__more-button"
-                    onClick={() =>
-                      setOpenIdeology((current) =>
-                        current === item.ideology ? null : item.ideology
-                      )
-                    }
-                  >
-                    Más información
-                  </button>
-                </article>
-              );
-            })}
-          </div></div>
-
-
-          {completeAnalysis && (
+          {canShowPoliticalResults && completeAnalysis && (
             <section className="complete-analysis-card">
               <div className="complete-analysis-card__intro">
                 <span className="complete-analysis-card__eyebrow">Solo en el Test Completo</span>
                 <h2>Análisis político avanzado</h2>
                 <p>
-                  Este apartado interpreta tu resultado con más profundidad que los
-                  otros tests: tipo de votante, consistencia, prioridades, tensiones
-                  internas, ejes políticos y coincidencias parciales con partidos.
+                  Este apartado interpreta tu resultado con más profundidad que los otros tests: tipo de votante, consistencia, prioridades, tensiones internas, ejes políticos y coincidencias parciales con partidos.
                 </p>
               </div>
 
@@ -2280,9 +2092,7 @@ function goBackToSelector() {
                   <span className="complete-analysis-panel__label">Tipo de votante</span>
                   <strong>{completeAnalysis.voterType}</strong>
                   <p>
-                    Esta etiqueta cruza tus ideologías dominantes con la consistencia
-                    del resultado y el partido nacional más afín, para evitar un
-                    arquetipo político desconectado de la coincidencia electoral.
+                    Esta etiqueta cruza tus ideologías dominantes con la consistencia del resultado y el partido nacional más afín, para evitar un arquetipo político desconectado de la coincidencia electoral.
                   </p>
                 </article>
 
@@ -2290,8 +2100,7 @@ function goBackToSelector() {
                   <span className="complete-analysis-panel__label">Consistencia ideológica</span>
                   <strong className="consistency-score">{completeAnalysis.consistency}%</strong>
                   <p>
-                    Mide si tus respuestas siguen una línea política estable o si
-                    mezclan posiciones que normalmente aparecen separadas.
+                    Mide si tus respuestas siguen una línea política estable o si mezclan posiciones que normalmente aparecen separadas.
                   </p>
                 </article>
               </div>
@@ -2333,9 +2142,7 @@ function goBackToSelector() {
               <article className="complete-analysis-panel">
                 <h3>Coincidencias parciales con partidos</h3>
                 <p>
-                  Un partido puede ser el más afín en conjunto, pero tu resultado
-                  puede coincidir parcialmente con otros en economía, cultura,
-                  soberanía o derechos sociales.
+                  Un partido puede ser el más afín en conjunto, pero tu resultado puede coincidir parcialmente con otros en economía, cultura, soberanía o derechos sociales.
                 </p>
                 <div className="partial-party-match-list">
                   {completeAnalysis.partialPartyMatches.map((match) => (
@@ -2376,11 +2183,7 @@ function goBackToSelector() {
             <div className="upgrade-result-card">
               <h2>¿Quieres un resultado mucho más completo?</h2>
               <p>
-                El test Rápido te da una orientación general. Si haces el
-                Test Ideológico o el Test Completo, también podrás ver tu afinidad
-                por bloques: economía, sociedad, nación, autoridad, geopolítica
-                e identidad cultural. Así sabrás no solo “dónde encajas”, sino
-                en qué temas concretos coincides más o menos con cada tendencia.
+                El test Rápido te da una orientación general. Si haces el Test Ideológico o el Test Completo, también podrás ver tu afinidad por bloques: economía, sociedad, nación, autoridad, geopolítica e identidad cultural. Así sabrás no solo “dónde encajas”, sino en qué temas concretos coincides más o menos con cada tendencia.
               </p>
               <button
                 type="button"
@@ -2392,7 +2195,7 @@ function goBackToSelector() {
             </div>
           )}
 
-          {!isUltraTest && (
+          {canShowPoliticalResults && !isUltraTest && (
             <>
               <h2>Resultado por bloques</h2>
 
@@ -2438,9 +2241,7 @@ function goBackToSelector() {
             <div className="upgrade-result-card">
               <h2>¿Quieres volver a elegir otro test?</h2>
               <p>
-                Puedes volver a la página inicial para hacer el test Rápido,
-                repetir el test Ideológico o realizar el test Completo si quieres un
-                análisis más detallado.
+                Puedes volver a la página inicial para hacer el test Rápido, repetir el test Ideológico o realizar el test Completo si quieres un análisis más detallado.
               </p>
               <button
                 type="button"
@@ -2453,74 +2254,31 @@ function goBackToSelector() {
           )}
         </section>
 
-        {openIdeology && ideologyExplanations[openIdeology] && (
+        {openCompositeIdeologyData && (
           <div className="modal-overlay" role="dialog" aria-modal="true">
             <div className="ideology-explanation ideology-explanation--popup">
               <button
                 type="button"
                 className="modal-close-button"
-                onClick={() => setOpenIdeology(null)}
+                onClick={() => setOpenCompositeIdeology(null)}
                 aria-label="Cerrar información ideológica"
               >
                 ×
               </button>
-              <h3>{ideologyExplanations[openIdeology].title}</h3>
-              <p>{ideologyExplanations[openIdeology].description}</p>
+              <h3>{openCompositeIdeologyData.title}</h3>
+              <p>{openCompositeIdeologyData.description}</p>
               <p>
-                <strong>Ejemplo:</strong> {cleanIdeologyExample(ideologyExplanations[openIdeology].example)}
+                <strong>Resultado:</strong> {openCompositeIdeologyData.percentage}% · {openCompositeIdeologyData.level}
               </p>
-            </div>
-          </div>
-        )}
-
-        {openPartyInfoData && (
-          <div className="modal-overlay" role="dialog" aria-modal="true">
-            <div className="party-info-popup">
-              <button
-                type="button"
-                className="modal-close-button"
-                onClick={() => setOpenPartyInfo(null)}
-                aria-label="Cerrar información del partido"
-              >
-                ×
-              </button>
-              <span className="party-info-popup__eyebrow">{openPartyInfoData.scopeLabel}</span>
-              <h3>{openPartyInfoData.title}</h3>
-              <p>{openPartyInfoData.intro}</p>
-
-              <div className="party-info-popup__section party-info-popup__summary">
-                <h4>Resumen del partido</h4>
-                <p>{openPartyInfoData.partySummary}</p>
+              <div className="composite-ideology-popup__traits">
+                <h4>Rasgos detectados</h4>
+                <p>{openCompositeIdeologyData.components.join(", ")}</p>
               </div>
-
-              {openPartyInfoData.sharedTraits.length > 0 && (
-                <div className="party-info-popup__section">
-                  <h4>Por qué encaja con tu perfil</h4>
-                  <ul className="party-info-popup__list">
-                    {openPartyInfoData.sharedTraits.map((trait) => (
-                      <li key={trait.label}>
-                        <strong>{trait.label}</strong>
-                        <span>Tu resultado: {trait.userValue}% · Perfil del partido: {trait.partyValue}%</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {openCompositeIdeologyData.isHistoricalCategory && (
+                <p>
+                  <strong>Nota:</strong> categoría histórica/analítica. No implica recomendación política ni afiliación.
+                </p>
               )}
-
-              {openPartyInfoData.partyTraits.length > 0 && (
-                <div className="party-info-popup__section">
-                  <h4>Rasgos principales del partido</h4>
-                  <ul className="party-info-popup__pill-list">
-                    {openPartyInfoData.partyTraits.map((trait) => (
-                      <li key={trait.label}>
-                        {trait.label}: {trait.value}%
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <p className="party-info-popup__note">{openPartyInfoData.territorialNote}</p>
             </div>
           </div>
         )}

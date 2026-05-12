@@ -53,6 +53,13 @@ export const ideologyLabels: Record<string, string> = {
   neutralista: "Neutralista",
   populista: "Populista",
   ecologista: "Ecologista",
+  marxismo: "Marxismo",
+  bolchevismo: "Bolchevismo",
+  nacionalSocialismo: "Nacional-socialismo (categoría histórica)",
+  terceraPosicion: "Tercera posición",
+  nacionalConservadurismo: "Nacional-conservadurismo",
+  liberalismoClasico: "Liberalismo clásico",
+  ecosocialismo: "Ecosocialismo",
 };
 
 export const partyProfiles: Record<string, Record<string, number>> = {
@@ -3608,16 +3615,16 @@ export const ideologyExplanations: Record<string, { title: string; description: 
   nacionalista: {
     title: "Nacionalista",
     description:
-      "Da mucha importancia a la nación, la cultura propia, la lengua, los símbolos y la prioridad de la comunidad nacional. En comunidades con partidos soberanistas, esta etiqueta debe interpretarse según la nación de referencia: España o la comunidad seleccionada.",
+      "Da mucha importancia a la nación, la cultura propia, la lengua, los símbolos y la prioridad de la comunidad nacional.",
     example:
-      "Proteger la lengua propia, controlar más la inmigración o priorizar los intereses del país o territorio de referencia.",
+      "Por ejemplo: proteger la lengua propia, controlar más la inmigración o priorizar los intereses del país o territorio.",
   },
   soberanista: {
     title: "Soberanista",
     description:
-      "Quiere que las decisiones importantes se tomen dentro del país o territorio, sin depender tanto de organismos externos. Puede significar soberanía española, más autogobierno territorial o independentismo, según la referencia elegida por el usuario.",
+      "Quiere que las decisiones importantes se tomen dentro del país o territorio, sin depender tanto de organismos externos.",
     example:
-      "Que España, Cataluña, Euskadi u otra comunidad tenga más capacidad para decidir leyes, economía o fronteras.",
+      "Por ejemplo: que España, Cataluña, Euskadi u otra comunidad tenga más capacidad para decidir leyes, economía o fronteras.",
   },
   globalista: {
     title: "Globalista",
@@ -3689,6 +3696,41 @@ export const ideologyExplanations: Record<string, { title: string; description: 
     example:
       "Por ejemplo: acelerar renovables, proteger espacios naturales, regular industrias contaminantes o reforzar políticas de bienestar animal.",
   },
+  marxismo: {
+    title: "Marxismo",
+    description:
+      "Corriente socialista centrada en la crítica al capitalismo, la lucha de clases, la propiedad colectiva o pública y la transformación estructural de la economía.",
+    example:
+      "Por ejemplo: defender que sectores estratégicos, banca, energía o vivienda queden bajo fuerte control público para reducir el poder del capital privado.",
+  },
+  bolchevismo: {
+    title: "Bolchevismo",
+    description:
+      "Categoría histórica vinculada al marxismo revolucionario, la centralización política, el partido de vanguardia, la economía planificada y un Estado fuerte.",
+    example:
+      "Por ejemplo: apoyar una transformación revolucionaria dirigida por una organización política centralizada con amplia capacidad de control estatal.",
+  },
+  nacionalSocialismo: {
+    title: "Nacional-socialismo (categoría histórica)",
+    description:
+      "Categoría histórica extremadamente específica que combina ultranacionalismo, autoritarismo, identitarismo excluyente, antiliberalismo, antiglobalismo y rechazo del pluralismo.",
+    example:
+      "Por ejemplo: no basta con ser nacionalista y socialista; el patrón exige señales fuertes de autoritarismo, exclusión identitaria y oposición radical al pluralismo.",
+  },
+  terceraPosicion: {
+    title: "Tercera posición",
+    description:
+      "Corriente que rechaza tanto el liberalismo económico puro como el socialismo internacionalista, combinando soberanía nacional, proteccionismo, crítica a élites e intervencionismo.",
+    example:
+      "Por ejemplo: defender economía protegida y soberanía nacional sin encajar plenamente en derecha liberal ni izquierda socialista clásica.",
+  },
+  nacionalConservadurismo: {
+    title: "Nacional-conservadurismo",
+    description:
+      "Corriente que combina identidad nacional, soberanía, orden, tradición, control migratorio y posiciones conservadoras en valores sociales.",
+    example:
+      "Por ejemplo: priorizar fronteras, cultura común, familia, seguridad y unidad política frente a globalismo o multiculturalismo.",
+  }
 };
 
 /* Ajuste de duración del test rápido:
