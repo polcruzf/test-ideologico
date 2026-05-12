@@ -2399,7 +2399,7 @@ section.test-selector {
   .test-selector__intro p {
     max-width: 290px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     margin-top: 50px;
   }
 
