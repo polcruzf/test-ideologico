@@ -315,11 +315,17 @@ function ElectoralProgramsCard() {
       </details>
 
       <p className="electoral-programs-card__legal-note">
-        Nota de transparencia: el resultado es orientativo. El algoritmo compara tus
+        <span className="nota_transparencia">Nota de transparencia</span><p className="parrafo1_nota_transparencia">El resultado es orientativo. El algoritmo compara tus
         respuestas con perfiles ideológicos elaborados a partir de programas
-        electorales, medidas públicas y posicionamientos políticos generales. Esta
+        electorales, medidas públicas y posicionamientos políticos generales.</p><p className="parrafo2_nota_transparencia"> Esta
         web no representa a ningún partido político ni implica afiliación,
-        recomendación oficial o verificación por parte de las formaciones citadas.
+        recomendación oficial o verificación por parte de las formaciones citadas.</p>
+        <p className="method-note">
+            El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
+            de la app. Estos perfiles se han elaborado a partir de programas
+            electorales, medidas públicas y declaraciones políticas de los partidos
+            incluidos.
+          </p>
       </p>
     </section>
   );
@@ -1821,14 +1827,6 @@ function goBackToSelector() {
           </div>
 
           <IdeologyBlocksInfoCard variant="home" />
-
-          <p className="method-note">
-            El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
-            de la app. Estos perfiles se han elaborado a partir de programas
-            electorales, medidas públicas y declaraciones políticas de los partidos
-            incluidos.
-          </p>
-
           <ElectoralProgramsCard />
         </section>
       </main>
