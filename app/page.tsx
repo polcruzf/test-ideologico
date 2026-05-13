@@ -314,19 +314,27 @@ function ElectoralProgramsCard() {
         </ul>
       </details>
 
-      <p className="electoral-programs-card__legal-note">
-        <span className="nota_transparencia">Nota de transparencia</span><p className="parrafo1_nota_transparencia">El resultado es orientativo. El algoritmo compara tus
-        respuestas con perfiles ideológicos elaborados a partir de programas
-        electorales, medidas públicas y posicionamientos políticos generales.</p><p className="parrafo2_nota_transparencia"> Esta
-        web no representa a ningún partido político ni implica afiliación,
-        recomendación oficial o verificación por parte de las formaciones citadas.</p>
-        <p className="method-note">
-            El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
-            de la app. Estos perfiles se han elaborado a partir de programas
-            electorales, medidas públicas y declaraciones políticas de los partidos
-            incluidos.
-          </p>
-      </p>
+<div className="electoral-programs-card__legal-note">
+  <span className="nota_transparencia">Nota de transparencia</span>
+
+  <p className="parrafo1_nota_transparencia">
+    El resultado es orientativo. El algoritmo compara tus respuestas con perfiles
+    ideológicos elaborados a partir de programas electorales, medidas públicas y
+    posicionamientos políticos generales.
+  </p>
+
+  <p className="parrafo2_nota_transparencia">
+    Esta web no representa a ningún partido político ni implica afiliación,
+    recomendación oficial o verificación oficial por parte de las formaciones
+    citadas.
+  </p>
+
+  <p className="method-note">
+    El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
+    de la app. Estos perfiles se han elaborado a partir de programas electorales,
+    medidas públicas y declaraciones políticas de los partidos incluidos.
+  </p>
+</div>
     </section>
   );
 }
@@ -2358,7 +2366,7 @@ function goBackToSelector() {
           </div>
           <div className="progress__meta">
             <span>Pregunta {currentQuestionIndex + 1}/{totalQuestions}</span>
-            <span>{progress}%</span>
+            <span className="progress_percentage">{progress}%</span>
           </div>
         </div>
       </header>

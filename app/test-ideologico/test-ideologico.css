@@ -29,11 +29,11 @@
 }
 
 main.ideology-test {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 body.min-h-full.flex.flex-col {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 .ideology-test__header {
@@ -63,7 +63,7 @@ body.min-h-full.flex.flex-col {
   width: 100%;
   height: 10px;
   overflow: hidden;
-  background: #eee;
+  background: #ffffff;
   border-radius: 999px;
 }
 
@@ -96,7 +96,7 @@ body.min-h-full.flex.flex-col {
   display: grid;
   align-content: center;
   gap: 40px;
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 .test-selector__intro {
@@ -192,7 +192,7 @@ span.nota_transparencia {
   gap: 20px;
   max-width: 860px;
   margin: 0 auto;
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 .question-card {
@@ -424,7 +424,7 @@ span.nota_transparencia {
 .results {
   display: grid;
   gap: 28px;
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 .results h2 {
@@ -1311,10 +1311,10 @@ a.ideology-blocks-info-card__button {
 }
 
 .electoral-programs-card__list a {
-  color: #111;
-  font-weight: 650;
+  color: #776b5f;
+  font-weight: 400;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
   overflow-wrap: anywhere;
 }
 
@@ -1521,20 +1521,20 @@ a.ideology-blocks-info-card__button {
 
 /* Overrides finales conservados del archivo original */
 main.ideology-test {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 body.min-h-full.flex.flex-col {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 section.test-selector {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 section.single-question,
 section.results {
-  background-color: #f6f6f6;
+  background-color: #eeeee8;
 }
 
 a.ideology-blocks-info-card__button {
@@ -2451,7 +2451,7 @@ section.test-selector {
 
   .ideology-blocks-info-card__list li {
     min-height: 30px;
-    padding: 8px 10px;
+    padding: 12px 10px;
     border-radius: 5px;
     font-size: 18px;
   }
