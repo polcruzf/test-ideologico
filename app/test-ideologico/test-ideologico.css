@@ -16,15 +16,16 @@
   /* MOBILE */
   --ideology-card-title-size-mobile: 13px;
   --ideology-card-percentage-size-mobile: 16px;
+  font-family: var(--font-inter-tight), sans-serif;
+  
 }
 
-/* Base */
+
 .ideology-test {
   max-width: 1100px;
   margin: 0 auto;
   padding: 48px 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #111;
+  font-family: var(--font-inter-tight), sans-serif;
   background: #fff;
 }
 
@@ -43,8 +44,7 @@ body.min-h-full.flex.flex-col {
 .ideology-test__header h1,
 .results h1 {
   margin: 0 0 12px;
-  font-size: clamp(32px, 5vw, 56px);
-  letter-spacing: -0.04em;
+  font-size: clamp(32px, 5vw, 56px);;
   line-height: 1.1;
 }
 
@@ -105,7 +105,6 @@ body.min-h-full.flex.flex-col {
 
 .test-selector__intro h1 {
   font-size: clamp(38px, 6vw, 72px);
-  letter-spacing: -0.03em;
 }
 
 .test-selector__intro p {
@@ -152,7 +151,6 @@ body.min-h-full.flex.flex-col {
   margin-bottom: 12px;
   font-size: 28px;
   font-weight: 800;
-  letter-spacing: -0.03em;
 }
 
 .test-option-card strong {
@@ -227,7 +225,6 @@ span.nota_transparencia {
   margin: 0 0 24px;
   font-size: clamp(22px, 4vw, 34px);
   line-height: 1.25;
-  letter-spacing: -0.03em;
 }
 
 .question-header-actions {
@@ -284,7 +281,7 @@ span.nota_transparencia {
   border-radius: 999px;
   background: #fff;
   color: #111;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
   animation: subtleInfoPulse 2.5s ease-in-out infinite;
 }
@@ -361,14 +358,12 @@ span.nota_transparencia {
 .primary-button:disabled,
 .secondary-button:disabled,
 .back-button:disabled {
-  opacity: 0.35;
   cursor: not-allowed;
 }
 
 .secondary-button {
-  background: #ffffff;
-  color: #111;
-  border: 1px solid #e2e2e2;
+  background: #86837c;
+  color: #ffffff;
 }
 
 .back-button {
@@ -430,7 +425,6 @@ span.nota_transparencia {
 .results h2 {
   margin: 0;
   font-size: 25px;
-  letter-spacing: -0.03em;
   font-weight: 700;
 }
 
@@ -442,14 +436,11 @@ span.nota_transparencia {
 .community-selector {
   display: grid;
   gap: 8px;
-  padding: 22px;
-  border: 1px solid #ddd;
-  border-radius: 22px;
-  background: #fff;
 }
 
 .community-selector label {
   font-weight: 800;
+  font-size: 18px;
 }
 
 .community-selector select {
@@ -728,7 +719,6 @@ span.nota_transparencia {
 .confirmation-modal h2 {
   margin: 0 40px 10px 0;
   font-size: clamp(26px, 4vw, 38px);
-  letter-spacing: -0.04em;
 }
 
 .confirmation-modal p {
@@ -773,7 +763,6 @@ span.nota_transparencia {
 .question-info--popup h3 {
   margin-right: 42px;
   font-size: 24px;
-  letter-spacing: -0.03em;
 }
 
 .ideology-explanation--popup {
@@ -792,7 +781,6 @@ span.nota_transparencia {
 .ideology-explanation--popup h3 {
   margin: 0 44px 10px 0;
   font-size: clamp(24px, 4vw, 34px);
-  letter-spacing: -0.04em;
 }
 
 .ideology-explanation--popup p {
@@ -914,7 +902,7 @@ span.nota_transparencia {
   background: #111;
   color: #fff;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .profile-definition-list {
@@ -973,7 +961,6 @@ span.nota_transparencia {
   gap: 24px;
   padding: 24px;
   border-radius: 24px;
-  background: #e7f1f3 !important;
   color: #111;
 }
 
@@ -995,7 +982,6 @@ span.nota_transparencia {
   color: #111;
   font-size: clamp(24px, 3vw, 34px);
   line-height: 1.1;
-  letter-spacing: -0.04em;
 }
 
 .ideology-blocks-info-card__text {
@@ -1034,7 +1020,7 @@ span.nota_transparencia {
   border-radius: 999px;
   background: #111;
   color: #fff;
-  font-weight: 900;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -1069,7 +1055,7 @@ a.ideology-blocks-info-card__button {
   background: #111;
   color: #fff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -1105,7 +1091,7 @@ a.ideology-blocks-info-card__button {
 .complete-analysis-panel__label {
   color: #666;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
@@ -1125,7 +1111,6 @@ a.ideology-blocks-info-card__button {
   color: #fff;
   font-size: clamp(26px, 4vw, 42px);
   line-height: 1.05;
-  letter-spacing: -0.04em;
 }
 
 .consistency-score {
@@ -1133,7 +1118,6 @@ a.ideology-blocks-info-card__button {
   font-size: clamp(42px, 6vw, 72px);
   font-weight: 950;
   line-height: 0.95;
-  letter-spacing: -0.05em;
 }
 
 .priority-list,
@@ -1164,7 +1148,7 @@ a.ideology-blocks-info-card__button {
   border-radius: 999px;
   background: #111;
   color: #fff;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .priority-item strong,
@@ -1221,7 +1205,7 @@ a.ideology-blocks-info-card__button {
 }
 
 .advanced-axis__header span {
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .advanced-axis__track {
@@ -1275,7 +1259,6 @@ a.ideology-blocks-info-card__button {
 .electoral-programs-card h2 {
   font-size: clamp(24px, 3vw, 34px);
   line-height: 1.1;
-  letter-spacing: -0.04em;
 }
 
 .electoral-programs-card h3 {
@@ -1296,7 +1279,7 @@ a.ideology-blocks-info-card__button {
 .electoral-programs-card__details summary {
   width: fit-content;
   color: #111;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -1599,7 +1582,6 @@ a.ideology-blocks-info-card__button {
   margin: 0;
   font-size: clamp(34px, 5vw, 56px);
   line-height: 1;
-  letter-spacing: -0.05em;
 }
 
 .pretest-setup__intro p {
@@ -1615,7 +1597,7 @@ a.ideology-blocks-info-card__button {
   background: #fff;
   color: #111;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -1650,7 +1632,7 @@ a.ideology-blocks-info-card__button {
   background: #111;
   color: #fff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -1658,7 +1640,6 @@ a.ideology-blocks-info-card__button {
 .territorial-question-card__header h2 {
   margin: 0;
   font-size: clamp(24px, 4vw, 36px);
-  letter-spacing: -0.04em;
   line-height: 1.08;
 }
 
@@ -1765,7 +1746,6 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 20px;
   padding: 26px;
-  border: 1px solid #ddd;
   border-radius: 26px;
   background: #fff;
 }
@@ -1782,7 +1762,7 @@ a.ideology-blocks-info-card__button {
   background: #111;
   color: #fff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -1790,7 +1770,6 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-card__intro h2 {
   margin: 0;
   font-size: clamp(26px, 4vw, 40px);
-  letter-spacing: -0.04em;
 }
 
 .composite-ideology-card__intro p {
@@ -1833,7 +1812,7 @@ a.ideology-blocks-info-card__button {
   background: #111;
   color: #fff;
   font-size: 11px;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .composite-ideology-item__top strong {
@@ -1845,7 +1824,6 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-item h3 {
   margin: 0;
   font-size: 22px;
-  letter-spacing: -0.03em;
 }
 
 .composite-ideology-item p {
@@ -1923,7 +1901,6 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 10px;
   padding: 24px;
-  border: 1px solid #ddd;
   border-radius: 22px;
   background: #fff;
 }
@@ -1968,7 +1945,6 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 18px;
   padding: 26px;
-  border: 1px solid #ddd;
   border-radius: 24px;
   background: #ffffff;
 }
@@ -1985,7 +1961,7 @@ a.ideology-blocks-info-card__button {
   background: #111;
   color: #fff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -2059,8 +2035,7 @@ a.ideology-blocks-info-card__button {
   margin: 0;
   color: #555;
   font-size: 13px;
-  font-weight: 900;
-  letter-spacing: -0.01em;
+  font-weight: 700;
 }
 
 .composite-ideology-popup__traits {
@@ -2110,7 +2085,6 @@ section.test-selector {
   color: #111;
   font-size: clamp(42px, 6vw, 76px);
   font-weight: 400;
-  letter-spacing: -0.055em;
   line-height: 0.98;
   text-transform: uppercase;
 }
@@ -2136,7 +2110,6 @@ section.test-selector {
   font-size: clamp(18px, 2vw, 22px);
   font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.03em;
 }
 
 .test-selector__subintro p,
@@ -2182,9 +2155,8 @@ section.test-selector {
   margin: 0 0 12px;
   color: #111;
   font-size: clamp(28px, 2.8vw, 38px);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.98;
-  letter-spacing: -0.055em;
   text-transform: uppercase;
 }
 
@@ -2230,9 +2202,8 @@ section.test-selector {
   margin: 0 auto;
   color: #111;
   font-size: clamp(30px, 4vw, 46px);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.98;
-  letter-spacing: -0.055em;
 }
 
 .ideology-blocks-info-card__text {
@@ -2288,9 +2259,8 @@ section.test-selector {
   margin: 0 auto;
   color: #111;
   font-size: clamp(30px, 4vw, 44px);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.055em;
 }
 
 .electoral-programs-card p {
@@ -2335,7 +2305,7 @@ section.test-selector {
 
 .electoral-programs-card__legal-note strong,
 .electoral-programs-card__legal-note b {
-  font-weight: 900;
+  font-weight: 700;
 }
 
 @media (min-width: 901px) {
@@ -2419,7 +2389,6 @@ section.test-selector {
 
   .test-option-card span {
     font-size: 23px;
-    letter-spacing: -0.045em;
   }
 
   .test-option-card strong {
