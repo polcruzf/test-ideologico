@@ -1908,7 +1908,7 @@ function goBackToSelector() {
       <main className="ideology-test">
         {stickyHeader}
         <section className="results">
-          <button
+          {/* <button
             type="button"
             className="back-button"
             onClick={() => {
@@ -1917,12 +1917,12 @@ function goBackToSelector() {
             }}
           >
             ← Volver a la última pregunta
-          </button>
+          </button> */}
 
-          <h1>Resultado del {getTestTitle(testMode)}</h1>
+          {hasSelectedCommunity && <h1>Resultado del {getTestTitle(testMode)}</h1>}
 
           <div className="community-selector">
-            <label htmlFor="community">Selecciona una comunidad autónoma</label>
+            <label htmlFor="community">Selecciona una comunidad autónoma para ver los resultados</label>
             <select
               id="community"
               value={selectedCommunity}
@@ -2224,9 +2224,9 @@ function goBackToSelector() {
             </section>
           )}
 
-          {isUltraTest && <IdeologyBlocksInfoCard variant="results" />}
+          {hasSelectedCommunity && isUltraTest && <IdeologyBlocksInfoCard variant="results" />}
 
-          {isUltraTest && (
+          {hasSelectedCommunity && isUltraTest && (
             <div className="upgrade-result-card">
               <h2>¿Quieres un resultado mucho más completo?</h2>
               <p>
@@ -2284,7 +2284,7 @@ function goBackToSelector() {
             </>
           )}
 
-          {!isUltraTest && (
+          {hasSelectedCommunity && !isUltraTest && (
             <div className="upgrade-result-card">
               <h2>¿Quieres volver a elegir otro test?</h2>
               <p>
