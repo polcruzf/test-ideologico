@@ -314,25 +314,19 @@ function ElectoralProgramsCard() {
         </ul>
       </details>
 
-<div className="electoral-programs-card__legal-note">
+      <div className="electoral-programs-card__legal-note">
   <span className="nota_transparencia">Nota de transparencia</span>
 
   <p className="parrafo1_nota_transparencia">
-    El resultado es orientativo. El algoritmo compara tus respuestas con perfiles
-    ideológicos elaborados a partir de programas electorales, medidas públicas y
-    posicionamientos políticos generales.
+    El resultado es orientativo. El algoritmo compara tus respuestas con perfiles ideológicos elaborados a partir de programas electorales, medidas públicas y posicionamientos políticos generales.
   </p>
 
   <p className="parrafo2_nota_transparencia">
-    Esta web no representa a ningún partido político ni implica afiliación,
-    recomendación oficial o verificación oficial por parte de las formaciones
-    citadas.
+    Esta web no representa a ningún partido político ni implica afiliación, recomendación oficial o verificación por parte de las formaciones citadas.
   </p>
 
   <p className="method-note">
-    El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos
-    de la app. Estos perfiles se han elaborado a partir de programas electorales,
-    medidas públicas y declaraciones políticas de los partidos incluidos.
+    El resultado se obtiene cruzando tus respuestas con los perfiles ideológicos de la app. Estos perfiles se han elaborado a partir de programas electorales, medidas públicas y declaraciones políticas de los partidos incluidos.
   </p>
 </div>
     </section>
@@ -1547,6 +1541,8 @@ export default function IdeologicalTestPage() {
   const [isAdvancingQuestion, setIsAdvancingQuestion] = useState(false);
   const savedResultSignatureRef = useRef<string | null>(null);
   const testStartedAtRef = useRef<string | null>(null);
+  const lastScrollYRef = useRef(0);
+  const [isStickyHeaderVisible, setIsStickyHeaderVisible] = useState(true);
 
   const activeQuestions =
     testMode === "ultra"
@@ -1589,6 +1585,31 @@ export default function IdeologicalTestPage() {
     ),
     [answers, activeQuestions, selectedCommunity, effectiveIndependencePosition]
   );
+
+  useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const previousScrollY = lastScrollYRef.current;
+
+      if (currentScrollY <= 12) {
+        setIsStickyHeaderVisible(true);
+      } else if (currentScrollY > previousScrollY + 8) {
+        setIsStickyHeaderVisible(false);
+      } else if (currentScrollY < previousScrollY - 8) {
+        setIsStickyHeaderVisible(true);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const totalQuestions = activeQuestions.length;
   const progress = Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
@@ -1718,6 +1739,34 @@ function goBackToSelector() {
     confirmationType === "restart"
       ? "Se perderán las respuestas actuales y volverás a la página principal de selección de tests."
       : "Se perderán las respuestas de este test y volverás a la página principal de selección.";
+
+  const stickyHeader = (
+    <header
+      className={
+        isStickyHeaderVisible
+          ? "site-sticky-header"
+          : "site-sticky-header site-sticky-header--hidden"
+      }
+    >
+      <div className="site-sticky-header__inner">
+        <span className="site-sticky-header__brand">Match Político</span>
+        <button
+          type="button"
+          className="site-sticky-header__button"
+          onClick={() => {
+            if (testMode === "selector") {
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+              return;
+            }
+
+            setConfirmationType("home");
+          }}
+        >
+          Volver a realizar un test
+        </button>
+      </div>
+    </header>
+  );
 
   useEffect(() => {
     if (!showResults || testMode === "selector" || !canShowPoliticalResults) return;
@@ -1857,6 +1906,7 @@ function goBackToSelector() {
 
     return (
       <main className="ideology-test">
+        {stickyHeader}
         <section className="results">
           <button
             type="button"
@@ -1889,7 +1939,7 @@ function goBackToSelector() {
               ))}
             </select>
             <p>
-              El resultado de partido se mostrará cuando selecciones una comunidad autónoma.
+              Los porcentajes ideológicos ya se han calculado, pero los resultados de partido dependen de la comunidad autónoma y, en algunos territorios, de tu posición sobre autodeterminación.
             </p>
           </div>
 
@@ -1914,15 +1964,6 @@ function goBackToSelector() {
                 ))}
               </div>
             </article>
-          )}
-
-          {!hasSelectedCommunity && (
-            <section className="results-pending-card">
-              <h2>Selecciona tu comunidad para ver partidos afines</h2>
-              <p>
-                Los porcentajes ideológicos ya se han calculado, pero los resultados de partido dependen de la comunidad autónoma y, en algunos territorios, de tu posición sobre autodeterminación.
-              </p>
-            </section>
           )}
 
           {hasSelectedCommunity && isIndependenceSetupRequired && independencePosition === null && (
@@ -2032,7 +2073,7 @@ function goBackToSelector() {
             </>
           )}
 
-          {highlightedCompositeIdeologies.length > 0 && (
+          {canShowPoliticalResults && highlightedCompositeIdeologies.length > 0 && (
             <section className="composite-ideology-card">
               <div className="composite-ideology-card__intro">
                 <span>Lectura avanzada</span>
@@ -2260,7 +2301,7 @@ function goBackToSelector() {
           )}
         </section>
 
-        {openCompositeIdeologyData && (
+        {canShowPoliticalResults && openCompositeIdeologyData && (
           <div className="modal-overlay" role="dialog" aria-modal="true">
             <div className="ideology-explanation ideology-explanation--popup">
               <button
@@ -2366,7 +2407,7 @@ function goBackToSelector() {
           </div>
           <div className="progress__meta">
             <span>Pregunta {currentQuestionIndex + 1}/{totalQuestions}</span>
-            <span className="progress_percentage">{progress}%</span>
+            <span>{progress}%</span>
           </div>
         </div>
       </header>

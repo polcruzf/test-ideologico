@@ -2444,4 +2444,78 @@ section.test-selector {
     font-size: 18px !important;
     line-height: 1.35 !important;
   }
+  
+}
+
+/* Header sticky solo para página de resultados */
+
+.site-sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  background-color: #eeeee8;
+  transform: translateY(0);
+  transition: transform 0.28s ease;
+}
+
+.site-sticky-header--hidden {
+  transform: translateY(-100%);
+}
+
+.site-sticky-header__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-sticky-header__brand {
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.site-sticky-header__button {
+  padding: 10px 14px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.site-sticky-header__button:hover {
+  background: #333;
+}
+
+.results {
+  padding-top: 72px;
+}
+
+@media (max-width: 700px) {
+  .site-sticky-header__inner {
+    padding: 12px 20px;
+  }
+
+  .site-sticky-header__brand {
+    display: none;
+  }
+
+
+  .site-sticky-header__button {
+    font-size: 13px;
+    padding: 9px 12px;
+    width: 100%;
+  }
+
+  .results {
+    padding-top: 66px;
+  }
 }
