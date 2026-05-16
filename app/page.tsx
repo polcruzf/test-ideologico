@@ -469,28 +469,29 @@ function getProfileIdeologyValue(profile: Record<string, number>, ideology: stri
 }
 
 function normalizeMainIdeologyScores(scores: Record<MainIdeologyAxis, number>): MainIdeologyDistribution[] {
-  const total = Math.max(
-    scores.comunismo + scores.nacionalismo + scores.liberalismo,
-    1
-  );
+  const total = scores.comunismo + scores.nacionalismo + scores.liberalismo;
 
   const raw = [
     {
       key: "comunismo" as const,
-      label: "Comunista",
-      percentage: Math.round((scores.comunismo / total) * 100),
+      label: "Intervencionista",
+      percentage: total > 0 ? Math.round((scores.comunismo / total) * 100) : 0,
     },
     {
       key: "nacionalismo" as const,
       label: "Nacionalista",
-      percentage: Math.round((scores.nacionalismo / total) * 100),
+      percentage: total > 0 ? Math.round((scores.nacionalismo / total) * 100) : 0,
     },
     {
       key: "liberalismo" as const,
       label: "Liberal",
-      percentage: Math.round((scores.liberalismo / total) * 100),
+      percentage: total > 0 ? Math.round((scores.liberalismo / total) * 100) : 0,
     },
   ];
+
+  if (total <= 0) {
+    return raw.sort((a, b) => b.percentage - a.percentage);
+  }
 
   const difference = 100 - raw.reduce((sum, item) => sum + item.percentage, 0);
   const strongestIndex = raw.reduce(
@@ -507,6 +508,108 @@ function normalizeMainIdeologyScores(scores: Record<MainIdeologyAxis, number>): 
   return raw.sort((a, b) => b.percentage - a.percentage);
 }
 
+function addAxisSignal(
+  scores: Record<MainIdeologyAxis, number>,
+  axis: MainIdeologyAxis,
+  answer: number,
+  weight: number,
+  positiveIdeologies: Set<string>,
+  oppositeIdeologies: Set<string>,
+  ideology: string
+) {
+  const points = answer * weight;
+
+  if (positiveIdeologies.has(ideology)) {
+    scores[axis] += Math.max(points, 0);
+  }
+
+  if (oppositeIdeologies.has(ideology)) {
+    scores[axis] += Math.max(-points, 0);
+  }
+}
+
+function calculateMainIdeologyDistributionFromAnswers(
+  answers: Answers,
+  questions: Question[]
+): MainIdeologyDistribution[] {
+  const scores: Record<MainIdeologyAxis, number> = {
+    comunismo: 0,
+    nacionalismo: 0,
+    liberalismo: 0,
+  };
+
+  const interventionistIdeologies = new Set([
+    "comunista",
+    "socialista",
+    "socialdemocrata",
+    "ecologista",
+  ]);
+
+  const liberalIdeologies = new Set(["liberal", "libertario"]);
+
+  const nationalistIdeologies = new Set([
+    "nacionalista",
+    "soberanista",
+    "tradicionalista",
+    "conservador",
+  ]);
+
+  const antiNationalistIdeologies = new Set([
+    "globalista",
+    "multiculturalista",
+  ]);
+
+  questions.forEach((question) => {
+    const answer = answers[question.id];
+
+    if (answer === undefined || answer === 0) return;
+
+    Object.entries(question.weights).forEach(([ideology, weight]) => {
+      if (question.block === "economia") {
+        addAxisSignal(
+          scores,
+          "comunismo",
+          answer,
+          weight,
+          interventionistIdeologies,
+          liberalIdeologies,
+          ideology
+        );
+
+        addAxisSignal(
+          scores,
+          "liberalismo",
+          answer,
+          weight,
+          liberalIdeologies,
+          interventionistIdeologies,
+          ideology
+        );
+
+        return;
+      }
+
+      if (
+        question.block === "nacion" ||
+        question.block === "identidad" ||
+        question.block === "geopolitica"
+      ) {
+        addAxisSignal(
+          scores,
+          "nacionalismo",
+          answer,
+          weight,
+          nationalistIdeologies,
+          antiNationalistIdeologies,
+          ideology
+        );
+      }
+    });
+  });
+
+  return normalizeMainIdeologyScores(scores);
+}
+
 function calculateMainIdeologyDistributionFromResults(
   results: IdeologyResult[]
 ): MainIdeologyDistribution[] {
@@ -515,21 +618,17 @@ function calculateMainIdeologyDistributionFromResults(
   return normalizeMainIdeologyScores({
     comunismo:
       value("comunista") * 1 +
-      value("socialista") * 0.9 +
+      value("socialista") * 0.85 +
       value("socialdemocrata") * 0.55 +
-      value("progresista") * 0.25 +
       value("ecologista") * 0.2,
     nacionalismo:
       value("nacionalista") * 1 +
-      value("soberanista") * 0.85 +
-      value("tradicionalista") * 0.5 +
-      value("conservador") * 0.45 +
-      value("autoritario") * 0.25,
+      value("soberanista") * 0.9 +
+      value("tradicionalista") * 0.45 +
+      value("conservador") * 0.35,
     liberalismo:
       value("liberal") * 1 +
-      value("libertario") * 0.8 +
-      value("institucionalista") * 0.25 +
-      value("globalista") * 0.2,
+      value("libertario") * 0.85,
   });
 }
 
@@ -549,29 +648,25 @@ function calculateMainIdeologyDistributionFromPartyProfile(
   return normalizeMainIdeologyScores({
     comunismo:
       value("comunista") * 1 +
-      value("socialista") * 0.9 +
+      value("socialista") * 0.85 +
       value("socialdemocrata") * 0.55 +
-      value("progresista") * 0.25 +
       value("ecologista") * 0.2,
     nacionalismo:
       value("nacionalista") * 1 +
-      value("soberanista") * 0.85 +
-      value("tradicionalista") * 0.5 +
-      value("conservador") * 0.45 +
-      value("autoritario") * 0.25,
+      value("soberanista") * 0.9 +
+      value("tradicionalista") * 0.45 +
+      value("conservador") * 0.35,
     liberalismo:
       value("liberal") * 1 +
-      value("libertario") * 0.8 +
-      value("institucionalista") * 0.25 +
-      value("globalista") * 0.2,
+      value("libertario") * 0.85,
   });
 }
 
 function getMainIdeologySummary(mainDistribution: MainIdeologyDistribution[]) {
   const dominant = mainDistribution[0];
 
-  if (!dominant) {
-    return "No se ha detectado una orientación ideológica principal suficientemente clara.";
+  if (!dominant || dominant.percentage === 0) {
+    return "No se ha detectado una orientación principal suficientemente clara en los tres ejes resumidos.";
   }
 
   if (dominant.percentage >= 75) {
@@ -653,8 +748,8 @@ function IdeologicalAxesMap({
       <div className="ideological-axes-card__intro">
         <h2>Mapa de ejes ideológicos</h2>
         <p>
-          Este mapa resume tu posición entre los tres ejes principales: comunismo,
-          nacionalismo y liberalismo. Cuanto más cerca esté el punto de un vértice,
+          Este mapa resume tu posición entre los tres ejes principales: intervención económica,
+          nacionalismo y liberalismo económico. Cuanto más cerca esté el punto de un vértice,
           más peso tiene ese eje en tu resultado.
         </p>
       </div>
@@ -672,7 +767,7 @@ function IdeologicalAxesMap({
           Nacionalismo
         </span>
         <span className="ideological-triangle-map__label ideological-triangle-map__label--left">
-          Comunismo
+          Intervención
         </span>
         <span className="ideological-triangle-map__label ideological-triangle-map__label--right">
           Liberalismo
@@ -1285,14 +1380,8 @@ function getCompositeIdeologyLevel(percentage: number) {
   if (percentage >= 50) return "Afinidad parcial";
   return "Afinidad baja";
 }
-function getCompositeComponentPercentage(userProfile: IdeologyResult[], component: string) {
-  const exactValue = userProfile.find((item) => item.ideology === component)?.percentage;
-
-  if (exactValue !== undefined) {
-    return `${ideologyLabels[component] ?? component}: ${exactValue}%`;
-  }
-
-  return component;
+function getCompositeComponentLabel(component: string) {
+  return ideologyLabels[component] ?? component;
 }
 
 function getCompositeIdeologyInfo(item: CompositeIdeologyResult | undefined) {
@@ -2138,8 +2227,9 @@ function goBackToSelector() {
     const openCompositeIdeologyData = getCompositeIdeologyInfo(
       compositeIdeologies.find((item) => item.id === openCompositeIdeology)
     );
-    const mainIdeologyDistribution = calculateMainIdeologyDistributionFromResults(
-      results.ideologyPercentages
+    const mainIdeologyDistribution = calculateMainIdeologyDistributionFromAnswers(
+      answers,
+      activeQuestions
     );
     const mainIdeologySummary = getMainIdeologySummary(mainIdeologyDistribution);
     const subIdeologies = getSubIdeologies(results.ideologyPercentages);
@@ -2393,7 +2483,7 @@ function goBackToSelector() {
                       <div className="composite-ideology-item__components">
                         {item.components.map((component) => (
                           <em key={component}>
-                            {getCompositeComponentPercentage(results.ideologyPercentages, component)}
+                            {getCompositeComponentLabel(component)}
                           </em>
                         ))}
                       </div>
