@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   answerOptions,
   autonomousCommunities,
@@ -40,6 +40,19 @@ type CompositeIdeologyResult = {
 type IdeologyResult = {
   ideology: string;
   percentage: number;
+};
+
+type MainIdeologyAxis = "comunismo" | "nacionalismo" | "liberalismo";
+
+type MainIdeologyDistribution = {
+  key: MainIdeologyAxis;
+  label: string;
+  percentage: number;
+};
+
+type IdeologicalMapPosition = {
+  x: number;
+  y: number;
 };
 
 type PartyMatch = {
@@ -448,6 +461,228 @@ function getIdeologyProfileDetail(item: IdeologyResult) {
 
 function getIdeologyPercentage(results: IdeologyResult[], ideology: string) {
   return results.find((item) => item.ideology === ideology)?.percentage ?? 0;
+}
+
+
+function getProfileIdeologyValue(profile: Record<string, number>, ideology: string) {
+  return profile[ideology] ?? 0;
+}
+
+function normalizeMainIdeologyScores(scores: Record<MainIdeologyAxis, number>): MainIdeologyDistribution[] {
+  const total = Math.max(
+    scores.comunismo + scores.nacionalismo + scores.liberalismo,
+    1
+  );
+
+  const raw = [
+    {
+      key: "comunismo" as const,
+      label: "Comunista",
+      percentage: Math.round((scores.comunismo / total) * 100),
+    },
+    {
+      key: "nacionalismo" as const,
+      label: "Nacionalista",
+      percentage: Math.round((scores.nacionalismo / total) * 100),
+    },
+    {
+      key: "liberalismo" as const,
+      label: "Liberal",
+      percentage: Math.round((scores.liberalismo / total) * 100),
+    },
+  ];
+
+  const difference = 100 - raw.reduce((sum, item) => sum + item.percentage, 0);
+  const strongestIndex = raw.reduce(
+    (bestIndex, item, index) =>
+      item.percentage > raw[bestIndex].percentage ? index : bestIndex,
+    0
+  );
+
+  raw[strongestIndex] = {
+    ...raw[strongestIndex],
+    percentage: clamp(raw[strongestIndex].percentage + difference),
+  };
+
+  return raw.sort((a, b) => b.percentage - a.percentage);
+}
+
+function calculateMainIdeologyDistributionFromResults(
+  results: IdeologyResult[]
+): MainIdeologyDistribution[] {
+  const value = (ideology: string) => getIdeologyPercentage(results, ideology);
+
+  return normalizeMainIdeologyScores({
+    comunismo:
+      value("comunista") * 1 +
+      value("socialista") * 0.9 +
+      value("socialdemocrata") * 0.55 +
+      value("progresista") * 0.25 +
+      value("ecologista") * 0.2,
+    nacionalismo:
+      value("nacionalista") * 1 +
+      value("soberanista") * 0.85 +
+      value("tradicionalista") * 0.5 +
+      value("conservador") * 0.45 +
+      value("autoritario") * 0.25,
+    liberalismo:
+      value("liberal") * 1 +
+      value("libertario") * 0.8 +
+      value("institucionalista") * 0.25 +
+      value("globalista") * 0.2,
+  });
+}
+
+function calculateMainIdeologyDistributionFromPartyProfile(
+  profile: Record<string, number> | undefined
+): MainIdeologyDistribution[] {
+  if (!profile) {
+    return normalizeMainIdeologyScores({
+      comunismo: 0,
+      nacionalismo: 0,
+      liberalismo: 0,
+    });
+  }
+
+  const value = (ideology: string) => getProfileIdeologyValue(profile, ideology);
+
+  return normalizeMainIdeologyScores({
+    comunismo:
+      value("comunista") * 1 +
+      value("socialista") * 0.9 +
+      value("socialdemocrata") * 0.55 +
+      value("progresista") * 0.25 +
+      value("ecologista") * 0.2,
+    nacionalismo:
+      value("nacionalista") * 1 +
+      value("soberanista") * 0.85 +
+      value("tradicionalista") * 0.5 +
+      value("conservador") * 0.45 +
+      value("autoritario") * 0.25,
+    liberalismo:
+      value("liberal") * 1 +
+      value("libertario") * 0.8 +
+      value("institucionalista") * 0.25 +
+      value("globalista") * 0.2,
+  });
+}
+
+function getMainIdeologySummary(mainDistribution: MainIdeologyDistribution[]) {
+  const dominant = mainDistribution[0];
+
+  if (!dominant) {
+    return "No se ha detectado una orientación ideológica principal suficientemente clara.";
+  }
+
+  if (dominant.percentage >= 75) {
+    return `Tu perfil tiene una orientación principalmente ${dominant.label.toLowerCase()}, porque este eje supera el 75% del resultado general.`;
+  }
+
+  return "Tu resultado no muestra una ideología única muy concreta. Encaja mejor como perfil híbrido, porque ningún eje principal supera el 75%.";
+}
+
+function getSubIdeologies(results: IdeologyResult[]) {
+  return results
+    .filter((item) => item.percentage >= 50)
+    .filter((item) => !["globalista", "multiculturalista", "institucionalista"].includes(item.ideology))
+    .slice(0, 3);
+  
+}
+
+function getSpecificIdeologyLabel(subIdeologies: IdeologyResult[]) {
+  if (subIdeologies.length === 0) return "Perfil ideológico mixto";
+
+  return subIdeologies
+    .slice(0, 2)
+    .map((item) => ideologyLabels[item.ideology] ?? item.ideology)
+    .join("-");
+}
+
+function getIdeologicalMapPosition(
+  mainDistribution: MainIdeologyDistribution[]
+): IdeologicalMapPosition {
+  const getAxis = (axis: MainIdeologyAxis) =>
+    mainDistribution.find((item) => item.key === axis)?.percentage ?? 0;
+
+  const comunismo = getAxis("comunismo") / 100;
+  const nacionalismo = getAxis("nacionalismo") / 100;
+  const liberalismo = getAxis("liberalismo") / 100;
+
+  return {
+    x: Math.round(comunismo * 10 + nacionalismo * 50 + liberalismo * 90),
+    y: Math.round(comunismo * 88 + nacionalismo * 14 + liberalismo * 88),
+  };
+}
+
+function getPartyProfileForAxes(
+  partyName: string,
+  profiles: Record<string, Record<string, number>>
+) {
+  if (!partyName || partyName === "Sin partido claramente afín") return undefined;
+  return profiles[partyName];
+}
+
+function MainIdeologyPills({
+  distribution,
+  variant = "light",
+}: {
+  distribution: MainIdeologyDistribution[];
+  variant?: "light" | "dark";
+}) {
+  return (
+    <div className={`main-ideology-pills main-ideology-pills--${variant}`}>
+      {distribution.map((item) => (
+        <div key={item.key} className="main-ideology-pill">
+          <strong>{item.percentage}%</strong>
+          <span>{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function IdeologicalAxesMap({
+  distribution,
+}: {
+  distribution: MainIdeologyDistribution[];
+}) {
+  const position = getIdeologicalMapPosition(distribution);
+
+  return (
+    <section className="ideological-axes-card">
+      <div className="ideological-axes-card__intro">
+        <h2>Mapa de ejes ideológicos</h2>
+        <p>
+          Este mapa resume tu posición entre los tres ejes principales: comunismo,
+          nacionalismo y liberalismo. Cuanto más cerca esté el punto de un vértice,
+          más peso tiene ese eje en tu resultado.
+        </p>
+      </div>
+
+      <div
+        className="ideological-triangle-map"
+        style={
+          {
+            "--axis-x": `${position.x}%`,
+            "--axis-y": `${position.y}%`,
+          } as CSSProperties
+        }
+      >
+        <span className="ideological-triangle-map__label ideological-triangle-map__label--top">
+          Nacionalismo
+        </span>
+        <span className="ideological-triangle-map__label ideological-triangle-map__label--left">
+          Comunismo
+        </span>
+        <span className="ideological-triangle-map__label ideological-triangle-map__label--right">
+          Liberalismo
+        </span>
+        <span className="ideological-triangle-map__dot" />
+      </div>
+
+      <MainIdeologyPills distribution={distribution} />
+    </section>
+  );
 }
 
 function detectInconsistencies(results: IdeologyResult[]) {
@@ -1903,6 +2138,20 @@ function goBackToSelector() {
     const openCompositeIdeologyData = getCompositeIdeologyInfo(
       compositeIdeologies.find((item) => item.id === openCompositeIdeology)
     );
+    const mainIdeologyDistribution = calculateMainIdeologyDistributionFromResults(
+      results.ideologyPercentages
+    );
+    const mainIdeologySummary = getMainIdeologySummary(mainIdeologyDistribution);
+    const subIdeologies = getSubIdeologies(results.ideologyPercentages);
+    const specificIdeologyLabel = getSpecificIdeologyLabel(subIdeologies);
+    const regionalProfiles =
+      regionalPartyProfiles[selectedCommunity] ?? nationalPartyProfiles;
+    const nationalPartyMainDistribution = calculateMainIdeologyDistributionFromPartyProfile(
+      getPartyProfileForAxes(results.finalNationalParty.party, nationalPartyProfiles)
+    );
+    const regionalPartyMainDistribution = calculateMainIdeologyDistributionFromPartyProfile(
+      getPartyProfileForAxes(results.finalRegionalParty.party, regionalProfiles)
+    );
 
     return (
       <main className="ideology-test">
@@ -1986,6 +2235,15 @@ function goBackToSelector() {
                     <div className="party-card_finalresult"><strong>{results.finalNationalParty.party}</strong></div>
                     <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
                   </div>
+                  {results.finalNationalParty.isClearMatch && (
+                    <div className="party-card_ideologies">
+                      <span>Ideologías sobre el partido</span>
+                      <MainIdeologyPills
+                        distribution={nationalPartyMainDistribution}
+                        variant="dark"
+                      />
+                    </div>
+                  )}
                   {!results.finalNationalParty.isClearMatch && (
                     <>
                       <p className="party-card_explanation">
@@ -2025,6 +2283,15 @@ function goBackToSelector() {
                     <div className="party-card_finalresult"><strong>{results.finalRegionalParty.party}</strong></div>
                     <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
                   </div>
+                  {results.finalRegionalParty.isClearMatch && (
+                    <div className="party-card_ideologies">
+                      <span>Ideologías sobre el partido</span>
+                      <MainIdeologyPills
+                        distribution={regionalPartyMainDistribution}
+                        variant="dark"
+                      />
+                    </div>
+                  )}
                   {!results.finalRegionalParty.isClearMatch && (
                     <p className="party-card_explanation">
                       {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
@@ -2035,19 +2302,38 @@ function goBackToSelector() {
 
               <section className="ideological-profile-card results-profile-card">
                 <h2 className="results-profile-title">Perfil ideológico resumido</h2>
-                <p className="results-profile-intro">{ideologicalProfile.intro}</p>
+                <div className="main-result-wrapper">
 
-                <div className="profile-highlight-list results-profile-highlight-list">
-                  {ideologicalProfile.ideologies.map((item) => (
-                    <span key={item.ideology} className="results-profile-highlight-item">
-                      {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
-                    </span>
-                  ))}
-                </div>
+              <div className="main-profile-summary">
+                <strong>{specificIdeologyLabel}</strong>
+              </div>
+
+              <MainIdeologyPills distribution={mainIdeologyDistribution} />
+
+              <p className="results-profile-intro">
+                {mainIdeologySummary}
+              </p>
+
+            </div>
+
+                {subIdeologies.length > 0 && (
+                  <div className="subideology-summary">
+                    <h3>Subideologías detectadas</h3>
+                    <div className="profile-highlight-list results-profile-highlight-list">
+                      {subIdeologies.map((item) => (
+                        <span key={item.ideology} className="results-profile-highlight-item">
+                          {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="profile-definition-list results-profile-detail-list">
-                  {ideologicalProfile.profileDetails.map((detail) => (
-                    <p key={detail} className="results-profile-detail-item">{detail}</p>
+                  {subIdeologies.map((item) => (
+                    <p key={item.ideology} className="results-profile-detail-item">
+                      {getIdeologyProfileDetail(item)}
+                    </p>
                   ))}
                 </div>
 
@@ -2070,6 +2356,8 @@ function goBackToSelector() {
                   </p>
                 )}
               </section>
+
+              <IdeologicalAxesMap distribution={mainIdeologyDistribution} />
             </>
           )}
 
