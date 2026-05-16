@@ -397,7 +397,6 @@ span.nota_transparencia {
 .primary-button--inside-dark {
   width: fit-content;
   margin-top: 18px;
-  border: 1px solid #fff;
   background: #000000;
   color: #ffffff;
 }
@@ -1699,18 +1698,18 @@ a.ideology-blocks-info-card__button {
   gap: 5px;
   padding: 12px;
   border-radius: 14px;
-  background: #dedbcb;
+  border: 2px solid #dedbcb;
 }
 
 .party-card_alternative-item span {
   margin: 0;
-  color: #000000;
+  color: #ffffff;
   font-size: 18px;
   font-weight: 700;
 }
 
 .party-card_alternative-item strong {
-  color: #000000;
+  color: #ffffff;
   font-size: 20px;
   line-height: 1.15;
 }
@@ -1721,6 +1720,7 @@ a.ideology-blocks-info-card__button {
   font-size: 18px;
   color:black;
   font-weight: 400;
+  padding: 0px 15px;
 }
 
 /* Corrientes ideológicas compuestas */
@@ -1774,8 +1774,7 @@ a.ideology-blocks-info-card__button {
 }
 
 .composite-ideology-item.is-historical {
-  border-color: #111;
-  background: #f4f4f4;
+  background: #dedbcbed;
 }
 
 .composite-ideology-item__top {
@@ -1785,7 +1784,7 @@ a.ideology-blocks-info-card__button {
   justify-content: center;
   gap: 12px;
   background-color: #ffffffed;
-  border-radius: 999px;
+  border-radius:14px;
   padding: 0 16px;
 }
 
@@ -1966,9 +1965,6 @@ a.ideology-blocks-info-card__button {
   min-height: 160px !important;
 }
 
-.composite-ideology-item.is-historical {
-  border-color: #111;
-}
 
 .composite-ideology-item__components {
   display: flex;
@@ -2591,7 +2587,7 @@ section.test-selector {
 }
 
 .main-ideology-pills--dark .main-ideology-pill {
-  border-color: #dedbcb;
+  border: 2px solid #dedbcb;
   background: transparent;
   color: #ffffff;
 }
