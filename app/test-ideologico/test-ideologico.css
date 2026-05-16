@@ -398,8 +398,8 @@ span.nota_transparencia {
   width: fit-content;
   margin-top: 18px;
   border: 1px solid #fff;
-  background: #fff;
-  color: #111;
+  background: #000000;
+  color: #ffffff;
 }
 
 .primary-button--inside-dark:hover {
@@ -431,6 +431,7 @@ span.nota_transparencia {
 .community-selector {
   display: grid;
   gap: 20px;
+  margin-bottom: 40px;
 }
 
 .community-selector label {
@@ -481,30 +482,30 @@ span.nota_transparencia {
 .party-card em {
   display: inline-block;
   margin-top: 12px;
-  padding: 6px 12px;
+  padding: 6px 20px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
+  background: #dedbcb;
+  color: #000000;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .upgrade-result-card {
   padding: 26px;
-  border: 1px solid #111;
   border-radius: 22px;
-  background: #111;
-  color: #fff;
+  background: #f7f6d8;
+  color: #000000;
 }
 
 .upgrade-result-card h2 {
   margin: 0 0 10px;
-  color: #fff;
+  color: #000000;
 }
 
 .upgrade-result-card p {
   margin: 0;
-  color: #f2f2f2;
+  color: #000000;
   line-height: 1.6;
 }
 
@@ -648,11 +649,8 @@ span.nota_transparencia {
 .result-ideology-card__badge {
   display: inline-flex;
   align-self: flex-start;
-  margin-top: 10px;
-  padding: 5px 8px;
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
+  justify-content: center;
+  color: #000000;
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
@@ -869,11 +867,7 @@ span.nota_transparencia {
 .ideological-profile-card {
   display: grid;
   gap: 16px;
-  padding: 26px;
-  border: 1px solid #ddd;
-  border-radius: 24px;
-  background: #ffffff;
-  margin: 30px 0px;
+  margin: 50px 0px 60px;
 }
 
 .ideological-profile-card h2 {
@@ -898,8 +892,8 @@ span.nota_transparencia {
   justify-content: center;
   padding: 8px 12px;
   border-radius: 999px;
-  background: #111;
-  color: #fff;
+  background: #dedbcb;
+  color: #000000;
   font-size: 16px;
   font-weight: 700;
 }
@@ -909,27 +903,19 @@ span.nota_transparencia {
   gap: 10px;
 }
 
-.profile-definition-list p {
-  padding: 14px;
-  border-radius: 14px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-}
-
 .profile-party-context {
   padding: 16px;
   border-radius: 16px;
-  background: #111;
-  color: #fff !important;
-  font-weight: 750;
+  background: #dedbcb;
+  color: #000000 !important;
+  font-weight: 600;
 }
 
 .profile-inconsistencies,
 .profile-no-inconsistencies {
   padding: 16px;
   border-radius: 16px;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: #f7f6d8;
 }
 
 .profile-inconsistencies h3 {
@@ -958,7 +944,6 @@ span.nota_transparencia {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 24px;
-  padding: 24px;
   border-radius: 24px;
   color: #111;
 }
@@ -1406,7 +1391,7 @@ a.ideology-blocks-info-card__button {
 
   .result-card.result-ideology-card {
     min-height: var(--ideology-card-min-height-mobile);
-    padding: 12px 14px 32px;
+    padding: 25px 20px 52px;
   }
 
   .result-ideology-card__top {
@@ -1441,7 +1426,6 @@ a.ideology-blocks-info-card__button {
   .ideology-blocks-info-card {
     grid-template-columns: 1fr;
     gap: 18px;
-    padding: 22px;
   }
 
   .ideology-blocks-info-card__button {
@@ -1543,20 +1527,17 @@ a.ideology-blocks-info-card__button {
 /* Explicación específica cuando no existe partido claramente afín */
 .party-card_explanation {
   margin: 18px 0 0;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.08);
+  padding: 14px 0px;
   color: #f2f2f2;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 400;
   line-height: 1.55;
 }
 
 @media (max-width: 700px) {
   .party-card_explanation {
     margin-top: 16px;
-    font-size: 13px;
+    font-size: 18px;
   }
 }
 
@@ -1690,18 +1671,17 @@ a.ideology-blocks-info-card__button {
   gap: 12px;
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .party-card_alternatives > strong {
   color: #fff;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .party-card_alternatives p {
   margin: 0;
   color: #d8d8d8;
-  font-size: 13px;
+  font-size: 18px;
   line-height: 1.5;
 }
 
@@ -1715,38 +1695,35 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 5px;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.08);
+  background: #dedbcb;
 }
 
 .party-card_alternative-item span {
   margin: 0;
-  color: #cfcfcf;
-  font-size: 12px;
-  font-weight: 800;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .party-card_alternative-item strong {
-  color: #fff;
-  font-size: 18px;
+  color: #000000;
+  font-size: 20px;
   line-height: 1.15;
 }
 
 .party-card_alternative-item em {
   width: fit-content;
-  margin: 0;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 0px;
+  font-size: 18px;
+  color:black;
+  font-weight: 400;
 }
 
 /* Corrientes ideológicas compuestas */
 .composite-ideology-card {
   display: grid;
   gap: 20px;
-  padding: 26px;
-  border-radius: 26px;
-  background: #fff;
 }
 
 .composite-ideology-card__intro {
@@ -1789,9 +1766,8 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 11px;
   padding: 18px;
-  border: 1px solid #e4e4e4;
   border-radius: 20px;
-  background: #fafafa;
+  background: #dedbcbed;
 }
 
 .composite-ideology-item.is-historical {
@@ -1803,15 +1779,18 @@ a.ideology-blocks-info-card__button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  justify-content: center;
   gap: 12px;
+  background-color: #ffffffed;
+  border-radius: 999px;
+  padding: 0 16px;
 }
 
 .composite-ideology-item__top span {
   padding: 5px 8px;
   border-radius: 999px;
-  background: #111;
-  color: #fff;
-  font-size: 16px!important;
+  color: #000000;
+  font-size: 18px!important;
   font-weight: 700;
 }
 
@@ -1835,11 +1814,11 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-item__components {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 12px;
 }
 
 .composite-ideology-item__components em {
-  padding: 5px 8px;
+  padding: 5px 15px;
   border-radius: 999px;
   background: #fff;
   border: 1px solid #e4e4e4;
@@ -1944,9 +1923,6 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-card {
   display: grid;
   gap: 18px;
-  padding: 26px;
-  border-radius: 24px;
-  background: #ffffff;
 }
 
 .composite-ideology-card__intro {
@@ -1980,7 +1956,7 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px;
+  gap: 20px;
 }
 
 .composite-ideology-item {
@@ -1994,30 +1970,24 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-item__components {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 12px;
   margin-top: 12px;
   padding-bottom: 18px;
+  flex-direction: column;
 }
 
 .composite-ideology-item__components em {
   display: inline-flex;
-  padding: 5px 8px;
+  padding: 5px 15px;
   border-radius: 999px;
-  background: #f2f2f2;
+  background: #eeeee8;
   color: #333;
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 800;
-}
-
-.composite-ideology-item .result-ideology-card__badge {
-  margin-top: 12px;
+  font-weight: 600;
 }
 
 @media (max-width: 700px) {
-  .composite-ideology-card {
-    padding: 20px;
-  }
 
   .composite-ideology-grid {
     grid-template-columns: 1fr;
@@ -2027,14 +1997,14 @@ a.ideology-blocks-info-card__button {
 /* Ajuste final: subtítulo de rasgos detectados en corrientes compuestas */
 .composite-ideology-item__traits {
   display: grid;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 5px;
+  margin-top: 25px;
 }
 
 .composite-ideology-item__traits h3 {
   margin: 0;
-  color: #555;
-  font-size: 16px;
+  color: #000000;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -2443,6 +2413,9 @@ section.test-selector {
     border-radius: 14px;
     font-size: 18px !important;
     line-height: 1.35 !important;
+  }
+  p.profile-no-inconsistencies {
+    margin-top: 20px;
   }
   
 }
