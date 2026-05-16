@@ -2326,13 +2326,13 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
                   </div>
                   {results.finalNationalParty.isClearMatch && (
-                    <div className="party-card_ideologies">
-                      <span>Ideologías sobre el partido</span>
+                    <details className="party-card_ideologies party-card_ideologies-toggle">
+                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
                       <MainIdeologyPills
                         distribution={nationalPartyMainDistribution}
                         variant="dark"
                       />
-                    </div>
+                    </details>
                   )}
                   {!results.finalNationalParty.isClearMatch && (
                     <>
@@ -2374,13 +2374,13 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
                   </div>
                   {results.finalRegionalParty.isClearMatch && (
-                    <div className="party-card_ideologies">
-                      <span>Ideologías sobre el partido</span>
+                    <details className="party-card_ideologies party-card_ideologies-toggle">
+                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
                       <MainIdeologyPills
                         distribution={regionalPartyMainDistribution}
                         variant="dark"
                       />
-                    </div>
+                    </details>
                   )}
                   {!results.finalRegionalParty.isClearMatch && (
                     <p className="party-card_explanation">
@@ -2398,7 +2398,6 @@ function goBackToSelector() {
                 <strong>{specificIdeologyLabel}</strong>
               </div>
 
-              <MainIdeologyPills distribution={mainIdeologyDistribution} />
 
               <p className="results-profile-intro">
                 {mainIdeologySummary}
@@ -2408,13 +2407,22 @@ function goBackToSelector() {
 
                 {subIdeologies.length > 0 && (
                   <div className="subideology-summary">
-                    <h3>Subideologías detectadas</h3>
-                    <div className="profile-highlight-list results-profile-highlight-list">
-                      {subIdeologies.map((item) => (
-                        <span key={item.ideology} className="results-profile-highlight-item">
-                          {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
-                        </span>
-                      ))}
+                    <div className="subideology-summary__title">
+                      <h3>Subideologías detectadas</h3>
+                    </div>
+                    <div className="subideology-summary__description">
+                      <div className="profile-highlight-list results-profile-highlight-list">
+                        {subIdeologies.map((item) => (
+                          <div key={item.ideology} className="results-profile-highlight-item">
+                            <div className="results-profile-highlight-item__title">
+                              {ideologyLabels[item.ideology] ?? item.ideology}
+                            </div>
+                            <div className="results-profile-highlight-item__description">
+                              {item.percentage}%
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -2478,16 +2486,6 @@ function goBackToSelector() {
 
                     <span className="result-ideology-card__badge">{getCompositeIdeologyLevel(item.percentage)}</span>
 
-                    <div className="composite-ideology-item__traits">
-                      <h3>Rasgos detectados</h3>
-                      <div className="composite-ideology-item__components">
-                        {item.components.map((component) => (
-                          <em key={component}>
-                            {getCompositeComponentLabel(component)}
-                          </em>
-                        ))}
-                      </div>
-                    </div>
 
                     <button
                       type="button"
@@ -2695,10 +2693,6 @@ function goBackToSelector() {
               <p>
                 <strong>Resultado:</strong> {openCompositeIdeologyData.percentage}% · {openCompositeIdeologyData.level}
               </p>
-              <div className="composite-ideology-popup__traits">
-                <h4>Rasgos detectados</h4>
-                <p>{openCompositeIdeologyData.components.join(", ")}</p>
-              </div>
               {openCompositeIdeologyData.isHistoricalCategory && (
                 <p>
                   <strong>Nota:</strong> categoría histórica/analítica. No implica recomendación política ni afiliación.
