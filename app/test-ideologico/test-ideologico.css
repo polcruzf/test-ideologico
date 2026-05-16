@@ -461,7 +461,7 @@ span.nota_transparencia {
 }
 
 .party-card {
-  padding: 28px;
+  padding: 20px;
   border-radius: 24px;
   background: #111;
   color: #fff;
@@ -652,6 +652,9 @@ span.nota_transparencia {
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
+  background-color: #ffffff;
+  padding: 2px 0px;
+  border-radius: 999px;
 }
 
 .result-ideology-card__more-button {
@@ -1727,6 +1730,9 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-card {
   display: grid;
   gap: 20px;
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 14px;
 }
 
 .composite-ideology-card__intro {
@@ -1783,7 +1789,7 @@ a.ideology-blocks-info-card__button {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background-color: #ffffffed;
+  background-color: #000000ed;
   border-radius:14px;
   padding: 0 16px;
 }
@@ -1791,13 +1797,13 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-item__top span {
   padding: 5px 8px;
   border-radius: 999px;
-  color: #000000;
+  color: #ffffff;
   font-size: 18px!important;
   font-weight: 700;
 }
 
 .composite-ideology-item__top strong {
-  color: #111;
+  color: #ffffff;
   font-size: 30px;
   line-height: 1;
 }
@@ -2565,6 +2571,7 @@ section.test-selector {
   background: #fff;
   color: #111;
   text-align: center;
+  gap:5px;
 }
 
 .main-ideology-pill strong {
@@ -2590,6 +2597,7 @@ section.test-selector {
   border: 2px solid #dedbcb;
   background: transparent;
   color: #ffffff;
+  gap: 7px;
 }
 
 .party-card_ideologies {
@@ -2649,7 +2657,6 @@ section.test-selector {
 
   position: relative;
   min-height: 360px;
-  border: 1px solid #ddd;
   border-radius: 24px;
   background:
     linear-gradient(135deg, transparent 49.6%, #111 50%, transparent 50.4%) left bottom / 50% 100% no-repeat,
@@ -2730,10 +2737,39 @@ section.test-selector {
     border-radius: 22px;
   }
 
-  .ideological-triangle-map {
-    min-height: 260px;
-    border-radius: 18px;
-  }
+.ideological-triangle-map {
+  min-height: 260px;
+  border-radius: 18px;
+  background: #eeeee8;
+  clip-path: none;
+}
+
+.ideological-triangle-map::before {
+  content: "";
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  top: 62px;
+  bottom: 34px;
+  background: #111;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.ideological-triangle-map::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 65px;
+  bottom: 36px;
+  background: #eeeee8;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.ideological-triangle-map__dot,
+.ideological-triangle-map__label {
+  z-index: 2;
+}
+
 
   .ideological-triangle-map__label {
     font-size: 12px;
