@@ -748,7 +748,7 @@ span.nota_transparencia {
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 0px;
   margin-top: 24px;
 }
 
@@ -789,13 +789,13 @@ span.nota_transparencia {
 .block-results {
   display: grid;
   gap: 40px;
+  background-color: white;
+  border-radius: 14px;
+  padding: 30px 20px;
 }
 
 .block-result-card {
-  padding: 24px;
-  border: 1px solid #ddd;
-  border-radius: 22px;
-  background: #fff;
+  padding-bottom: 45px;
 }
 
 .block-result-card__header {
@@ -808,6 +808,7 @@ span.nota_transparencia {
 .block-result-card__header h3 {
   margin: 0;
   font-size: 24px;
+  font-weight: 600;
 }
 
 .block-party-results {
@@ -818,11 +819,12 @@ span.nota_transparencia {
 }
 
 .block-party-results p {
+  color: #000000;
+  background: #dedbcb;
+  border-radius: 14px;
   margin: 0;
   padding: 14px;
-  border-radius: 14px;
-  background: #f3f3f3;
-  color: #555;
+  font-size: 18px;
 }
 
 .block-party-results strong {
@@ -832,11 +834,11 @@ span.nota_transparencia {
 }
 
 .block-party-results em {
-  display: inline-block;
+  color: #000000;
   margin-top: 8px;
-  color: #555;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 500;
+  display: inline-block;
 }
 
 .ideology-bars {
@@ -848,6 +850,7 @@ span.nota_transparencia {
   display: flex;
   justify-content: space-between;
   margin-bottom: 6px;
+  font-size: 18px;
 }
 
 .ideology-bar__track {
@@ -1377,6 +1380,7 @@ a.ideology-blocks-info-card__button {
 
   .modal-actions {
     display: grid;
+    justify-content: stretch;
   }
 
   .modal-actions .primary-button,
@@ -1933,6 +1937,7 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-card {
   display: grid;
   gap: 18px;
+  margin-bottom: 45px;
 }
 
 .composite-ideology-card__intro {
@@ -1960,7 +1965,7 @@ a.ideology-blocks-info-card__button {
 
 .composite-ideology-card__intro p {
   margin: 0;
-  color: #555;
+  color: #000000;
   line-height: 1.6;
 }
 
