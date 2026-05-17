@@ -416,7 +416,7 @@ function getIdeologyDefinition(ideology: string) {
   return `${explanation.title}: ${explanation.description}`;
 }
 
-function getIdeologyProfileDetail(item: IdeologyResult) {
+function getIdeologyProfileDetailParts(item: IdeologyResult) {
   const label = ideologyLabels[item.ideology] ?? item.ideology;
 
   const details: Record<string, string> = {
@@ -456,7 +456,17 @@ function getIdeologyProfileDetail(item: IdeologyResult) {
       "das mucha importancia a la transición energética, la protección ambiental, la sostenibilidad y la intervención pública frente al cambio climático.",
   };
 
-  return `${label} (${item.percentage}%): ${details[item.ideology] ?? "tu resultado muestra que esta orientación influye en tu forma de entender la política. Significa que varias de tus respuestas coinciden con las ideas centrales de este perfil, aunque no tenga por qué definirte por completo."}`;
+  return {
+    title: `${label} (${item.percentage}%)`,
+    description:
+      details[item.ideology] ??
+      "tu resultado muestra que esta orientación influye en tu forma de entender la política. Significa que varias de tus respuestas coinciden con las ideas centrales de este perfil, aunque no tenga por qué definirte por completo.",
+  };
+}
+
+function getIdeologyProfileDetail(item: IdeologyResult) {
+  const detail = getIdeologyProfileDetailParts(item);
+  return `${detail.title}: ${detail.description}`;
 }
 
 function getIdeologyPercentage(results: IdeologyResult[], ideology: string) {
@@ -2392,47 +2402,40 @@ function goBackToSelector() {
 
               <section className="ideological-profile-card results-profile-card">
                 <h2 className="results-profile-title">Perfil ideológico resumido</h2>
+
                 <div className="main-result-wrapper">
+                  <div className="main-profile-summary">
+                    <strong>{specificIdeologyLabel}</strong>
+                  </div>
 
-              <div className="main-profile-summary">
-                <strong>{specificIdeologyLabel}</strong>
-              </div>
-
-
-              <p className="results-profile-intro">
-                {mainIdeologySummary}
-              </p>
-
-            </div>
-
-                {subIdeologies.length > 0 && (
-                  <div className="subideology-summary">
-                    <div className="subideology-summary__title">
-                      <h3>Subideologías detectadas</h3>
-                    </div>
-                    <div className="subideology-summary__description">
+                  {subIdeologies.length > 0 && (
+                    <div className="subideology-summary">
                       <div className="profile-highlight-list results-profile-highlight-list">
                         {subIdeologies.map((item) => (
                           <div key={item.ideology} className="results-profile-highlight-item">
-                            <div className="results-profile-highlight-item__title">
-                              {ideologyLabels[item.ideology] ?? item.ideology}
-                            </div>
-                            <div className="results-profile-highlight-item__description">
-                              {item.percentage}%
-                            </div>
+                            {ideologyLabels[item.ideology] ?? item.ideology}: {item.percentage}%
                           </div>
                         ))}
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <div className="profile-definition-list results-profile-detail-list">
-                  {subIdeologies.map((item) => (
-                    <p key={item.ideology} className="results-profile-detail-item">
-                      {getIdeologyProfileDetail(item)}
-                    </p>
-                  ))}
+                  <div className="profile-definition-list results-profile-detail-list">
+                    {subIdeologies.map((item) => {
+                      const detail = getIdeologyProfileDetailParts(item);
+
+                      return (
+                        <div key={item.ideology} className="results-profile-detail-item">
+                          <div className="results-profile-detail-item__title">
+                            {detail.title}
+                          </div>
+                          <div className="results-profile-detail-item__description">
+                            {detail.description}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {ideologicalProfile.partySummary && (
