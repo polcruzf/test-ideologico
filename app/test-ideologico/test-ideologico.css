@@ -24,7 +24,7 @@
 .ideology-test {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 20px;
+  padding: 58px 20px;
   font-family: var(--font-inter-tight), sans-serif;
   background: #fff;
 }
@@ -362,8 +362,8 @@ span.nota_transparencia {
 }
 
 .secondary-button {
-  background: #86837c;
-  color: #ffffff;
+  background: #dedbcb;
+  color: #000000;
 }
 
 .back-button {
@@ -406,7 +406,8 @@ span.nota_transparencia {
 }
 
 .modal-actions button.secondary-button {
-  background-color: #eeeeee;
+  background-color: #dedbcb;
+  color: black;
 }
 
 /* Resultados */
@@ -1513,7 +1514,8 @@ a.ideology-blocks-info-card__button {
 }
 
 .modal-actions button.secondary-button {
-  background-color: #eeeeee;
+  background-color: #dedbcb;
+  color: black;
 }
 
 
@@ -2431,12 +2433,14 @@ section.test-selector {
   }
   .results-profile-detail-item__title {
     font-weight: 700;
+    font-size: 18px;
   }
   .results-profile-highlight-item {
     background-color: #dedbcb;
     border-radius: 14px;
     padding: 5px 15px;
     font-weight: 600;
+    font-size: 18px;
   }
   
 }
@@ -2495,7 +2499,7 @@ section.test-selector {
 
 @media (max-width: 700px) {
   .site-sticky-header__inner {
-    padding: 25px 20px;
+    padding: 15px 20px;
     box-shadow: 0px 2px 10px #57462930;
   }
 
@@ -2514,8 +2518,13 @@ section.test-selector {
   .results {
     padding-top: 40px;
   }
+  .results-profile-detail-item__description {
+    font-size: 18px;
+  }
 }
-
+.results-profile-detail-item__description::first-letter {
+  text-transform: uppercase;
+}
 
 
 
@@ -2574,7 +2583,7 @@ section.test-selector {
   gap: 10px;
   flex-direction: column;
 }
-ideological-triangle-map .main-ideology-pills.main-ideology-pills--light {
+section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
