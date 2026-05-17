@@ -1056,12 +1056,17 @@ a.ideology-blocks-info-card__button {
 .complete-analysis-card h3 {
   margin: 0;
   color: #111;
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 10px;
 }
 
 .complete-analysis-card p {
   margin: 0;
-  color: #444;
+  color: #000000;
   line-height: 1.6;
+  font-size: 18px;
+  padding-bottom: 20px;
 }
 
 .complete-analysis-grid {
@@ -1081,7 +1086,7 @@ a.ideology-blocks-info-card__button {
 }
 
 .complete-analysis-panel__label {
-  color: #666;
+  color: #000000;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1096,7 +1101,7 @@ a.ideology-blocks-info-card__button {
 
 .voter-type-card .complete-analysis-panel__label,
 .voter-type-card p {
-  color: #ddd;
+  color: #ffffff;
 }
 
 .voter-type-card strong {
@@ -1119,16 +1124,17 @@ a.ideology-blocks-info-card__button {
   display: grid;
   gap: 12px;
 }
-
+.advanced-axis-list {
+  gap: 30px;
+}
 .priority-item {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 12px;
   align-items: start;
-  padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  background: #fafafa;
+  padding: 20px 14px 5px;
+  border-radius: 14px;
+  background: #dedbcb;
 }
 
 .priority-pill {
@@ -1147,40 +1153,38 @@ a.ideology-blocks-info-card__button {
 .partial-party-match strong {
   display: block;
   color: #111;
-  font-size: 17px;
+  font-size: 18px;
 }
 
 .priority-item em {
   display: block;
-  margin: 3px 0 8px;
-  color: #666;
+  margin: 3px 0 16px;
+  color: #000000;
   font-style: normal;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .contradiction-warning {
   padding: 15px;
-  border: 1px solid #e1d4a8;
   border-radius: 16px;
-  background: #fff8df;
-  color: #332b12;
+  background: #f7f6d8;
+  color: #000000;
 }
 
 .partial-party-match {
   display: flex;
   justify-content: space-between;
-  gap: 14px;
+  gap: 7px;
   padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  background: #fafafa;
+  border-radius: 14px;
+  background: #eeeee8;
 }
 
 .partial-party-match span {
-  color: #555;
-  font-size: 13px;
-  font-weight: 800;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 400;
   text-align: right;
 }
 
@@ -1194,6 +1198,7 @@ a.ideology-blocks-info-card__button {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  font-size: 18px;
 }
 
 .advanced-axis__header span {
@@ -1479,7 +1484,8 @@ a.ideology-blocks-info-card__button {
   }
 
   .complete-analysis-card {
-    padding: 20px;
+    padding: 30px 20px;
+    gap: 50px;
   }
 
   .complete-analysis-grid {
@@ -2531,36 +2537,25 @@ section.test-selector {
   text-transform: uppercase;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+article.complete-analysis-panel1.voter-type-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 14px;
+}
+article.complete-analysis-panel2.consistency-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #dedbcb;
+    padding: 20px;
+    border-radius: 14px;
+    gap: 15px;
+    margin-bottom: 45px;
+}
+.voter-type-card p {
+  font-size: 18px;
+}
 
 .main-profile-summary {
   display: grid;
@@ -2814,5 +2809,82 @@ section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
   .ideological-triangle-map__dot {
     width: 22px;
     height: 22px;
+  }
+}
+
+
+@media (min-width:700px){
+  .test-selector__intro h1{
+    font-weight: 200;
+    margin-bottom: 40px;
+  }
+  .test-selector__subintro h2 {
+    margin-bottom: 70px;
+  }
+  .test-selector__intro p {
+    font-weight: 400;
+  }
+  .ideology-blocks-info-card__title, .electoral-programs-card h2 {
+    font-size: 36px;
+  }
+  .ideology-blocks-info-card__content {
+    margin: 30px 0px;
+  }
+  .test-option-card span {
+    font-weight: 800;
+    font-size: 25px;
+  }
+  .ideology-test {
+    max-width: 750px;
+  }
+  .site-sticky-header__brand {
+    font-size: 25px;
+    font-weight: 350;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .main-ideology-pill span{
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .main-ideology-pill strong{
+    font-size: 18px;
+  }
+  .main-profile-summary strong {
+    padding: 15px 15px;
+  }
+  .main-profile-summary {
+    text-align: center;
+  }
+  .results-profile-highlight-item {
+    background-color: #dedbcb;
+    border-radius: 999px;
+    padding: 5px 15px;
+  }
+  .profile-highlight-list.results-profile-highlight-list {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 20px 0px 40px;
+  }
+  .results-profile-detail-item__title {
+    font-weight: 700;
+  }
+  .composite-ideology-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .ideology-blocks-info-card__text {
+    margin: 0;
+  }
+  .modal-actions {
+    gap:10px
+  }
+  article.complete-analysis-panel2.consistency-card {
+    margin-bottom: 0;
+  }
+  .complete-analysis-card {
+    gap: 42px;
   }
 }

@@ -2514,7 +2514,7 @@ function goBackToSelector() {
               </div>
 
               <div className="complete-analysis-grid">
-                <article className="complete-analysis-panel voter-type-card">
+                <article className="complete-analysis-panel1 voter-type-card">
                   <span className="complete-analysis-panel__label">Tipo de votante</span>
                   <strong>{completeAnalysis.voterType}</strong>
                   <p>
@@ -2522,7 +2522,7 @@ function goBackToSelector() {
                   </p>
                 </article>
 
-                <article className="complete-analysis-panel consistency-card">
+                <article className="complete-analysis-panel2 consistency-card">
                   <span className="complete-analysis-panel__label">Consistencia ideológica</span>
                   <strong className="consistency-score">{completeAnalysis.consistency}%</strong>
                   <p>
@@ -2531,14 +2531,14 @@ function goBackToSelector() {
                 </article>
               </div>
 
-              <article className="complete-analysis-panel">
+              <article className="complete-analysis-panel3">
                 <h3>Perfil político profundo</h3>
                 {completeAnalysis.deepProfile.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </article>
 
-              <article className="complete-analysis-panel">
+              <article className="complete-analysis-panel4">
                 <h3>Tus prioridades ideológicas</h3>
                 <div className="priority-list">
                   {completeAnalysis.priorities.map((priority, index) => (
@@ -2554,7 +2554,7 @@ function goBackToSelector() {
                 </div>
               </article>
 
-              <article className="complete-analysis-panel">
+              <article className="complete-analysis-panel5">
                 <h3>Contradicciones o tensiones internas</h3>
                 <div className="contradiction-list">
                   {completeAnalysis.contradictions.map((contradiction) => (
@@ -2565,7 +2565,7 @@ function goBackToSelector() {
                 </div>
               </article>
 
-              <article className="complete-analysis-panel">
+              <article className="complete-analysis-panel6">
                 <h3>Coincidencias parciales con partidos</h3>
                 <p>
                   Un partido puede ser el más afín en conjunto, pero tu resultado puede coincidir parcialmente con otros en economía, cultura, soberanía o derechos sociales.
@@ -2580,7 +2580,7 @@ function goBackToSelector() {
                 </div>
               </article>
 
-              <article className="complete-analysis-panel">
+              <article className="complete-analysis-panel7">
                 <h3>Mapa ideológico avanzado</h3>
                 <div className="advanced-axis-list">
                   {completeAnalysis.axes.map((axis) => (
