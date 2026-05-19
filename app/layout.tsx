@@ -18,26 +18,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-openGraph: {
+export const metadata: Metadata = {
+  metadataBase: new URL("https://matchpolitico.com"),
+
   title: "Match Político",
-  description: "Descubre tu perfil ideológico y tu afinidad política.",
-  url: "https://matchpolitico.com",
-  siteName: "Match Político",
-  images: [
-    {
-      url: "/og-image.jpg", // horizontal
-      width: 1200,
-      height: 630,
-    },
-    {
-      url: "/og-image-square.jpg", // 👈 AÑADE ESTA
-      width: 800,
-      height: 800,
-    },
-  ],
-  locale: "es_ES",
-  type: "website",
-},
+  description: "Test político e ideológico para descubrir tu afinidad política.",
+
+  openGraph: {
+    title: "Match Político",
+    description: "Descubre tu perfil ideológico y tu afinidad política.",
+    url: "https://matchpolitico.com",
+    siteName: "Match Político",
+    images: [
+      {
+        url: "https://matchpolitico.com/og-image.jpg", // 👈 ABSOLUTA
+        width: 1200,
+        height: 630,
+        alt: "Match Político",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Match Político",
+    description: "Descubre tu perfil ideológico",
+    images: ["https://matchpolitico.com/og-image.jpg"],
+  },
+};
 
 
 export default function RootLayout({
