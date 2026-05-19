@@ -18,10 +18,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+openGraph: {
   title: "Match Político",
-  description: "Test político e ideológico para descubrir tu afinidad política.",
-};
+  description: "Descubre tu perfil ideológico y tu afinidad política.",
+  url: "https://matchpolitico.com",
+  siteName: "Match Político",
+  images: [
+    {
+      url: "/og-image.jpg", // horizontal
+      width: 1200,
+      height: 630,
+    },
+    {
+      url: "/og-image-square.jpg", // 👈 AÑADE ESTA
+      width: 800,
+      height: 800,
+    },
+  ],
+  locale: "es_ES",
+  type: "website",
+},
 
 
 export default function RootLayout({
