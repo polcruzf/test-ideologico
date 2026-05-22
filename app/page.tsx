@@ -2166,12 +2166,11 @@ function goBackToSelector() {
           <div className="test-selector__intro">
             <h1>Match Político</h1>
             <div className="test-selector__subintro">
-              <h2>Descubre tu perfil ideológico</h2>
+              <h2>Tu perfil político real</h2>
             </div>
             
             <p>
-              Elige el nivel de profundidad del test. Cuantas más preguntas
-              respondas, más detallado será el resultado.
+              Haz el test ideológico de Match Político y descubre tu perfil político real
             </p>
           </div>
 

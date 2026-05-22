@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://matchpolitico.com"),
 
   title: "Match Político",
-  description: "Test político e ideológico para descubrir tu afinidad política.",
+  description: "Haz el test ideológico de Match Político y descubre tu perfil político real y el partido más afín en 2 minutos.",
 
   openGraph: {
     title: "Match Político",
-    description: "Descubre tu perfil ideológico y tu afinidad política.",
+    description: "Haz el test y descubre tu perfil ideológico, tu afinidad política y qué partido encaja más contigo.",
     url: "https://matchpolitico.com",
     siteName: "Match Político",
     images: [
@@ -47,6 +47,13 @@ export const metadata: Metadata = {
     description: "Descubre tu perfil ideológico",
     images: ["https://matchpolitico.com/og-image.jpg"],
   },
+
+  icons: {
+  icon: "/favicon.ico",
+},
+alternates: {
+  canonical: "https://matchpolitico.com",
+},
 };
 
 
@@ -64,3 +71,4 @@ export default function RootLayout({
     </html>
   );
 }
+
