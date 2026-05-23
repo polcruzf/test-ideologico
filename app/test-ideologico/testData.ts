@@ -608,24 +608,27 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 19,
-    "text": "Los trabajadores deberían participar en la dirección de las empresas.",
+    "text": "Las empresas deberían ser gestionadas en parte por sus trabajadores, no solo por los propietarios.",
     "block": "economia",
     "weights": {
-      "socialista": 3,
-      "comunista": 3,
-      "socialdemocrata": 1,
-      "liberal": -1
+      "socialista": 2,
+      "comunista": 1,
+      "socialdemocrata": 3,
+      "liberal": -2,
+      "Conservador":-1
     }
   },
   {
     "id": 20,
-    "text": "La economía planificada es más justa que el mercado libre.",
+    "text": "El Estado debería tener más capacidad que el mercado para decidir qué se produce, cómo se distribuye y a qué precio.",
     "block": "economia",
     "weights": {
-      "comunista": 3,
-      "socialista": 2,
-      "liberal": -3,
-      "libertario": -3
+      "comunista": 2,
+      "socialista": 3,
+      "liberal": -2,
+      "libertario": -3,
+      "socialdemocrata": 2,
+      "conservador": -1
     }
   },
   {
@@ -633,32 +636,37 @@ export const ideologicalQuestions: Question[] = [
     "text": "Reducir impuestos suele mejorar la economía.",
     "block": "economia",
     "weights": {
-      "liberal": 3,
+      "liberal": 2,
       "libertario": 3,
       "conservador": 1,
-      "socialista": -2
+      "socialista": -2,
+      "socialdemocrata": -3,
+      "comunista":-1
     }
   },
   {
     "id": 22,
-    "text": "El Estado debería rescatar empresas privadas en crisis.",
+    "text": "Las empresas en crisis deben poder quebrar aunque eso implique pérdida de empleo.",
     "block": "economia",
     "weights": {
-      "socialdemocrata": 2,
-      "socialista": 1,
-      "liberal": -1,
-      "libertario": -2
+      "socialdemocrata": -2,
+      "socialista": -1,
+      "liberal": 1,
+      "libertario": 2
     }
   },
   {
     "id": 23,
-    "text": "Las multinacionales tienen demasiado poder sobre los gobiernos.",
+    "text": "Limitar el poder de las grandes empresas es más importante que mantener su libertad para operar sin restricciones.",
     "block": "economia",
     "weights": {
+      "socialdemocrata": 3,
       "socialista": 2,
-      "comunista": 2,
+      "comunista": 1,
       "soberanista": 1,
-      "liberal": -1
+      "liberal": -2,
+      "libertario":-2,
+      "conservador":-1
     }
   },
   {
@@ -2671,7 +2679,7 @@ export const ideologicalQuestions: Question[] = [
 export const ultraQuickIdeologicalQuestions: Question[] = [
   {
     id: 1,
-    text: "Prefiero pagar más impuestos si eso permite tener mejores servicios públicos.",
+    text: "Prefieres pagar más impuestos si eso permite tener mejores servicios públicos.",
     block: "economia",
     weights: {
       comunista: 3,
@@ -2684,9 +2692,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si priorizas servicios públicos financiados entre todos o si prefieres que cada persona conserve más dinero y elija por su cuenta. Ejemplo cotidiano: pagar más impuestos para mejorar sanidad, becas o transporte público.",
       agree:
-        "Si estás muy de acuerdo, en la práctica aceptas más impuestos para reforzar servicios comunes. Puede ayudar a quien tiene menos recursos, pero también aumenta la carga fiscal de trabajadores, autónomos y empresas.",
+        "En la práctica aceptas más impuestos para reforzar servicios comunes. Puede ayudar a quien tiene menos recursos, pero también aumenta la carga fiscal de trabajadores, autónomos y empresas.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres menos impuestos y más decisión individual. Puede dar más libertad económica, pero también puede dejar peor cubiertas algunas necesidades sociales.",
+        "En la práctica prefieres menos impuestos y más decisión individual. Puede dar más libertad económica, pero también puede dejar peor cubiertas algunas necesidades sociales.",
     },
   },
   {
@@ -2704,9 +2712,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si das más importancia a facilitar la actividad económica o a regularla más. Ejemplo cotidiano: abrir un negocio con menos papeleo, contratar con menos costes o pagar menos impuestos empresariales.",
       agree:
-        "Si estás muy de acuerdo, en la práctica favoreces menos burocracia y más libertad para emprender. Puede crear actividad y empleo, pero también reducir controles laborales o fiscales.",
+        "En la práctica favoreces menos burocracia y más libertad para emprender. Puede crear actividad y empleo, pero también reducir controles laborales o fiscales.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas más normas para evitar abusos o repartir mejor la riqueza. Puede proteger más, pero también hacer más difícil emprender o contratar.",
+        "En la práctica aceptas más normas para evitar abusos o repartir mejor la riqueza. Puede proteger más, pero también hacer más difícil emprender o contratar.",
     },
   },
   {
@@ -2723,9 +2731,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si prefieres más soberanía nacional o más coordinación con instituciones externas. Ejemplo cotidiano: aceptar o rechazar normas europeas sobre fronteras, agricultura, energía o ayudas públicas.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres que España tenga más margen para decidir aunque haya conflictos con organismos externos.",
+        "En la práctica quieres que España tenga más margen para decidir aunque haya conflictos con organismos externos.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica valoras más la cooperación internacional y las reglas comunes, aunque algunas decisiones se tomen lejos del voto directo nacional.",
+        "En la práctica valoras más la cooperación internacional y las reglas comunes, aunque algunas decisiones se tomen lejos del voto directo nacional.",
     },
   },
   {
@@ -2743,14 +2751,14 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide tu posición sobre fronteras, integración y presión sobre servicios. Ejemplo cotidiano: acceso a vivienda, empleo, ayudas, idioma, seguridad o convivencia en barrios y escuelas.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más requisitos, más control y más prioridad para la población local. Puede reducir presión social, pero también limitar llegada de trabajadores o personas que necesitan acogida.",
+        "En la práctica quieres más requisitos, más control y más prioridad para la población local. Puede reducir presión social, pero también limitar llegada de trabajadores o personas que necesitan acogida.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más abierta. Puede aportar diversidad y población activa, pero necesita buena gestión para evitar problemas reales de integración.",
+        "En la práctica prefieres una sociedad más abierta. Puede aportar diversidad y población activa, pero necesita buena gestión para evitar problemas reales de integración.",
     },
   },
   {
     id: 5,
-    text: "Creo que se han perdido valores como respeto, familia, esfuerzo o disciplina.",
+    text: "Crees que se han perdido valores como respeto, familia, esfuerzo o disciplina.",
     block: "sociedad",
     weights: {
       conservador: 3,
@@ -2761,14 +2769,14 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si ves los cambios sociales como pérdida de valores o como evolución normal. Ejemplo cotidiano: educación de los hijos, respeto a profesores, normas de convivencia o importancia de la familia.",
       agree:
-        "Si estás muy de acuerdo, en la práctica tiendes a valorar más autoridad, tradición, disciplina y continuidad cultural.",
+        "En la práctica tiendes a valorar más autoridad, tradición, disciplina y continuidad cultural.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica tiendes a ver los cambios sociales como positivos o necesarios, aunque puedan incomodar a sectores más tradicionales.",
+        "En la práctica tiendes a ver los cambios sociales como positivos o necesarios, aunque puedan incomodar a sectores más tradicionales.",
     },
   },
   {
     id: 6,
-    text: "Para mejorar la seguridad aceptaría más policía, vigilancia o penas más duras.",
+    text: "Para mejorar la seguridad aceptarías más policía, vigilancia o penas más duras.",
     block: "autoridad",
     weights: {
       autoritario: 3,
@@ -2781,9 +2789,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide cuánto poder debe tener el Estado para mantener el orden. Ejemplo cotidiano: cámaras en la calle, más controles policiales, más cárcel para reincidentes o más vigilancia digital.",
       agree:
-        "Si estás muy de acuerdo, en la práctica priorizas seguridad y orden aunque haya menos privacidad o más poder policial.",
+        "En la práctica priorizas seguridad y orden aunque haya menos privacidad o más poder policial.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica priorizas garantías, privacidad y límites al Estado, aunque algunas respuestas contra el delito sean más lentas.",
+        "En la práctica priorizas garantías, privacidad y límites al Estado, aunque algunas respuestas contra el delito sean más lentas.",
     },
   },
   {
@@ -2800,9 +2808,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si prefieres cooperación internacional o soluciones decididas por cada país. Ejemplo cotidiano: cambio climático, guerras, comercio, pandemias o inmigración.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas normas comunes y acuerdos entre países. Puede coordinar mejor grandes problemas, pero reduce libertad de actuación nacional.",
+        "En la práctica apoyas normas comunes y acuerdos entre países. Puede coordinar mejor grandes problemas, pero reduce libertad de actuación nacional.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres que cada país actúe según sus propios intereses. Da más control interno, pero dificulta soluciones coordinadas.",
+        "En la práctica prefieres que cada país actúe según sus propios intereses. Da más control interno, pero dificulta soluciones coordinadas.",
     },
   },
   {
@@ -2820,9 +2828,9 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta mide si das más importancia a una identidad cultural común o a una sociedad más plural. Ejemplo cotidiano: lengua, fiestas populares, símbolos públicos, religión, historia o tradiciones locales.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres reforzar la cultura propia desde las instituciones. Puede aumentar cohesión, pero dejar menos espacio a otras identidades.",
+        "En la práctica quieres reforzar la cultura propia desde las instituciones. Puede aumentar cohesión, pero dejar menos espacio a otras identidades.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres instituciones más neutrales o multiculturales. Puede favorecer pluralidad, pero debilitar referencias comunes.",
+        "En la práctica prefieres instituciones más neutrales o multiculturales. Puede favorecer pluralidad, pero debilitar referencias comunes.",
     },
   },
 ];
@@ -2843,9 +2851,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre dinero público. Por ejemplo: sanidad, colegios, ayudas al alquiler, becas, pensiones o transporte público.",
       agree:
-        "Si estás muy de acuerdo, en la práctica aceptas pagar más impuestos si eso permite tener más servicios y ayudas. Puede beneficiar a personas con menos ingresos, pero también puede hacer que trabajadores, autónomos y empresas paguen más.",
+        "En la práctica aceptas pagar más impuestos si eso permite tener más servicios y ayudas. Puede beneficiar a personas con menos ingresos, pero también puede hacer que trabajadores, autónomos y empresas paguen más.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres pagar menos impuestos y que cada persona decida más con su dinero. Puede dar más libertad económica, pero también puede dejar peor cubiertas cosas como sanidad, vivienda o ayudas sociales.",
+        "En la práctica prefieres pagar menos impuestos y que cada persona decida más con su dinero. Puede dar más libertad económica, pero también puede dejar peor cubiertas cosas como sanidad, vivienda o ayudas sociales.",
     },
   },
   {
@@ -2863,14 +2871,14 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre facilidad para emprender, contratar, vender, comprar vivienda, invertir o conservar patrimonio.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres menos papeleo, menos impuestos y menos límites para empresas y propietarios. Puede crear más actividad económica, pero también puede aumentar diferencias entre quien tiene mucho y quien tiene poco.",
+        "En la práctica quieres menos papeleo, menos impuestos y menos límites para empresas y propietarios. Puede crear más actividad económica, pero también puede aumentar diferencias entre quien tiene mucho y quien tiene poco.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas más normas para repartir mejor la riqueza o controlar abusos. Por ejemplo, limitar alquileres o subir impuestos a grandes fortunas. Puede proteger más, pero también puede frenar inversión o crear más burocracia.",
+        "En la práctica aceptas más normas para repartir mejor la riqueza o controlar abusos. Por ejemplo, limitar alquileres o subir impuestos a grandes fortunas. Puede proteger más, pero también puede frenar inversión o crear más burocracia.",
     },
   },
   {
     id: 3,
-    text: "Sanidad, educación y pensiones deberían depender sobre todo del Estado.",
+    text: "Sanidad, educación y pensiones deberían depender del Estado.",
     block: "economia",
     weights: {
       socialista: 3,
@@ -2883,9 +2891,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta habla de servicios básicos que casi todos usamos: médico, hospital, escuela, universidad, pensión o dependencia.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres que esos servicios estén garantizados aunque una persona tenga poco dinero. El coste es que hacen falta más impuestos y puede haber listas de espera o gestión lenta.",
+        "En la práctica quieres que esos servicios estén garantizados aunque una persona tenga poco dinero. El coste es que hacen falta más impuestos y puede haber listas de espera o gestión lenta.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica quieres más peso de opciones privadas y elección personal. Puede dar más rapidez a quien puede pagar, pero también puede crear diferencias entre ciudadanos.",
+        "En la práctica quieres más peso de opciones privadas y elección personal. Puede dar más rapidez a quien puede pagar, pero también puede crear diferencias entre ciudadanos.",
     },
   },
 
@@ -2902,9 +2910,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre quién debe mandar más: el país o instituciones externas como la UE. Afecta a leyes, fronteras, ayudas europeas, energía o comercio.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más independencia para tomar decisiones propias. Puede dar más control al país, pero también puede traer choques con Europa, pérdida de fondos o menos influencia fuera.",
+        "En la práctica quieres más independencia para tomar decisiones propias. Puede dar más control al país, pero también puede traer choques con Europa, pérdida de fondos o menos influencia fuera.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas más normas comunes y cooperación internacional. Puede dar estabilidad y acuerdos, pero algunas decisiones quedan más lejos del voto directo de los ciudadanos.",
+        "En la práctica aceptas más normas comunes y cooperación internacional. Puede dar estabilidad y acuerdos, pero algunas decisiones quedan más lejos del voto directo de los ciudadanos.",
     },
   },
   {
@@ -2922,9 +2930,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta no va solo de fronteras. También trata de vivienda, trabajo, servicios públicos, seguridad, idioma e integración cultural.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más requisitos de entrada, más control y más prioridad para la población local. Puede reducir presión sobre vivienda o servicios, pero también puede faltar mano de obra y limitar acogida de personas que necesitan ayuda.",
+        "En la práctica quieres más requisitos de entrada, más control y más prioridad para la población local. Puede reducir presión sobre vivienda o servicios, pero también puede faltar mano de obra y limitar acogida de personas que necesitan ayuda.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más abierta. Puede aportar trabajadores, diversidad y población joven, pero necesita buena gestión para evitar problemas de convivencia, empleo o vivienda.",
+        "En la práctica prefieres una sociedad más abierta. Puede aportar trabajadores, diversidad y población joven, pero necesita buena gestión para evitar problemas de convivencia, empleo o vivienda.",
     },
   },
   {
@@ -2942,9 +2950,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre si una comunidad necesita una base común: historia, lengua, símbolos, fiestas y cultura compartida.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres que la escuela refuerce más la identidad común. Puede aumentar sentimiento de pertenencia, pero algunas familias pueden sentir que se impone una visión concreta.",
+        "En la práctica quieres que la escuela refuerce más la identidad común. Puede aumentar sentimiento de pertenencia, pero algunas familias pueden sentir que se impone una visión concreta.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres una escuela más neutral o más abierta a muchas identidades. Puede ser más plural, pero puede debilitar los vínculos comunes.",
+        "En la práctica prefieres una escuela más neutral o más abierta a muchas identidades. Puede ser más plural, pero puede debilitar los vínculos comunes.",
     },
   },
 
@@ -2961,9 +2969,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre cambios sociales del día a día: familia, educación, respeto a profesores, normas, formas de hablar o convivencia.",
       agree:
-        "Si estás muy de acuerdo, en la práctica sueles querer reforzar autoridad, familia, disciplina y costumbres. Puede dar más orden, pero también puede frenar cambios que otros consideran necesarios.",
+        "En la práctica sueles querer reforzar autoridad, familia, disciplina y costumbres. Puede dar más orden, pero también puede frenar cambios que otros consideran necesarios.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica ves los cambios sociales como algo normal o positivo. Puede abrir más libertad personal, pero también puede generar sensación de falta de límites.",
+        "En la práctica ves los cambios sociales como algo normal o positivo. Puede abrir más libertad personal, pero también puede generar sensación de falta de límites.",
     },
   },
   {
@@ -2980,29 +2988,29 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre temas como modelos de familia, igualdad, identidad, costumbres, lenguaje público o cambios en la educación.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas adaptar leyes y normas sociales a nuevas realidades. Puede ampliar derechos, pero también puede molestar a quienes sienten que sus valores quedan apartados.",
+        "En la práctica apoyas adaptar leyes y normas sociales a nuevas realidades. Puede ampliar derechos, pero también puede molestar a quienes sienten que sus valores quedan apartados.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres conservar más las costumbres existentes. Puede dar estabilidad, pero puede dejar sin respuesta a personas que piden reconocimiento o igualdad.",
+        "En la práctica prefieres conservar más las costumbres existentes. Puede dar estabilidad, pero puede dejar sin respuesta a personas que piden reconocimiento o igualdad.",
     },
   },
   {
     id: 9,
-    text: "La gente debería poder decir opiniones duras u ofensivas sin miedo a multas o censura.",
+    text: "La libertad de expresión debería permitir decir opiniones incluso si resultan ofensivas.",
     block: "sociedad",
     weights: {
       libertario: 3,
-      liberal: 2,
-      conservador: 1,
-      progresista: -1,
-      autoritario: -2,
+      liberal: 1,
+      conservador: 0,
+      progresista: 0,
+      autoritario: -3,
     },
     info: {
       meaning:
         "Esta pregunta trata sobre libertad de expresión. Por ejemplo: bromas polémicas, críticas al gobierno, opiniones sobre religión, inmigración o género.",
       agree:
-        "Si estás muy de acuerdo, en la práctica proteges más el debate abierto y la crítica. El riesgo es que circulen mensajes hirientes, insultos o discursos que generen tensión.",
+        "En la práctica proteges más el debate abierto y la crítica. El riesgo es que circulen mensajes hirientes, insultos o discursos que generen tensión.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas más límites para evitar daño o discriminación. El riesgo es que se use para censurar opiniones incómodas.",
+        "En la práctica aceptas más límites para evitar daño o discriminación. El riesgo es que se use para censurar opiniones incómodas.",
     },
   },
 
@@ -3020,9 +3028,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre seguridad cotidiana: robos, okupación, disturbios, delitos graves, cámaras, policía y justicia.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más herramientas contra el delito. Puede aumentar la sensación de seguridad, pero también puede reducir privacidad o aumentar abusos si no hay controles.",
+        "En la práctica quieres más herramientas contra el delito. Puede aumentar la sensación de seguridad, pero también puede reducir privacidad o aumentar abusos si no hay controles.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres proteger más derechos y límites al poder. Puede evitar abusos, pero puede hacer que el Estado actúe más lento contra algunos problemas.",
+        "En la práctica prefieres proteger más derechos y límites al poder. Puede evitar abusos, pero puede hacer que el Estado actúe más lento contra algunos problemas.",
     },
   },
   {
@@ -3038,9 +3046,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre decisiones personales: privacidad, familia, consumo, educación, redes sociales o forma de vivir.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres que cada persona decida más por sí misma. Puede dar libertad, pero también reduce la capacidad del Estado para prevenir ciertos problemas.",
+        "En la práctica quieres que cada persona decida más por sí misma. Puede dar libertad, pero también reduce la capacidad del Estado para prevenir ciertos problemas.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas que el Estado regule más para proteger, ordenar o evitar riesgos. Puede dar más control social, pero también puede resultar invasivo.",
+        "En la práctica aceptas que el Estado regule más para proteger, ordenar o evitar riesgos. Puede dar más control social, pero también puede resultar invasivo.",
     },
   },
   {
@@ -3057,9 +3065,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre justicia penal: cárcel, multas, reincidencia, protección a víctimas y reinserción.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres castigos más duros para dar seguridad y sensación de justicia. Puede proteger más a víctimas, pero también llenar cárceles y dificultar segundas oportunidades.",
+        "En la práctica quieres castigos más duros para dar seguridad y sensación de justicia. Puede proteger más a víctimas, pero también llenar cárceles y dificultar segundas oportunidades.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica das más peso a reinserción y proporcionalidad. Puede ayudar a recuperar personas, pero puede generar sensación de impunidad si la respuesta parece blanda.",
+        "En la práctica das más peso a reinserción y proporcionalidad. Puede ayudar a recuperar personas, pero puede generar sensación de impunidad si la respuesta parece blanda.",
     },
   },
 
@@ -3077,9 +3085,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre política exterior: UE, OTAN, comercio, energía, guerras, acuerdos y relaciones con otros países.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más independencia exterior. Puede proteger intereses propios, pero también puede aislar o reducir apoyos internacionales.",
+        "En la práctica quieres más independencia exterior. Puede proteger intereses propios, pero también puede aislar o reducir apoyos internacionales.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres coordinación con aliados. Puede dar estabilidad y apoyo, pero a veces obliga a aceptar decisiones que no gustan dentro del país.",
+        "En la práctica prefieres coordinación con aliados. Puede dar estabilidad y apoyo, pero a veces obliga a aceptar decisiones que no gustan dentro del país.",
     },
   },
   {
@@ -3096,9 +3104,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre problemas que cruzan fronteras. Por ejemplo: cambio climático, refugiados, comercio, pandemias o guerras.",
       agree:
-        "Si estás muy de acuerdo, en la práctica apoyas normas comunes y cooperación entre países. Puede resolver mejor problemas globales, pero reduce la libertad de cada país para actuar solo.",
+        "En la práctica apoyas normas comunes y cooperación entre países. Puede resolver mejor problemas globales, pero reduce la libertad de cada país para actuar solo.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres que cada país decida por su cuenta. Da más control interno, pero dificulta coordinar soluciones amplias.",
+        "En la práctica prefieres que cada país decida por su cuenta. Da más control interno, pero dificulta coordinar soluciones amplias.",
     },
   },
   {
@@ -3116,9 +3124,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre autosuficiencia. Por ejemplo: producir más energía aquí, proteger agricultura local o reforzar defensa.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más independencia en sectores básicos. Puede proteger en crisis, pero puede subir precios o gasto público.",
+        "En la práctica quieres más independencia en sectores básicos. Puede proteger en crisis, pero puede subir precios o gasto público.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica aceptas depender más del comercio internacional si es más barato. Puede bajar costes, pero aumenta dependencia de otros países.",
+        "En la práctica aceptas depender más del comercio internacional si es más barato. Puede bajar costes, pero aumenta dependencia de otros países.",
     },
   },
 
@@ -3136,9 +3144,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre fiestas, lengua, símbolos, historia, religión, tradiciones y cultura local o nacional.",
       agree:
-        "Si estás muy de acuerdo, en la práctica quieres más apoyo público a la cultura propia. Puede reforzar pertenencia, pero puede dejar menos espacio a otras culturas.",
+        "En la práctica quieres más apoyo público a la cultura propia. Puede reforzar pertenencia, pero puede dejar menos espacio a otras culturas.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres instituciones más neutrales. Puede favorecer pluralidad, pero también hacer que la cultura propia pierda presencia.",
+        "En la práctica prefieres instituciones más neutrales. Puede favorecer pluralidad, pero también hacer que la cultura propia pierda presencia.",
     },
   },
   {
@@ -3156,9 +3164,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre diversidad cultural frente a una identidad común compartida.",
       agree:
-        "Si estás muy de acuerdo, en la práctica valoras diversidad, mezcla cultural y apertura. Puede enriquecer la sociedad, pero necesita buena integración para evitar separación entre grupos.",
+        "En la práctica valoras diversidad, mezcla cultural y apertura. Puede enriquecer la sociedad, pero necesita buena integración para evitar separación entre grupos.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres una cultura común fuerte. Puede mejorar cohesión, pero puede dificultar que personas distintas se sientan plenamente incluidas.",
+        "En la práctica prefieres una cultura común fuerte. Puede mejorar cohesión, pero puede dificultar que personas distintas se sientan plenamente incluidas.",
     },
   },
   {
@@ -3175,9 +3183,9 @@ export const quickIdeologicalQuestions: Question[] = [
       meaning:
         "Esta pregunta trata sobre si religión y tradición siguen dando normas, comunidad y sentido compartido.",
       agree:
-        "Si estás muy de acuerdo, en la práctica valoras más conservar celebraciones, creencias y costumbres. Puede unir a parte de la sociedad, pero puede excluir a quienes no comparten esa tradición.",
+        "En la práctica valoras más conservar celebraciones, creencias y costumbres. Puede unir a parte de la sociedad, pero puede excluir a quienes no comparten esa tradición.",
       disagree:
-        "Si estás muy en desacuerdo, en la práctica prefieres una sociedad más secular y flexible. Puede dar más libertad individual, pero puede reducir referencias comunes.",
+        "En la práctica prefieres una sociedad más secular y flexible. Puede dar más libertad individual, pero puede reducir referencias comunes.",
     },
   },
 ];
