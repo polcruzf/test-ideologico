@@ -2734,6 +2734,18 @@ section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
   right: 18px;
   bottom: 18px;
 }
+.party-card_promises-button {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor:pointer;
+}
+summary.party-card_ideologies-button {
+  cursor:pointer;
+}
+
+span.party-card_religion-label {
+    display: none;
+}
 
 @media (max-width: 900px) {
 
@@ -2810,9 +2822,15 @@ section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
     width: 22px;
     height: 22px;
   }
+  strong.party-card_religion-value {
+    font-size: 15px;
+    font-weight: 500;
+  }
 }
 
 
+
+/* VERSION PC */
 @media (min-width:700px){
   .test-selector__intro h1{
     font-weight: 200;
@@ -2860,6 +2878,7 @@ section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
     background-color: #dedbcb;
     border-radius: 999px;
     padding: 5px 15px;
+    width: 100%;
   }
   .profile-highlight-list.results-profile-highlight-list {
     display: flex;
@@ -2887,4 +2906,54 @@ section.ideological-axes-card .main-ideology-pills.main-ideology-pills--light {
   .complete-analysis-card {
     gap: 42px;
   }
+  .party-card_percentatge {
+    margin-bottom: 20px;
+  }
+  strong.party-card_promises-value {
+    font-size: 22px;
+  }
+  .party-card_promises-summary {
+    margin-bottom: 10px;
+  }
+  .party-card_promises-stats {
+    padding-left: 15px;
+  }
+  p.party-card_promises-methodology {
+    padding-left: 15px;
+  }
+  .question-card h2 {
+    margin:0 0 35px;
+  }
+  .party-card_promises {
+    margin-bottom: 25px;
+  }
+  strong.party-card_religion-value {
+    font-size: 22px;
+  }
+  p.party-card_religion-description {
+    padding: 10px 0px 0px 15px;
+  }
+  strong.party-card_religion-value {
+    font-size: 18px;
+    font-weight: 400;
+    border: 2px solid white;
+    border-radius: 15px;
+    padding: 10px 15px;
+  }
+  .party-card_religion {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+
+
+
+
+
+.party-card_promises {
+    display: none;
 }

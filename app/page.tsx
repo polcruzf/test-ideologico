@@ -525,7 +525,7 @@ function getReligionAffinityResult(answers: Answers, questions: Question[]): Rel
 const strongestKey =
   (Object.keys(distribution) as ReligionProfileKey[]).sort(
     (a, b) => (distribution[b] ?? 0) - (distribution[a] ?? 0)
-  )[0] ?? "laica";
+  )[0] ?? "laicidad";
 
 return {
   key: strongestKey,
@@ -606,15 +606,10 @@ function PartyPromiseListSection({
               <p className="party-card_promise-evidence">{promise.evidence}</p>
             )}
 
-            {promise.sourceHref && (
-              <a
-                className="party-card_promise-source"
-                href={promise.sourceHref}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {promise.sourceLabel ?? "Ver fuente"}
-              </a>
+            {promise.sourceLabel && (
+              <p className="party-card_promise-source">
+                Fuente: {promise.sourceLabel}
+              </p>
             )}
           </li>
         ))}
@@ -656,9 +651,8 @@ function PartyAccountabilityBlock({ match }: { match: PartyMatch }) {
           <div className="party-card_promises-methodology-block">
             <p className="party-card_promises-methodology">{fulfillment.methodology}</p>
             <p className="party-card_promises-protection-note">
-              El porcentaje se basa en un análisis propio a partir de programas electorales y medidas ejecutadas. Puede estar sujeto a interpretación.
+              El porcentaje se basa en un análisis propio a partir de programas electorales, medidas ejecutadas y fuentes verificables. La clasificación de cada promesa puede estar sujeta a interpretación.
             </p>
-            <p className="party-card_promises-updated">Actualizado: {fulfillment.updatedAt}</p>
           </div>
 
           {fulfillment.promises.length > 0 ? (
@@ -679,6 +673,45 @@ function PartyAccountabilityBlock({ match }: { match: PartyMatch }) {
   );
 }
 
+function getStrongestReligionProfileKey(profile: PartyReligionProfile | undefined) {
+  if (!profile) return null;
+
+  return (Object.keys(religionProfileLabels) as ReligionProfileKey[]).sort(
+    (a, b) => (profile[b] ?? 0) - (profile[a] ?? 0)
+  )[0] ?? null;
+}
+
+function getPartyAdjustedReligionAffinity(
+  match: PartyMatch,
+  religionAffinity: ReligionAffinityResult
+): ReligionAffinityResult {
+  const partyProfile = match.religionProfile ?? getPartyReligionProfile(match.party);
+
+  if (!match.isClearMatch || !partyProfile) {
+    return religionAffinity;
+  }
+
+  const keys = Object.keys(religionProfileLabels) as ReligionProfileKey[];
+  const adjustedDistribution = keys.reduce((accumulator, key) => {
+    const userValue = religionAffinity.distribution[key] ?? 50;
+    const partyValue = partyProfile[key] ?? 50;
+
+    accumulator[key] = clamp(Math.round(userValue * 0.35 + partyValue * 0.65));
+    return accumulator;
+  }, {} as PartyReligionProfile);
+
+  const strongestKey =
+    getStrongestReligionProfileKey(adjustedDistribution) ?? religionAffinity.key;
+
+  return {
+    key: strongestKey,
+    label: religionProfileLabels[strongestKey],
+    percentage: adjustedDistribution[strongestKey] ?? religionAffinity.percentage,
+    distribution: adjustedDistribution,
+    description: religionProfileDescriptions[strongestKey],
+  };
+}
+
 function PartyReligionBlock({
   match,
   religionAffinity,
@@ -688,11 +721,13 @@ function PartyReligionBlock({
 }) {
   if (!match.isClearMatch) return null;
 
+  const adjustedReligionAffinity = getPartyAdjustedReligionAffinity(match, religionAffinity);
+
   return (
     <div className="party-card_religion">
       <span className="party-card_religion-label">Valores religiosos</span>
-      <strong className="party-card_religion-value">{religionAffinity.label}</strong>
-      <p className="party-card_religion-description">{religionAffinity.description}</p>
+      <strong className="party-card_religion-value">{adjustedReligionAffinity.label}</strong>
+      <p className="party-card_religion-description">{adjustedReligionAffinity.description}</p>
     </div>
   );
 }
@@ -2580,18 +2615,26 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
                   </div>
 
-                  <PartyAccountabilityBlock match={results.finalNationalParty} />
-                  <PartyReligionBlock match={results.finalNationalParty} religionAffinity={results.religionAffinity} />
+<PartyAccountabilityBlock match={results.finalNationalParty} />
 
-                  {results.finalNationalParty.isClearMatch && (
-                    <details className="party-card_ideologies party-card_ideologies-toggle">
-                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-                      <MainIdeologyPills
-                        distribution={nationalPartyMainDistribution}
-                        variant="dark"
-                      />
-                    </details>
-                  )}
+{results.finalNationalParty.isClearMatch && (
+  <details className="party-card_ideologies party-card_ideologies-toggle">
+    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+
+    <div className="party-card_ideologies-content">
+            <MainIdeologyPills
+        distribution={nationalPartyMainDistribution}
+        variant="dark"
+      />
+      <PartyReligionBlock
+        match={results.finalNationalParty}
+        religionAffinity={results.religionAffinity}
+      />
+
+
+    </div>
+  </details>
+)}
                   {!results.finalNationalParty.isClearMatch && (
                     <>
                       <p className="party-card_explanation">
@@ -2632,18 +2675,26 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
                   </div>
 
-                  <PartyAccountabilityBlock match={results.finalRegionalParty} />
-                  <PartyReligionBlock match={results.finalRegionalParty} religionAffinity={results.religionAffinity} />
+<PartyAccountabilityBlock match={results.finalRegionalParty} />
 
-                  {results.finalRegionalParty.isClearMatch && (
-                    <details className="party-card_ideologies party-card_ideologies-toggle">
-                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-                      <MainIdeologyPills
-                        distribution={regionalPartyMainDistribution}
-                        variant="dark"
-                      />
-                    </details>
-                  )}
+{results.finalRegionalParty.isClearMatch && (
+  <details className="party-card_ideologies party-card_ideologies-toggle">
+    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+
+    <div className="party-card_ideologies-content">
+      <MainIdeologyPills
+        distribution={regionalPartyMainDistribution}
+        variant="dark"
+      />
+
+      <PartyReligionBlock
+        match={results.finalRegionalParty}
+        religionAffinity={results.religionAffinity}
+      />
+
+    </div>
+  </details>
+)}
                   {!results.finalRegionalParty.isClearMatch && (
                     <p className="party-card_explanation">
                       {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.

@@ -7,11 +7,10 @@ export type Block =
   | "identidad";
 
 export type ReligionProfileKey =
-  | "cristiana_tradicional"
-  | "islamica_tradicional"
-  | "judia_tradicional"
+  | "tradicional_religiosa"
   | "laicidad"
-  | "pluralismo_religioso";
+  | "apertura_religiosa"
+  | "identitaria_cultural";
 
 export type ReligionWeights = Partial<Record<ReligionProfileKey, number>>;
 
@@ -69,24 +68,21 @@ export const blockLabels: Record<string, string> = {
 };
 
 export const religionProfileLabels: Record<ReligionProfileKey, string> = {
-  cristiana_tradicional: "Religión: Tradicional cristiana",
-  islamica_tradicional: "Religión: Tradicional islámica",
-  judia_tradicional: "Religión: Tradicional judía",
+  tradicional_religiosa: "Religión: Tradicional",
   laicidad: "Religión: Laica",
-  pluralismo_religioso: "Religión: Plural religiosa",
+  apertura_religiosa: "Religión: Abierta",
+  identitaria_cultural: "Religión: Identitaria",
 };
 
 export const religionProfileDescriptions: Record<ReligionProfileKey, string> = {
-  cristiana_tradicional:
-    "Valora que la tradición cristiana, por su peso histórico en España y Europa, tenga presencia cultural, educativa o institucional.",
-  islamica_tradicional:
-    "Valora que las comunidades musulmanas puedan conservar y expresar públicamente sus tradiciones religiosas dentro del marco legal común.",
-  judia_tradicional:
-    "Valora el reconocimiento cultural e institucional de la tradición judía y su continuidad comunitaria dentro del marco legal común.",
+  tradicional_religiosa:
+    "Valora que la religión y las tradiciones tengan presencia social y puedan ayudar a conservar valores comunitarios.",
   laicidad:
-    "Prefiere que las instituciones públicas sean neutrales y que la religión quede principalmente en el ámbito privado.",
-  pluralismo_religioso:
-    "Valora una convivencia abierta entre distintas religiones, culturas y formas de vida, con reconocimiento público equilibrado de la diversidad.",
+    "Prefiere instituciones públicas neutrales y una separación clara entre religión, Estado y vida pública institucional.",
+  apertura_religiosa:
+    "Valora que distintas religiones puedan expresarse públicamente y convivir con reconocimiento equilibrado dentro del marco legal común.",
+  identitaria_cultural:
+    "Da prioridad a la tradición religiosa vinculada a la cultura histórica del país como parte de la identidad colectiva y de la cohesión social.",
 };
 
 
@@ -406,7 +402,7 @@ CUP: {
 export const ideologicalQuestions: Question[] = [
   {
     "id": 1,
-    "text": "¿El Estado debería nacionalizar empresas estratégicas?",
+    "text": "El Estado debería nacionalizar empresas estratégicas.",
     "block": "economia",
     "weights": {
       "comunista": 3,
@@ -418,7 +414,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 2,
-    "text": "¿El libre mercado genera más prosperidad que la intervención estatal?",
+    "text": "El libre mercado genera más prosperidad que la intervención estatal.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -430,7 +426,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 3,
-    "text": "¿Los impuestos a las grandes fortunas deberían ser más altos?",
+    "text": "Los impuestos a las grandes fortunas deberían ser más altos.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -442,7 +438,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 4,
-    "text": "¿La propiedad privada es un derecho fundamental que el Estado debe proteger?",
+    "text": "La propiedad privada es un derecho fundamental que el Estado debe proteger.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -454,7 +450,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 5,
-    "text": "¿La sanidad debería ser completamente pública?",
+    "text": "La sanidad debería ser completamente pública.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -465,7 +461,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 6,
-    "text": "¿La educación privada debería tener más límites legales?",
+    "text": "La educación privada debería tener más límites legales.",
     "block": "economia",
     "weights": {
       "socialista": 2,
@@ -477,7 +473,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 7,
-    "text": "¿Las ayudas sociales demasiado amplias generan dependencia?",
+    "text": "Las ayudas sociales demasiado amplias generan dependencia.",
     "block": "economia",
     "weights": {
       "liberal": 2,
@@ -489,7 +485,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 8,
-    "text": "¿El Estado debería garantizar empleo a todo ciudadano?",
+    "text": "El Estado debería garantizar empleo a todo ciudadano.",
     "block": "economia",
     "weights": {
       "comunista": 3,
@@ -500,7 +496,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 9,
-    "text": "¿Las empresas deberían pagar más impuestos aunque reduzcan beneficios?",
+    "text": "Las empresas deberían pagar más impuestos aunque reduzcan beneficios.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -512,7 +508,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 10,
-    "text": "¿Los sindicatos deberían tener más poder en las empresas?",
+    "text": "Los sindicatos deberían tener más poder en las empresas.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -523,19 +519,19 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 11,
-    "text": "¿La vivienda debería regularse con precios máximos?",
+    "text": "El Estado debería intervenir en la economía para controlar precios en sectores importantes.",
     "block": "economia",
     "weights": {
       "socialista": 3,
-      "comunista": 2,
-      "socialdemocrata": 2,
+      "socialdemocrata": 3,
+      "comunista": 1,
       "liberal": -2,
       "libertario": -3
     }
   },
   {
     "id": 12,
-    "text": "¿Los emprendedores deberían tener menos cargas fiscales?",
+    "text": "Los emprendedores deberían tener menos cargas fiscales.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -546,7 +542,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 13,
-    "text": "¿El salario mínimo debería subir de forma obligatoria cada año?",
+    "text": "El salario mínimo debería subir de forma obligatoria cada año.",
     "block": "economia",
     "weights": {
       "socialista": 2,
@@ -557,7 +553,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 14,
-    "text": "¿La banca debería estar mucho más controlada por el Estado?",
+    "text": "La banca debería estar mucho más controlada por el Estado.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -568,7 +564,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 15,
-    "text": "¿La desigualdad económica es aceptable si aumenta la riqueza general?",
+    "text": "La desigualdad económica es aceptable si aumenta la riqueza general.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -579,7 +575,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 16,
-    "text": "¿Las grandes herencias deberían pagar más impuestos?",
+    "text": "Las grandes herencias deberían pagar más impuestos.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -590,7 +586,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 17,
-    "text": "¿La competencia privada mejora los servicios públicos?",
+    "text": "La competencia privada mejora los servicios públicos.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -601,7 +597,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 18,
-    "text": "¿El Estado debería limitar los beneficios de sectores esenciales?",
+    "text": "El Estado debería limitar los beneficios de sectores esenciales.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -612,7 +608,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 19,
-    "text": "¿Los trabajadores deberían participar en la dirección de las empresas?",
+    "text": "Los trabajadores deberían participar en la dirección de las empresas.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -623,7 +619,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 20,
-    "text": "¿La economía planificada es más justa que el mercado libre?",
+    "text": "La economía planificada es más justa que el mercado libre.",
     "block": "economia",
     "weights": {
       "comunista": 3,
@@ -634,7 +630,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 21,
-    "text": "¿Reducir impuestos suele mejorar la economía?",
+    "text": "Reducir impuestos suele mejorar la economía.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -645,7 +641,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 22,
-    "text": "¿El Estado debería rescatar empresas privadas en crisis?",
+    "text": "El Estado debería rescatar empresas privadas en crisis.",
     "block": "economia",
     "weights": {
       "socialdemocrata": 2,
@@ -656,7 +652,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 23,
-    "text": "¿Las multinacionales tienen demasiado poder sobre los gobiernos?",
+    "text": "Las multinacionales tienen demasiado poder sobre los gobiernos.",
     "block": "economia",
     "weights": {
       "socialista": 2,
@@ -667,7 +663,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 24,
-    "text": "¿La economía debería priorizar la igualdad sobre el crecimiento?",
+    "text": "La economía debería priorizar la igualdad sobre el crecimiento.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -678,7 +674,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 25,
-    "text": "¿El pequeño comercio debería recibir protección frente a grandes cadenas?",
+    "text": "El pequeño comercio debería recibir protección frente a grandes cadenas.",
     "block": "economia",
     "weights": {
       "soberanista": 2,
@@ -689,7 +685,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 26,
-    "text": "¿El mercado laboral debería ser más flexible para contratar y despedir?",
+    "text": "El mercado laboral debería ser más flexible para contratar y despedir.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -700,7 +696,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 27,
-    "text": "¿El Estado debería controlar el precio de la energía?",
+    "text": "El Estado debería controlar el precio de la energía.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -711,7 +707,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 28,
-    "text": "¿Las privatizaciones suelen empeorar los servicios esenciales?",
+    "text": "Las privatizaciones suelen empeorar los servicios esenciales.",
     "block": "economia",
     "weights": {
       "socialista": 3,
@@ -722,7 +718,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 29,
-    "text": "¿La inversión extranjera es positiva aunque reduzca control nacional?",
+    "text": "La inversión extranjera es positiva aunque reduzca control nacional.",
     "block": "economia",
     "weights": {
       "liberal": 2,
@@ -733,7 +729,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 30,
-    "text": "¿El déficit público es aceptable para financiar derechos sociales?",
+    "text": "El déficit público es aceptable para financiar derechos sociales.",
     "block": "economia",
     "weights": {
       "socialista": 2,
@@ -744,7 +740,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 31,
-    "text": "¿La economía debe estar al servicio de la nación antes que del mercado global?",
+    "text": "La economía debe estar al servicio de la nación antes que del mercado global.",
     "block": "economia",
     "weights": {
       "soberanista": 3,
@@ -755,7 +751,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 32,
-    "text": "¿Los impuestos bajos son una forma de libertad individual?",
+    "text": "Los impuestos bajos son una forma de libertad individual.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -765,7 +761,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 33,
-    "text": "¿Las pensiones deberían depender más del ahorro privado?",
+    "text": "Las pensiones deberían depender más del ahorro privado.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -776,7 +772,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 34,
-    "text": "¿La riqueza acumulada por grandes fortunas es moralmente sospechosa?",
+    "text": "La riqueza acumulada por grandes fortunas es moralmente sospechosa.",
     "block": "economia",
     "weights": {
       "comunista": 3,
@@ -787,7 +783,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 35,
-    "text": "¿La propiedad pública es preferible en sectores básicos?",
+    "text": "La propiedad pública es preferible en sectores básicos.",
     "block": "economia",
     "weights": {
       "comunista": 3,
@@ -798,7 +794,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 36,
-    "text": "¿La libertad empresarial debe prevalecer sobre la regulación laboral?",
+    "text": "La libertad empresarial debe prevalecer sobre la regulación laboral.",
     "block": "economia",
     "weights": {
       "liberal": 3,
@@ -809,7 +805,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 37,
-    "text": "¿La soberanía nacional debe estar por encima de organismos internacionales?",
+    "text": "La soberanía nacional debe estar por encima de organismos internacionales.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -819,7 +815,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 38,
-    "text": "¿La inmigración debería limitarse para proteger la identidad cultural?",
+    "text": "La inmigración debería limitarse para proteger la identidad cultural.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -831,7 +827,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 39,
-    "text": "¿La globalización debilita la identidad de los pueblos?",
+    "text": "La globalización debilita la identidad de los pueblos.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -842,7 +838,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 40,
-    "text": "¿La nación es más importante que la clase social?",
+    "text": "La nación es más importante que la clase social.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -853,7 +849,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 41,
-    "text": "¿Las fronteras deberían ser más estrictas?",
+    "text": "Las fronteras deberían ser más estrictas.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -864,7 +860,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 42,
-    "text": "¿El patriotismo es una virtud política positiva?",
+    "text": "El patriotismo es una virtud política positiva.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -875,7 +871,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 43,
-    "text": "¿La ciudadanía debería ser más difícil de obtener?",
+    "text": "La ciudadanía debería ser más difícil de obtener.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -886,7 +882,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 44,
-    "text": "¿Los ciudadanos nacionales deberían tener prioridad laboral?",
+    "text": "Los ciudadanos nacionales deberían tener prioridad laboral.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -897,7 +893,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 45,
-    "text": "¿La lengua nacional debe tener protección preferente?",
+    "text": "La lengua nacional debe tener protección preferente.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -908,7 +904,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 46,
-    "text": "¿Las regiones con identidad propia deberían poder independizarse?",
+    "text": "Las regiones con identidad propia deberían poder independizarse.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -918,7 +914,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 47,
-    "text": "¿El multiculturalismo debilita la cohesión social?",
+    "text": "El multiculturalismo debilita la cohesión social.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -929,7 +925,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 48,
-    "text": "¿La Unión Europea tiene demasiado poder sobre España?",
+    "text": "La Unión Europea tiene demasiado poder sobre España.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -939,7 +935,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 49,
-    "text": "¿La prioridad política debe ser proteger al pueblo propio?",
+    "text": "La prioridad política debe ser proteger al pueblo propio.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -950,7 +946,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 50,
-    "text": "¿Los tratados internacionales reducen la democracia nacional?",
+    "text": "Los tratados internacionales reducen la democracia nacional.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -960,7 +956,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 51,
-    "text": "¿La identidad cultural debe enseñarse más en la escuela?",
+    "text": "La identidad cultural debe enseñarse más en la escuela.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -971,7 +967,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 52,
-    "text": "¿Las políticas migratorias actuales son demasiado permisivas?",
+    "text": "Las políticas migratorias actuales son demasiado permisivas.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -982,7 +978,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 53,
-    "text": "¿Un país debe anteponer sus intereses a los intereses globales?",
+    "text": "Un país debe anteponer sus intereses a los intereses globales.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -992,7 +988,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 54,
-    "text": "¿La cultura propia puede perderse por exceso de inmigración?",
+    "text": "La cultura propia puede perderse por exceso de inmigración.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1002,7 +998,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 55,
-    "text": "¿Las élites globales perjudican a las naciones pequeñas?",
+    "text": "Las élites globales perjudican a las naciones pequeñas.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -1012,7 +1008,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 56,
-    "text": "¿La bandera y los símbolos nacionales son políticamente importantes?",
+    "text": "La bandera y los símbolos nacionales son políticamente importantes.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1022,7 +1018,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 57,
-    "text": "¿El nacionalismo puede ser una defensa legítima de un pueblo?",
+    "text": "El nacionalismo puede ser una defensa legítima de un pueblo.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1032,7 +1028,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 58,
-    "text": "¿El internacionalismo suele ignorar las identidades reales?",
+    "text": "El internacionalismo suele ignorar las identidades reales.",
     "block": "nacion",
     "weights": {
       "nacionalista": 2,
@@ -1042,7 +1038,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 59,
-    "text": "¿El control fronterizo es imprescindible para la seguridad?",
+    "text": "El control fronterizo es imprescindible para la seguridad.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1053,7 +1049,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 60,
-    "text": "¿Las ayudas públicas deberían priorizar a ciudadanos nacionales?",
+    "text": "Las ayudas públicas deberían priorizar a ciudadanos nacionales.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1064,7 +1060,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 61,
-    "text": "¿La nación debe protegerse incluso frente a intereses económicos externos?",
+    "text": "La nación debe protegerse incluso frente a intereses económicos externos.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1074,7 +1070,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 62,
-    "text": "¿La descentralización territorial mejora la convivencia?",
+    "text": "La descentralización territorial mejora la convivencia.",
     "block": "nacion",
     "weights": {
       "institucionalista": 2,
@@ -1084,7 +1080,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 63,
-    "text": "¿El centralismo protege mejor la unidad nacional?",
+    "text": "El centralismo protege mejor la unidad nacional.",
     "block": "nacion",
     "weights": {
       "nacionalista": 2,
@@ -1094,7 +1090,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 64,
-    "text": "¿Una nación sin soberanía económica no es plenamente libre?",
+    "text": "Una nación sin soberanía económica no es plenamente libre.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -1104,7 +1100,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 65,
-    "text": "¿Las fronteras abiertas son una amenaza para el Estado del bienestar?",
+    "text": "Las fronteras abiertas son una amenaza para el Estado del bienestar.",
     "block": "nacion",
     "weights": {
       "nacionalista": 2,
@@ -1115,7 +1111,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 66,
-    "text": "¿La identidad nacional debe estar por encima de identidades individuales?",
+    "text": "La identidad nacional debe estar por encima de identidades individuales.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1125,7 +1121,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 67,
-    "text": "¿El turismo masivo puede dañar la identidad local?",
+    "text": "El turismo masivo puede dañar la identidad local.",
     "block": "nacion",
     "weights": {
       "nacionalista": 2,
@@ -1136,7 +1132,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 68,
-    "text": "¿Los organismos supranacionales deben tener menos poder?",
+    "text": "Los organismos supranacionales deben tener menos poder.",
     "block": "nacion",
     "weights": {
       "soberanista": 3,
@@ -1146,7 +1142,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 69,
-    "text": "¿Una comunidad política necesita una cultura común fuerte?",
+    "text": "Una comunidad política necesita una cultura común fuerte.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1156,7 +1152,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 70,
-    "text": "¿La inmigración debe adaptarse culturalmente al país receptor?",
+    "text": "La inmigración debe adaptarse culturalmente al país receptor.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1166,7 +1162,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 71,
-    "text": "¿El patriotismo económico es necesario para proteger empleo local?",
+    "text": "El patriotismo económico es necesario para proteger empleo local.",
     "block": "nacion",
     "weights": {
       "nacionalista": 2,
@@ -1177,7 +1173,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 72,
-    "text": "¿La nación debe ser el marco principal de la democracia?",
+    "text": "La nación debe ser el marco principal de la democracia.",
     "block": "nacion",
     "weights": {
       "nacionalista": 3,
@@ -1187,7 +1183,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 73,
-    "text": "¿La sociedad actual ha perdido valores tradicionales importantes?",
+    "text": "La sociedad actual ha perdido valores tradicionales importantes.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1197,7 +1193,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 74,
-    "text": "¿El cambio social rápido suele ser positivo?",
+    "text": "El cambio social rápido suele ser positivo.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1208,7 +1204,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 75,
-    "text": "¿La familia tradicional debería protegerse especialmente?",
+    "text": "La familia tradicional debería protegerse especialmente.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1218,7 +1214,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 76,
-    "text": "¿La corrección política limita la libertad de expresión?",
+    "text": "La corrección política limita la libertad de expresión.",
     "block": "sociedad",
     "weights": {
       "conservador": 2,
@@ -1229,7 +1225,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 77,
-    "text": "¿El feminismo actual ha ido demasiado lejos?",
+    "text": "El feminismo actual ha ido demasiado lejos.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1239,7 +1235,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 78,
-    "text": "¿La religión debería mantenerse fuera de las instituciones públicas?",
+    "text": "La religión debería mantenerse fuera de las instituciones públicas.",
     "block": "sociedad",
     "weights": {
       "progresista": 2,
@@ -1250,7 +1246,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 79,
-    "text": "¿La escuela debería transmitir valores tradicionales?",
+    "text": "La escuela debería transmitir valores tradicionales.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1260,7 +1256,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 80,
-    "text": "¿La libertad individual debe estar por encima de normas morales colectivas?",
+    "text": "La libertad individual debe estar por encima de normas morales colectivas.",
     "block": "sociedad",
     "weights": {
       "libertario": 3,
@@ -1271,7 +1267,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 81,
-    "text": "¿La sociedad necesita más disciplina y menos permisividad?",
+    "text": "La sociedad necesita más disciplina y menos permisividad.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1282,7 +1278,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 82,
-    "text": "¿La cultura moderna es demasiado individualista?",
+    "text": "La cultura moderna es demasiado individualista.",
     "block": "sociedad",
     "weights": {
       "conservador": 2,
@@ -1293,7 +1289,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 83,
-    "text": "¿Las nuevas generaciones han perdido respeto por la autoridad?",
+    "text": "Las nuevas generaciones han perdido respeto por la autoridad.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1304,7 +1300,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 84,
-    "text": "¿La igualdad de género debería ser una prioridad política central?",
+    "text": "La igualdad de género debería ser una prioridad política central.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1315,7 +1311,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 85,
-    "text": "¿Las políticas identitarias fragmentan la sociedad?",
+    "text": "Las políticas identitarias fragmentan la sociedad.",
     "block": "sociedad",
     "weights": {
       "conservador": 2,
@@ -1326,7 +1322,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 86,
-    "text": "¿La tradición suele contener sabiduría acumulada?",
+    "text": "La tradición suele contener sabiduría acumulada.",
     "block": "sociedad",
     "weights": {
       "tradicionalista": 3,
@@ -1336,7 +1332,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 87,
-    "text": "¿La moral pública debería tener ciertos límites legales?",
+    "text": "La moral pública debería tener ciertos límites legales.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1346,7 +1342,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 88,
-    "text": "¿La sociedad debería ser más tolerante con estilos de vida diversos?",
+    "text": "La sociedad debería ser más tolerante con estilos de vida diversos.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1357,7 +1353,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 89,
-    "text": "¿Los medios promueven valores demasiado progresistas?",
+    "text": "Los medios promueven valores demasiado progresistas.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1367,7 +1363,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 90,
-    "text": "¿La educación sexual debería ampliarse en las escuelas?",
+    "text": "La educación sexual debería ampliarse en las escuelas.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1378,7 +1374,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 91,
-    "text": "¿El mérito individual es más importante que la igualdad de resultados?",
+    "text": "El mérito individual es más importante que la igualdad de resultados.",
     "block": "sociedad",
     "weights": {
       "liberal": 3,
@@ -1388,7 +1384,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 92,
-    "text": "¿La sociedad debe proteger especialmente a minorías discriminadas?",
+    "text": "La sociedad debe proteger especialmente a minorías discriminadas.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1398,7 +1394,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 93,
-    "text": "¿El matrimonio y la familia son pilares centrales de la sociedad?",
+    "text": "El matrimonio y la familia son pilares centrales de la sociedad.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1408,7 +1404,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 94,
-    "text": "¿El Estado no debería imponer una visión moral concreta?",
+    "text": "El Estado no debería imponer una visión moral concreta.",
     "block": "sociedad",
     "weights": {
       "libertario": 3,
@@ -1419,7 +1415,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 95,
-    "text": "¿La cultura occidental está en decadencia?",
+    "text": "La cultura occidental está en decadencia.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1430,7 +1426,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 96,
-    "text": "¿Las reformas sociales deberían hacerse lentamente?",
+    "text": "Las reformas sociales deberían hacerse lentamente.",
     "block": "sociedad",
     "weights": {
       "conservador": 2,
@@ -1440,7 +1436,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 97,
-    "text": "¿La libertad de expresión debe incluir opiniones ofensivas?",
+    "text": "La libertad de expresión debe incluir opiniones ofensivas.",
     "block": "sociedad",
     "weights": {
       "libertario": 3,
@@ -1450,7 +1446,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 98,
-    "text": "¿La protección de animales debería tener más peso legal?",
+    "text": "La protección de animales debería tener más peso legal.",
     "block": "sociedad",
     "weights": {
       "progresista": 2,
@@ -1460,7 +1456,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 99,
-    "text": "¿La religión aporta estabilidad social?",
+    "text": "La religión aporta estabilidad social.",
     "block": "sociedad",
     "weights": {
       "tradicionalista": 3,
@@ -1470,7 +1466,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 100,
-    "text": "¿El secularismo estricto es necesario en una democracia moderna?",
+    "text": "El secularismo estricto es necesario en una democracia moderna.",
     "block": "sociedad",
     "weights": {
       "progresista": 2,
@@ -1480,7 +1476,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 101,
-    "text": "¿El arte y la cultura deberían ser más libres de límites morales?",
+    "text": "El arte y la cultura deberían ser más libres de límites morales.",
     "block": "sociedad",
     "weights": {
       "libertario": 2,
@@ -1490,7 +1486,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 102,
-    "text": "¿La escuela debería ser neutral en debates culturales?",
+    "text": "La escuela debería ser neutral en debates culturales.",
     "block": "sociedad",
     "weights": {
       "liberal": 2,
@@ -1501,7 +1497,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 103,
-    "text": "¿Las cuotas por género o identidad son justas?",
+    "text": "Las cuotas por género o identidad son justas.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1512,7 +1508,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 104,
-    "text": "¿La sociedad necesita recuperar respeto por la tradición?",
+    "text": "La sociedad necesita recuperar respeto por la tradición.",
     "block": "sociedad",
     "weights": {
       "tradicionalista": 3,
@@ -1522,7 +1518,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 105,
-    "text": "¿La cultura popular actual perjudica a los jóvenes?",
+    "text": "La cultura popular actual perjudica a los jóvenes.",
     "block": "sociedad",
     "weights": {
       "conservador": 2,
@@ -1532,7 +1528,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 106,
-    "text": "¿Las familias deberían tener más libertad para elegir educación moral?",
+    "text": "Las familias deberían tener más libertad para elegir educación moral.",
     "block": "sociedad",
     "weights": {
       "liberal": 2,
@@ -1543,7 +1539,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 107,
-    "text": "¿El progreso social suele traer más derechos y bienestar?",
+    "text": "El progreso social suele traer más derechos y bienestar.",
     "block": "sociedad",
     "weights": {
       "progresista": 3,
@@ -1553,7 +1549,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 108,
-    "text": "¿La estabilidad cultural es más importante que la innovación social?",
+    "text": "La estabilidad cultural es más importante que la innovación social.",
     "block": "sociedad",
     "weights": {
       "conservador": 3,
@@ -1563,7 +1559,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 109,
-    "text": "¿La seguridad debe priorizarse sobre ciertas libertades individuales?",
+    "text": "La seguridad debe priorizarse sobre ciertas libertades individuales.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1573,7 +1569,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 110,
-    "text": "¿La policía necesita más autoridad para mantener el orden?",
+    "text": "La policía necesita más autoridad para mantener el orden.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1583,7 +1579,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 111,
-    "text": "¿El Estado debería tener el menor poder posible sobre la vida privada?",
+    "text": "El Estado debería tener el menor poder posible sobre la vida privada.",
     "block": "autoridad",
     "weights": {
       "libertario": 3,
@@ -1593,7 +1589,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 112,
-    "text": "¿Las penas judiciales deberían endurecerse?",
+    "text": "Las penas judiciales deberían endurecerse.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1603,7 +1599,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 113,
-    "text": "¿La vigilancia digital es aceptable para prevenir delitos graves?",
+    "text": "La vigilancia digital es aceptable para prevenir delitos graves.",
     "block": "autoridad",
     "weights": {
       "autoritario": 2,
@@ -1613,7 +1609,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 114,
-    "text": "¿Las protestas radicales deberían reprimirse con firmeza?",
+    "text": "Las protestas radicales deberían reprimirse con firmeza.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1623,7 +1619,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 115,
-    "text": "¿El orden público es más importante que el derecho a protestar?",
+    "text": "El orden público es más importante que el derecho a protestar.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1633,7 +1629,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 116,
-    "text": "¿El Estado suele abusar de su poder?",
+    "text": "El Estado suele abusar de su poder.",
     "block": "autoridad",
     "weights": {
       "libertario": 3,
@@ -1643,7 +1639,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 117,
-    "text": "¿El ejército debería tener más presupuesto?",
+    "text": "El ejército debería tener más presupuesto.",
     "block": "autoridad",
     "weights": {
       "nacionalista": 2,
@@ -1654,7 +1650,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 118,
-    "text": "¿El servicio militar obligatorio sería positivo?",
+    "text": "El servicio militar obligatorio sería positivo.",
     "block": "autoridad",
     "weights": {
       "autoritario": 2,
@@ -1665,7 +1661,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 119,
-    "text": "¿La desobediencia civil puede estar justificada?",
+    "text": "La desobediencia civil puede estar justificada.",
     "block": "autoridad",
     "weights": {
       "progresista": 2,
@@ -1675,7 +1671,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 120,
-    "text": "¿La ley debe cumplirse aunque parezca injusta?",
+    "text": "La ley debe cumplirse aunque parezca injusta.",
     "block": "autoridad",
     "weights": {
       "institucionalista": 3,
@@ -1685,7 +1681,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 121,
-    "text": "¿Los jueces deberían ser más duros con delincuentes reincidentes?",
+    "text": "Los jueces deberían ser más duros con delincuentes reincidentes.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1695,7 +1691,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 122,
-    "text": "¿La prisión debería centrarse más en castigo que en reinserción?",
+    "text": "La prisión debería centrarse más en castigo que en reinserción.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1705,7 +1701,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 123,
-    "text": "¿La reinserción social debe ser prioritaria en justicia penal?",
+    "text": "La reinserción social debe ser prioritaria en justicia penal.",
     "block": "autoridad",
     "weights": {
       "progresista": 2,
@@ -1715,7 +1711,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 124,
-    "text": "¿La censura puede ser aceptable para evitar desorden social?",
+    "text": "La censura puede ser aceptable para evitar desorden social.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1725,7 +1721,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 125,
-    "text": "¿Las armas deberían estar más reguladas?",
+    "text": "Las armas deberían estar más reguladas.",
     "block": "autoridad",
     "weights": {
       "institucionalista": 2,
@@ -1735,7 +1731,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 126,
-    "text": "¿Los estados de emergencia se usan demasiado fácilmente?",
+    "text": "Los estados de emergencia se usan demasiado fácilmente.",
     "block": "autoridad",
     "weights": {
       "libertario": 2,
@@ -1745,7 +1741,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 127,
-    "text": "¿Un gobierno fuerte es necesario en tiempos de crisis?",
+    "text": "Un gobierno fuerte es necesario en tiempos de crisis.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1755,7 +1751,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 128,
-    "text": "¿La democracia debe limitar a partidos que amenacen el sistema?",
+    "text": "La democracia debe limitar a partidos que amenacen el sistema.",
     "block": "autoridad",
     "weights": {
       "institucionalista": 3,
@@ -1765,7 +1761,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 129,
-    "text": "¿La libertad individual debe tener muy pocos límites?",
+    "text": "Los acuerdos internacionales deberían tener más peso que las decisiones individuales de cada país.",
     "block": "autoridad",
     "weights": {
       "libertario": 3,
@@ -1776,7 +1772,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 130,
-    "text": "¿La autoridad de profesores y padres debería reforzarse?",
+    "text": "La autoridad de profesores y padres debería reforzarse.",
     "block": "autoridad",
     "weights": {
       "conservador": 3,
@@ -1787,7 +1783,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 131,
-    "text": "¿El Estado debería poder prohibir organizaciones extremistas?",
+    "text": "El Estado debería poder prohibir organizaciones extremistas.",
     "block": "autoridad",
     "weights": {
       "autoritario": 2,
@@ -1797,7 +1793,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 132,
-    "text": "¿La policía recibe demasiadas críticas injustas?",
+    "text": "La policía recibe demasiadas críticas injustas.",
     "block": "autoridad",
     "weights": {
       "conservador": 2,
@@ -1807,7 +1803,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 133,
-    "text": "¿El derecho a la privacidad debe pesar más que la seguridad?",
+    "text": "El derecho a la privacidad debe pesar más que la seguridad.",
     "block": "autoridad",
     "weights": {
       "libertario": 3,
@@ -1817,7 +1813,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 134,
-    "text": "¿Los delitos contra la nación deberían castigarse con especial dureza?",
+    "text": "Los delitos contra la nación deberían castigarse con especial dureza.",
     "block": "autoridad",
     "weights": {
       "nacionalista": 3,
@@ -1828,7 +1824,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 135,
-    "text": "¿El sistema judicial es demasiado blando?",
+    "text": "El sistema judicial es demasiado blando.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1838,7 +1834,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 136,
-    "text": "¿La autoridad política debe estar fuertemente limitada por la Constitución?",
+    "text": "La autoridad política debe estar fuertemente limitada por la Constitución.",
     "block": "autoridad",
     "weights": {
       "institucionalista": 3,
@@ -1848,7 +1844,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 137,
-    "text": "¿La población debería votar más decisiones mediante referéndum?",
+    "text": "La población debería votar más decisiones mediante referéndum.",
     "block": "autoridad",
     "weights": {
       "soberanista": 2,
@@ -1858,7 +1854,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 138,
-    "text": "¿La tecnocracia puede ser mejor que la política partidista?",
+    "text": "La tecnocracia puede ser mejor que la política partidista.",
     "block": "autoridad",
     "weights": {
       "institucionalista": 2,
@@ -1868,7 +1864,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 139,
-    "text": "¿El Estado debería controlar más los contenidos peligrosos en internet?",
+    "text": "El Estado debería controlar más los contenidos peligrosos en internet.",
     "block": "autoridad",
     "weights": {
       "autoritario": 2,
@@ -1878,7 +1874,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 140,
-    "text": "¿La seguridad nacional justifica secretos de Estado?",
+    "text": "La seguridad nacional justifica secretos de Estado.",
     "block": "autoridad",
     "weights": {
       "autoritario": 2,
@@ -1888,7 +1884,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 141,
-    "text": "¿Las fuerzas de seguridad deben tener presunción de autoridad?",
+    "text": "Las fuerzas de seguridad deben tener presunción de autoridad.",
     "block": "autoridad",
     "weights": {
       "autoritario": 3,
@@ -1898,7 +1894,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 142,
-    "text": "¿La libertad de manifestación debe prevalecer aunque cause molestias?",
+    "text": "La libertad de manifestación debe prevalecer aunque cause molestias.",
     "block": "autoridad",
     "weights": {
       "libertario": 2,
@@ -1908,7 +1904,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 143,
-    "text": "¿La estabilidad social es más importante que el cambio político?",
+    "text": "La estabilidad social es más importante que el cambio político.",
     "block": "autoridad",
     "weights": {
       "conservador": 2,
@@ -1919,7 +1915,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 144,
-    "text": "¿El poder político debería estar mucho más descentralizado?",
+    "text": "El poder político debería estar mucho más descentralizado.",
     "block": "autoridad",
     "weights": {
       "libertario": 2,
@@ -1929,7 +1925,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 145,
-    "text": "¿La política exterior debe centrarse primero en los intereses nacionales?",
+    "text": "La política exterior debe centrarse primero en los intereses nacionales.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -1939,7 +1935,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 146,
-    "text": "¿La integración europea debería ampliarse?",
+    "text": "La integración europea debería ampliarse.",
     "block": "geopolitica",
     "weights": {
       "globalista": 3,
@@ -1950,7 +1946,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 147,
-    "text": "¿Las organizaciones internacionales tienen demasiado poder?",
+    "text": "Las organizaciones internacionales tienen demasiado poder.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -1960,7 +1956,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 148,
-    "text": "¿La cooperación internacional es más importante que la soberanía nacional?",
+    "text": "La cooperación internacional es más importante que la soberanía nacional.",
     "block": "geopolitica",
     "weights": {
       "globalista": 3,
@@ -1971,7 +1967,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 149,
-    "text": "¿La OTAN es necesaria para la seguridad de España?",
+    "text": "La OTAN es necesaria para la seguridad de España.",
     "block": "geopolitica",
     "weights": {
       "institucionalista": 2,
@@ -1981,7 +1977,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 150,
-    "text": "¿Las guerras modernas suelen estar motivadas por intereses económicos ocultos?",
+    "text": "Las guerras modernas suelen estar motivadas por intereses económicos ocultos.",
     "block": "geopolitica",
     "weights": {
       "socialista": 2,
@@ -1992,7 +1988,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 151,
-    "text": "¿España debería ser más neutral en conflictos internacionales?",
+    "text": "España debería ser más neutral en conflictos internacionales.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 2,
@@ -2002,7 +1998,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 152,
-    "text": "¿Los países occidentales intervienen demasiado en otros países?",
+    "text": "Los países occidentales intervienen demasiado en otros países.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 2,
@@ -2012,7 +2008,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 153,
-    "text": "¿La independencia energética es una prioridad nacional?",
+    "text": "La independencia energética es una prioridad nacional.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2022,7 +2018,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 154,
-    "text": "¿El comercio internacional perjudica a industrias locales?",
+    "text": "El comercio internacional perjudica a industrias locales.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 2,
@@ -2033,7 +2029,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 155,
-    "text": "¿Las sanciones económicas son una herramienta legítima?",
+    "text": "Las sanciones económicas son una herramienta legítima.",
     "block": "geopolitica",
     "weights": {
       "institucionalista": 2,
@@ -2043,7 +2039,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 156,
-    "text": "¿Los derechos humanos justifican intervenir en otros países?",
+    "text": "Los derechos humanos justifican intervenir en otros países.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2053,7 +2049,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 157,
-    "text": "¿Los tratados de libre comercio benefician a la economía?",
+    "text": "Los tratados de libre comercio benefician a la economía.",
     "block": "geopolitica",
     "weights": {
       "liberal": 3,
@@ -2063,7 +2059,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 158,
-    "text": "¿La soberanía militar es esencial para ser un país libre?",
+    "text": "La soberanía militar es esencial para ser un país libre.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2073,7 +2069,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 159,
-    "text": "¿La ONU debería tener más capacidad de decisión?",
+    "text": "La ONU debería tener más capacidad de decisión.",
     "block": "geopolitica",
     "weights": {
       "globalista": 3,
@@ -2083,7 +2079,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 160,
-    "text": "¿Los bloques económicos reducen independencia nacional?",
+    "text": "Los bloques económicos reducen independencia nacional.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2093,7 +2089,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 161,
-    "text": "¿La diplomacia debe prevalecer casi siempre sobre la fuerza militar?",
+    "text": "La diplomacia debe prevalecer casi siempre sobre la fuerza militar.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2103,7 +2099,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 162,
-    "text": "¿Un país debe proteger su industria aunque encarezca productos?",
+    "text": "Un país debe proteger su industria aunque encarezca productos.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2113,7 +2109,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 163,
-    "text": "¿La política exterior debería defender valores universales?",
+    "text": "La política exterior debería defender valores universales.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2123,7 +2119,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 164,
-    "text": "¿Las fronteras nacionales siguen siendo esenciales en el siglo XXI?",
+    "text": "Las fronteras nacionales siguen siendo esenciales en el siglo XXI.",
     "block": "geopolitica",
     "weights": {
       "nacionalista": 3,
@@ -2133,7 +2129,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 165,
-    "text": "¿España debería reducir su dependencia de la UE?",
+    "text": "España debería reducir su dependencia de la UE.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2143,7 +2139,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 166,
-    "text": "¿Las instituciones europeas protegen mejor los derechos que los Estados?",
+    "text": "Las instituciones europeas protegen mejor los derechos que los Estados.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2153,7 +2149,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 167,
-    "text": "¿La inmigración debe gestionarse con acuerdos internacionales?",
+    "text": "La inmigración debe gestionarse con acuerdos internacionales.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2163,7 +2159,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 168,
-    "text": "¿La ayuda exterior debe reducirse si hay problemas internos?",
+    "text": "La ayuda exterior debe reducirse si hay problemas internos.",
     "block": "geopolitica",
     "weights": {
       "nacionalista": 2,
@@ -2174,7 +2170,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 169,
-    "text": "¿La globalización beneficia principalmente a élites económicas?",
+    "text": "La globalización beneficia principalmente a élites económicas.",
     "block": "geopolitica",
     "weights": {
       "socialista": 2,
@@ -2185,7 +2181,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 170,
-    "text": "¿Los países deben poder ignorar normas internacionales injustas?",
+    "text": "Los países deben poder ignorar normas internacionales injustas.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2195,7 +2191,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 171,
-    "text": "¿La defensa común europea sería positiva?",
+    "text": "La defensa común europea sería positiva.",
     "block": "geopolitica",
     "weights": {
       "globalista": 2,
@@ -2205,7 +2201,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 172,
-    "text": "¿La seguridad nacional debe condicionar la política económica?",
+    "text": "La seguridad nacional debe condicionar la política económica.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 2,
@@ -2216,7 +2212,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 173,
-    "text": "¿Los refugiados de guerra deberían ser acogidos ampliamente?",
+    "text": "Los refugiados de guerra deberían ser acogidos ampliamente.",
     "block": "geopolitica",
     "weights": {
       "progresista": 2,
@@ -2227,7 +2223,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 174,
-    "text": "¿El realismo político es más importante que el idealismo moral?",
+    "text": "El realismo político es más importante que el idealismo moral.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 2,
@@ -2237,7 +2233,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 175,
-    "text": "¿Los organismos globales limitan la voluntad popular?",
+    "text": "Los organismos globales limitan la voluntad popular.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2247,7 +2243,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 176,
-    "text": "¿La política exterior debe proteger a comunidades culturales afines?",
+    "text": "La política exterior debe proteger a comunidades culturales afines.",
     "block": "geopolitica",
     "weights": {
       "nacionalista": 2,
@@ -2257,7 +2253,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 177,
-    "text": "¿La cooperación internacional ayuda a resolver problemas climáticos?",
+    "text": "La cooperación internacional ayuda a resolver problemas climáticos.",
     "block": "geopolitica",
     "weights": {
       "globalista": 3,
@@ -2267,7 +2263,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 178,
-    "text": "¿El ejército debe ser una herramienta central de soberanía?",
+    "text": "El ejército debe ser una herramienta central de soberanía.",
     "block": "geopolitica",
     "weights": {
       "nacionalista": 2,
@@ -2277,7 +2273,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 179,
-    "text": "¿La política exterior española debería ser más independiente de EE. UU.?",
+    "text": "La política exterior española debería ser más independiente de EE. UU..",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2287,7 +2283,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 180,
-    "text": "¿El internacionalismo debilita la democracia nacional?",
+    "text": "El internacionalismo debilita la democracia nacional.",
     "block": "geopolitica",
     "weights": {
       "soberanista": 3,
@@ -2297,7 +2293,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 181,
-    "text": "¿La identidad cultural propia debe protegerse activamente desde el Estado?",
+    "text": "La identidad cultural propia debe protegerse activamente desde el Estado.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2308,7 +2304,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 182,
-    "text": "¿Una sociedad multicultural es preferible a una sociedad culturalmente homogénea?",
+    "text": "Una sociedad multicultural es preferible a una sociedad culturalmente homogénea.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 3,
@@ -2319,7 +2315,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 183,
-    "text": "¿La lengua y la cultura propias deberían tener prioridad institucional?",
+    "text": "La lengua y la cultura propias deberían tener prioridad institucional.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2330,7 +2326,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 184,
-    "text": "¿La tradición cultural debe adaptarse a los valores modernos?",
+    "text": "La tradición cultural debe adaptarse a los valores modernos.",
     "block": "identidad",
     "weights": {
       "progresista": 3,
@@ -2341,7 +2337,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 185,
-    "text": "¿La religión forma parte importante de la identidad de un pueblo?",
+    "text": "La religión forma parte importante de la identidad de un pueblo.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2351,7 +2347,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 186,
-    "text": "¿La diversidad cultural debería ser una prioridad política?",
+    "text": "La diversidad cultural debería ser una prioridad política.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 3,
@@ -2362,7 +2358,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 187,
-    "text": "¿La escuela debe enseñar más historia nacional?",
+    "text": "La escuela debe enseñar más historia nacional.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2372,7 +2368,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 188,
-    "text": "¿La cultura de origen debe prevalecer sobre influencias externas?",
+    "text": "La cultura de origen debe prevalecer sobre influencias externas.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2383,7 +2379,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 189,
-    "text": "¿La religión debe quedar en el ámbito estrictamente privado?",
+    "text": "La religión debe quedar en el ámbito estrictamente privado.",
     "block": "identidad",
     "weights": {
       "progresista": 2,
@@ -2393,7 +2389,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 190,
-    "text": "¿La identidad cultural es más importante que la diversidad?",
+    "text": "La identidad cultural es más importante que la diversidad.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2403,7 +2399,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 191,
-    "text": "¿Los símbolos religiosos deberían permitirse en espacios públicos?",
+    "text": "Los símbolos religiosos deberían permitirse en espacios públicos.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 2,
@@ -2413,7 +2409,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 192,
-    "text": "¿Las fiestas tradicionales deberían recibir más apoyo institucional?",
+    "text": "Las fiestas tradicionales deberían recibir más apoyo institucional.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2423,7 +2419,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 193,
-    "text": "¿La cultura nacional debería protegerse frente a modas globales?",
+    "text": "La cultura nacional debería protegerse frente a modas globales.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2434,7 +2430,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 194,
-    "text": "¿La identidad de una nación se basa principalmente en cultura compartida?",
+    "text": "La identidad de una nación se basa principalmente en cultura compartida.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2444,7 +2440,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 195,
-    "text": "¿La identidad de una nación se basa principalmente en ciudadanía legal?",
+    "text": "La identidad de una nación se basa principalmente en ciudadanía legal.",
     "block": "identidad",
     "weights": {
       "institucionalista": 2,
@@ -2454,7 +2450,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 196,
-    "text": "¿El pluralismo cultural fortalece una sociedad?",
+    "text": "El pluralismo cultural fortalece una sociedad.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 3,
@@ -2465,7 +2461,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 197,
-    "text": "¿La inmigración debe integrarse en la cultura mayoritaria?",
+    "text": "La inmigración debe integrarse en la cultura mayoritaria.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2475,7 +2471,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 198,
-    "text": "¿La cultura occidental debe defenderse políticamente?",
+    "text": "La cultura occidental debe defenderse políticamente.",
     "block": "identidad",
     "weights": {
       "conservador": 3,
@@ -2486,7 +2482,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 199,
-    "text": "¿Las raíces religiosas de Europa deberían reconocerse oficialmente?",
+    "text": "Las raíces religiosas de Europa deberían reconocerse oficialmente.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2496,7 +2492,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 200,
-    "text": "¿La identidad personal debe estar por encima de la identidad nacional?",
+    "text": "La identidad personal debe estar por encima de la identidad nacional.",
     "block": "identidad",
     "weights": {
       "libertario": 2,
@@ -2506,7 +2502,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 201,
-    "text": "¿El mestizaje cultural es positivo para una sociedad?",
+    "text": "El mestizaje cultural es positivo para una sociedad.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 3,
@@ -2517,7 +2513,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 202,
-    "text": "¿Las instituciones deben ser neutrales ante todas las culturas?",
+    "text": "Las instituciones deben ser neutrales ante todas las culturas.",
     "block": "identidad",
     "weights": {
       "liberal": 2,
@@ -2528,7 +2524,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 203,
-    "text": "¿Una cultura común fuerte mejora la confianza social?",
+    "text": "Una cultura común fuerte mejora la confianza social.",
     "block": "identidad",
     "weights": {
       "nacionalista": 2,
@@ -2539,7 +2535,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 204,
-    "text": "¿La secularización ha debilitado la sociedad?",
+    "text": "La secularización ha debilitado la sociedad.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2549,7 +2545,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 205,
-    "text": "¿El arte nacional debe recibir prioridad frente a productos culturales globales?",
+    "text": "El arte nacional debe recibir prioridad frente a productos culturales globales.",
     "block": "identidad",
     "weights": {
       "nacionalista": 2,
@@ -2559,7 +2555,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 206,
-    "text": "¿La identidad cultural debe influir en las leyes migratorias?",
+    "text": "La identidad cultural debe influir en las leyes migratorias.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2569,7 +2565,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 207,
-    "text": "¿El Estado debe financiar expresiones culturales minoritarias?",
+    "text": "El Estado debe financiar expresiones culturales minoritarias.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 2,
@@ -2580,7 +2576,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 208,
-    "text": "¿La religión ayuda a conservar valores comunitarios?",
+    "text": "La religión ayuda a conservar valores comunitarios.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2590,7 +2586,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 209,
-    "text": "¿La identidad nacional puede convivir con una visión abierta del mundo?",
+    "text": "La identidad nacional puede convivir con una visión abierta del mundo.",
     "block": "identidad",
     "weights": {
       "institucionalista": 2,
@@ -2600,7 +2596,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 210,
-    "text": "¿La cultura propia debe tener preferencia en medios públicos?",
+    "text": "La cultura propia debe tener preferencia en medios públicos.",
     "block": "identidad",
     "weights": {
       "nacionalista": 3,
@@ -2610,7 +2606,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 211,
-    "text": "¿La sociedad debería celebrar más la diversidad religiosa?",
+    "text": "La sociedad debería celebrar más la diversidad religiosa.",
     "block": "identidad",
     "weights": {
       "multiculturalista": 3,
@@ -2620,7 +2616,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 212,
-    "text": "¿La pertenencia cultural debe implicar deberes sociales?",
+    "text": "La pertenencia cultural debe implicar deberes sociales.",
     "block": "identidad",
     "weights": {
       "nacionalista": 2,
@@ -2631,7 +2627,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 213,
-    "text": "¿La tradición es más importante que la innovación cultural?",
+    "text": "La tradición es más importante que la innovación cultural.",
     "block": "identidad",
     "weights": {
       "tradicionalista": 3,
@@ -2641,7 +2637,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 214,
-    "text": "¿La identidad cultural debe decidirse individualmente y no colectivamente?",
+    "text": "La identidad cultural debe decidirse individualmente y no colectivamente.",
     "block": "identidad",
     "weights": {
       "libertario": 2,
@@ -2651,7 +2647,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 215,
-    "text": "¿La cultura local debería protegerse frente al turismo masivo?",
+    "text": "La cultura local debería protegerse frente al turismo masivo.",
     "block": "identidad",
     "weights": {
       "nacionalista": 2,
@@ -2661,7 +2657,7 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 216,
-    "text": "¿La diversidad cultural excesiva puede dificultar la convivencia?",
+    "text": "La diversidad cultural excesiva puede dificultar la convivencia.",
     "block": "identidad",
     "weights": {
       "nacionalista": 2,
@@ -2675,7 +2671,7 @@ export const ideologicalQuestions: Question[] = [
 export const ultraQuickIdeologicalQuestions: Question[] = [
   {
     id: 1,
-    text: "¿Prefieres pagar más impuestos si eso permite tener mejores servicios públicos?",
+    text: "Prefiero pagar más impuestos si eso permite tener mejores servicios públicos.",
     block: "economia",
     weights: {
       comunista: 3,
@@ -2695,7 +2691,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 2,
-    text: "¿Crees que las empresas y autónomos deberían tener menos trabas para crecer?",
+    text: "Las empresas y autónomos deberían tener menos trabas para crecer.",
     block: "economia",
     weights: {
       liberal: 3,
@@ -2715,7 +2711,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 3,
-    text: "¿España debería tomar más decisiones por sí misma aunque choque con la Unión Europea?",
+    text: "España debería priorizar sus propias decisiones aunque no coincidan con otros países.",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2734,7 +2730,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 4,
-    text: "¿La inmigración debería controlarse más para proteger empleo, vivienda y convivencia?",
+    text: "La inmigración debería controlarse más para proteger empleo, vivienda y convivencia.",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2754,7 +2750,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 5,
-    text: "¿Se han perdido valores como respeto, familia, esfuerzo o disciplina?",
+    text: "Creo que se han perdido valores como respeto, familia, esfuerzo o disciplina.",
     block: "sociedad",
     weights: {
       conservador: 3,
@@ -2772,7 +2768,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 6,
-    text: "¿Para mejorar la seguridad aceptarías más policía, vigilancia o penas más duras?",
+    text: "Para mejorar la seguridad aceptaría más policía, vigilancia o penas más duras.",
     block: "autoridad",
     weights: {
       autoritario: 3,
@@ -2792,7 +2788,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 7,
-    text: "¿Los problemas globales se resuelven mejor con acuerdos internacionales?",
+    text: "Los acuerdos internacionales deberían tener más peso que las decisiones y/o intereses individuales de cada país.",
     block: "geopolitica",
     weights: {
       globalista: 3,
@@ -2811,7 +2807,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
   },
   {
     id: 8,
-    text: "¿Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios?",
+    text: "Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios.",
     block: "identidad",
     weights: {
       nacionalista: 3,
@@ -2834,7 +2830,7 @@ export const ultraQuickIdeologicalQuestions: Question[] = [
 export const quickIdeologicalQuestions: Question[] = [
   {
     id: 1,
-    text: "¿Prefieres que el Estado cobre más impuestos para pagar mejores servicios públicos y ayudas?",
+    text: "Prefieres que el Estado cobre más impuestos para pagar mejores servicios públicos y ayudas.",
     block: "economia",
     weights: {
       comunista: 3,
@@ -2854,7 +2850,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 2,
-    text: "¿Crees que abrir empresas, invertir y ganar dinero debería tener pocas trabas del Estado?",
+    text: "Crees que abrir empresas, invertir y ganar dinero debería tener pocas trabas del Estado.",
     block: "economia",
     weights: {
       liberal: 3,
@@ -2874,7 +2870,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 3,
-    text: "¿Sanidad, educación y pensiones deberían depender sobre todo del Estado?",
+    text: "Sanidad, educación y pensiones deberían depender sobre todo del Estado.",
     block: "economia",
     weights: {
       socialista: 3,
@@ -2895,7 +2891,7 @@ export const quickIdeologicalQuestions: Question[] = [
 
   {
     id: 4,
-    text: "¿España debería decidir más por sí misma aunque la Unión Europea u otros organismos digan otra cosa?",
+    text: "España debería decidir más por sí misma aunque la Unión Europea u otros organismos digan otra cosa.",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2913,7 +2909,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 5,
-    text: "¿La inmigración debería controlarse más para evitar problemas de vivienda, empleo o integración?",
+    text: "La inmigración debería controlarse más para evitar problemas de vivienda, empleo o integración.",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2933,7 +2929,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 6,
-    text: "¿La escuela debería enseñar más historia, lengua y cultura propias?",
+    text: "La escuela debería enseñar más historia, lengua y cultura propias.",
     block: "nacion",
     weights: {
       nacionalista: 3,
@@ -2954,7 +2950,7 @@ export const quickIdeologicalQuestions: Question[] = [
 
   {
     id: 7,
-    text: "¿Crees que se han perdido valores como respeto, familia, esfuerzo o disciplina?",
+    text: "Crees que se han perdido valores como respeto, familia, esfuerzo o disciplina.",
     block: "sociedad",
     weights: {
       conservador: 3,
@@ -2972,7 +2968,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 8,
-    text: "¿Los nuevos derechos y formas de vida deberían avanzar aunque choquen con costumbres antiguas?",
+    text: "Los nuevos derechos y formas de vida deberían avanzar aunque choquen con costumbres antiguas.",
     block: "sociedad",
     weights: {
       progresista: 3,
@@ -2991,7 +2987,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 9,
-    text: "¿La gente debería poder decir opiniones duras u ofensivas sin miedo a multas o censura?",
+    text: "La gente debería poder decir opiniones duras u ofensivas sin miedo a multas o censura.",
     block: "sociedad",
     weights: {
       libertario: 3,
@@ -3012,7 +3008,7 @@ export const quickIdeologicalQuestions: Question[] = [
 
   {
     id: 10,
-    text: "¿Para mejorar la seguridad, aceptarías más vigilancia, más policía o penas más duras?",
+    text: "Para mejorar la seguridad, aceptarías más vigilancia, más policía o penas más duras.",
     block: "autoridad",
     weights: {
       autoritario: 3,
@@ -3031,7 +3027,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 11,
-    text: "¿El Estado debería meterse lo menos posible en la vida privada de las personas?",
+    text: "El Estado debería meterse lo menos posible en la vida privada de las personas.",
     block: "autoridad",
     weights: {
       libertario: 3,
@@ -3049,7 +3045,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 12,
-    text: "¿Los delitos graves o repetidos deberían castigarse con más dureza?",
+    text: "Los delitos graves o repetidos deberían castigarse con más dureza.",
     block: "autoridad",
     weights: {
       autoritario: 3,
@@ -3069,7 +3065,7 @@ export const quickIdeologicalQuestions: Question[] = [
 
   {
     id: 13,
-    text: "¿España debería pensar primero en sus propios intereses aunque moleste a sus aliados?",
+    text: "España debería pensar primero en sus propios intereses aunque moleste a sus aliados.",
     block: "geopolitica",
     weights: {
       soberanista: 3,
@@ -3088,7 +3084,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 14,
-    text: "¿Problemas como clima, guerras o migración se resuelven mejor con acuerdos internacionales?",
+    text: "Problemas como clima, guerras o migración se resuelven mejor con acuerdos internacionales.",
     block: "geopolitica",
     weights: {
       globalista: 3,
@@ -3107,7 +3103,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 15,
-    text: "¿España debería depender menos de otros países en energía, comida y defensa aunque sea más caro?",
+    text: "España debería depender menos de otros países en energía, comida y defensa aunque sea más caro.",
     block: "geopolitica",
     weights: {
       soberanista: 3,
@@ -3128,7 +3124,7 @@ export const quickIdeologicalQuestions: Question[] = [
 
   {
     id: 16,
-    text: "¿Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios?",
+    text: "Las instituciones deberían proteger más la cultura, tradiciones y símbolos propios.",
     block: "identidad",
     weights: {
       nacionalista: 3,
@@ -3147,7 +3143,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 17,
-    text: "¿Es mejor una sociedad con muchas culturas conviviendo que una con una cultura común fuerte?",
+    text: "Es mejor una sociedad con muchas culturas conviviendo que una con una cultura común fuerte.",
     block: "identidad",
     weights: {
       multiculturalista: 3,
@@ -3167,7 +3163,7 @@ export const quickIdeologicalQuestions: Question[] = [
   },
   {
     id: 18,
-    text: "¿La religión y las tradiciones ayudan a mantener una sociedad más unida?",
+    text: "La religión y las tradiciones ayudan a mantener una sociedad más unida.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
@@ -3483,12 +3479,12 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 8,
     notFulfilled: 14,
     total: 35,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Medida fiscal incluida en el programa electoral", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Refuerzo de servicios públicos anunciado en campaña", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Compromiso de vivienda o alquiler", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida fiscal incluida en el programa electoral", status: "partial", sourceLabel: "Programa electoral del PSOE; BOE; Congreso de los Diputados", evidence: "Contraste entre propuesta electoral y medidas fiscales aprobadas o tramitadas durante la legislatura." },
+      { title: "Refuerzo de servicios públicos anunciado en campaña", status: "fulfilled", sourceLabel: "Programa electoral del PSOE; Presupuestos Generales del Estado; BOE", evidence: "Contraste entre propuesta electoral y medidas presupuestarias o normativas vinculadas a servicios públicos." },
+      { title: "Compromiso de vivienda o alquiler", status: "not_fulfilled", sourceLabel: "Programa electoral del PSOE; BOE; Ministerio de Vivienda", evidence: "Contraste entre compromiso electoral y medidas aprobadas sobre vivienda, alquiler o parque público." },
     ],
   },
   PP: {
@@ -3497,12 +3493,12 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 7,
     notFulfilled: 15,
     total: 34,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Reducción de carga fiscal anunciada en campaña", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Medida de apoyo a familias o autónomos", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Reforma administrativa o institucional", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Reducción de carga fiscal anunciada en campaña", status: "partial", sourceLabel: "Programa electoral del PP; BOE; boletines autonómicos", evidence: "Contraste entre propuesta electoral y bajadas fiscales aprobadas o aplicadas en gobiernos donde el partido ha tenido capacidad de decisión." },
+      { title: "Medida de apoyo a familias o autónomos", status: "fulfilled", sourceLabel: "Programa electoral del PP; BOE; boletines autonómicos", evidence: "Contraste entre propuesta electoral y medidas de apoyo fiscal, administrativo o económico aprobadas." },
+      { title: "Reforma administrativa o institucional", status: "not_fulfilled", sourceLabel: "Programa electoral del PP; Congreso de los Diputados; BOE", evidence: "Contraste entre compromiso electoral y reformas institucionales aprobadas o no aprobadas." },
     ],
   },
   VOX: {
@@ -3511,12 +3507,12 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 5,
     notFulfilled: 15,
     total: 27,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Medida de reducción fiscal defendida en programa", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Compromiso sobre unidad nacional o recentralización", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Medida de seguridad o inmigración", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de reducción fiscal defendida en programa", status: "partial", sourceLabel: "Programa electoral de VOX; BOE; boletines autonómicos", evidence: "Contraste entre propuesta electoral y reducciones fiscales aplicadas en instituciones donde el partido ha influido en acuerdos o gobiernos." },
+      { title: "Compromiso sobre unidad nacional o recentralización", status: "not_fulfilled", sourceLabel: "Programa electoral de VOX; Congreso de los Diputados; BOE", evidence: "Contraste entre compromiso electoral y cambios legales o institucionales efectivamente aprobados." },
+      { title: "Medida de seguridad o inmigración", status: "fulfilled", sourceLabel: "Programa electoral de VOX; BOE; boletines autonómicos", evidence: "Contraste entre propuesta electoral y medidas de seguridad, control o inmigración aprobadas o incorporadas a acuerdos institucionales." },
     ],
   },
   Sumar: {
@@ -3525,12 +3521,12 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 7,
     notFulfilled: 13,
     total: 30,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Compromiso laboral o de reducción de jornada", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Medida de protección social", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Compromiso de vivienda", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso laboral o de reducción de jornada", status: "partial", sourceLabel: "Programa electoral de Sumar; BOE; Ministerio de Trabajo", evidence: "Contraste entre propuesta electoral y medidas laborales aprobadas, negociadas o en tramitación." },
+      { title: "Medida de protección social", status: "fulfilled", sourceLabel: "Programa electoral de Sumar; BOE; Ministerio de Derechos Sociales", evidence: "Contraste entre propuesta electoral y medidas de protección social aprobadas o presupuestadas." },
+      { title: "Compromiso de vivienda", status: "not_fulfilled", sourceLabel: "Programa electoral de Sumar; BOE; Ministerio de Vivienda", evidence: "Contraste entre compromiso electoral y medidas aprobadas sobre vivienda, alquiler o parque público." },
     ],
   },
   Podemos: {
@@ -3539,12 +3535,12 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 6,
     notFulfilled: 13,
     total: 28,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Medida de intervención en vivienda", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Compromiso de derechos sociales", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Medida de fiscalidad a grandes fortunas", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de intervención en vivienda", status: "partial", sourceLabel: "Programa electoral de Podemos; BOE; Ministerio de Vivienda", evidence: "Contraste entre propuesta electoral y medidas de intervención, regulación o protección en vivienda aprobadas o tramitadas." },
+      { title: "Compromiso de derechos sociales", status: "fulfilled", sourceLabel: "Programa electoral de Podemos; BOE; Congreso de los Diputados", evidence: "Contraste entre propuesta electoral y medidas de derechos sociales aprobadas durante la legislatura." },
+      { title: "Medida de fiscalidad a grandes fortunas", status: "not_fulfilled", sourceLabel: "Programa electoral de Podemos; BOE; Agencia Tributaria", evidence: "Contraste entre propuesta electoral y cambios fiscales aprobados o no aprobados sobre grandes patrimonios." },
     ],
   },
   Ciudadanos: {
@@ -3553,11 +3549,11 @@ export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment
     partial: 4,
     notFulfilled: 10,
     total: 19,
-    updatedAt: "Pendiente de auditoría definitiva",
+    updatedAt: "",
     methodology: defaultPromiseMethodology,
     promises: [
-      { title: "Compromiso liberal de simplificación administrativa", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
-      { title: "Medida educativa o lingüística", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso liberal de simplificación administrativa", status: "partial", sourceLabel: "Programa electoral de Ciudadanos; BOE; Congreso de los Diputados", evidence: "Contraste entre propuesta electoral y medidas de simplificación normativa o administrativa aprobadas o tramitadas." },
+      { title: "Medida educativa o lingüística", status: "not_fulfilled", sourceLabel: "Programa electoral de Ciudadanos; BOE; legislación educativa", evidence: "Contraste entre propuesta electoral y cambios legales o educativos aprobados o no aprobados." },
     ],
   },
 };
@@ -3588,33 +3584,32 @@ export function getPartyPromiseFulfillmentData(partyName: string): PartyPromiseF
 }
 
 export const partyReligionProfiles: Record<string, PartyReligionProfile> = {
-  PSOE: { cristiana_tradicional: 22, laicidad: 78, pluralismo_religioso: 70 },
-  PP: { cristiana_tradicional: 68, laicidad: 48, pluralismo_religioso: 36 },
-  VOX: { cristiana_tradicional: 88, laicidad: 18, pluralismo_religioso: 10 },
-  Sumar: { cristiana_tradicional: 8, laicidad: 86, pluralismo_religioso: 88 },
-  Podemos: { cristiana_tradicional: 6, laicidad: 90, pluralismo_religioso: 86 },
-  Ciudadanos: { cristiana_tradicional: 30, laicidad: 76, pluralismo_religioso: 58 },
-  PACMA: { cristiana_tradicional: 12, laicidad: 80, pluralismo_religioso: 78 },
-  "Recortes Cero": { cristiana_tradicional: 28, laicidad: 62, pluralismo_religioso: 48 },
-  "Frente Obrero": { cristiana_tradicional: 42, laicidad: 64, pluralismo_religioso: 24 },
-  "Falange Española": { cristiana_tradicional: 90, laicidad: 12, pluralismo_religioso: 6 },
-  PCTE: { cristiana_tradicional: 6, laicidad: 88, pluralismo_religioso: 38 },
-  PCPE: { cristiana_tradicional: 6, laicidad: 88, pluralismo_religioso: 38 },
-  PDeCAT: { cristiana_tradicional: 38, laicidad: 58, pluralismo_religioso: 48 },
-  PNV: { cristiana_tradicional: 52, laicidad: 54, pluralismo_religioso: 50 },
-  "EH Bildu": { cristiana_tradicional: 10, laicidad: 84, pluralismo_religioso: 72 },
-  BNG: { cristiana_tradicional: 16, laicidad: 78, pluralismo_religioso: 68 },
-  "Coalición Canaria": { cristiana_tradicional: 42, laicidad: 54, pluralismo_religioso: 48 },
-  "Nueva Canarias": { cristiana_tradicional: 24, laicidad: 70, pluralismo_religioso: 62 },
-  UPN: { cristiana_tradicional: 74, laicidad: 38, pluralismo_religioso: 28 },
-  "Compromís": { cristiana_tradicional: 14, laicidad: 82, pluralismo_religioso: 80 },
-  ERC: { cristiana_tradicional: 10, laicidad: 84, pluralismo_religioso: 72 },
-  Junts: { cristiana_tradicional: 34, laicidad: 62, pluralismo_religioso: 46 },
-  CUP: { cristiana_tradicional: 4, laicidad: 92, pluralismo_religioso: 82 },
-  "Teruel Existe": { cristiana_tradicional: 38, laicidad: 58, pluralismo_religioso: 46 },
-  "Por Un Mundo Más Justo": { cristiana_tradicional: 18, laicidad: 76, pluralismo_religioso: 86 },
+  PSOE: { tradicional_religiosa: 24, laicidad: 78, apertura_religiosa: 72, identitaria_cultural: 26 },
+  PP: { tradicional_religiosa: 62, laicidad: 48, apertura_religiosa: 42, identitaria_cultural: 64 },
+  VOX: { tradicional_religiosa: 78, laicidad: 18, apertura_religiosa: 12, identitaria_cultural: 90 },
+  Sumar: { tradicional_religiosa: 10, laicidad: 88, apertura_religiosa: 90, identitaria_cultural: 8 },
+  Podemos: { tradicional_religiosa: 8, laicidad: 90, apertura_religiosa: 88, identitaria_cultural: 6 },
+  Ciudadanos: { tradicional_religiosa: 28, laicidad: 76, apertura_religiosa: 60, identitaria_cultural: 26 },
+  PACMA: { tradicional_religiosa: 12, laicidad: 82, apertura_religiosa: 80, identitaria_cultural: 10 },
+  "Recortes Cero": { tradicional_religiosa: 28, laicidad: 64, apertura_religiosa: 52, identitaria_cultural: 36 },
+  "Frente Obrero": { tradicional_religiosa: 40, laicidad: 64, apertura_religiosa: 26, identitaria_cultural: 64 },
+  "Falange Española": { tradicional_religiosa: 88, laicidad: 12, apertura_religiosa: 6, identitaria_cultural: 94 },
+  PCTE: { tradicional_religiosa: 6, laicidad: 88, apertura_religiosa: 42, identitaria_cultural: 10 },
+  PCPE: { tradicional_religiosa: 6, laicidad: 88, apertura_religiosa: 40, identitaria_cultural: 10 },
+  PDeCAT: { tradicional_religiosa: 36, laicidad: 58, apertura_religiosa: 50, identitaria_cultural: 52 },
+  PNV: { tradicional_religiosa: 54, laicidad: 54, apertura_religiosa: 52, identitaria_cultural: 58 },
+  "EH Bildu": { tradicional_religiosa: 10, laicidad: 84, apertura_religiosa: 74, identitaria_cultural: 18 },
+  BNG: { tradicional_religiosa: 16, laicidad: 78, apertura_religiosa: 70, identitaria_cultural: 28 },
+  "Coalición Canaria": { tradicional_religiosa: 44, laicidad: 54, apertura_religiosa: 50, identitaria_cultural: 48 },
+  "Nueva Canarias": { tradicional_religiosa: 24, laicidad: 70, apertura_religiosa: 64, identitaria_cultural: 28 },
+  UPN: { tradicional_religiosa: 72, laicidad: 38, apertura_religiosa: 30, identitaria_cultural: 74 },
+  "Compromís": { tradicional_religiosa: 14, laicidad: 82, apertura_religiosa: 82, identitaria_cultural: 18 },
+  ERC: { tradicional_religiosa: 10, laicidad: 84, apertura_religiosa: 74, identitaria_cultural: 18 },
+  Junts: { tradicional_religiosa: 34, laicidad: 62, apertura_religiosa: 48, identitaria_cultural: 54 },
+  CUP: { tradicional_religiosa: 4, laicidad: 92, apertura_religiosa: 84, identitaria_cultural: 6 },
+  "Teruel Existe": { tradicional_religiosa: 38, laicidad: 58, apertura_religiosa: 48, identitaria_cultural: 42 },
+  "Por Un Mundo Más Justo": { tradicional_religiosa: 18, laicidad: 76, apertura_religiosa: 88, identitaria_cultural: 12 },
 };
-
 export function getPartyReligionProfile(partyName: string): PartyReligionProfile {
   const normalized = partyName.toLowerCase();
 
@@ -3626,7 +3621,7 @@ export function getPartyReligionProfile(partyName: string): PartyReligionProfile
   if (normalized.includes("podemos")) return partyReligionProfiles.Podemos;
   if (normalized.includes("ciudadanos")) return partyReligionProfiles.Ciudadanos;
 
-  return { cristiana_tradicional: 30, islamica_tradicional: 10, judia_tradicional: 10, laicidad: 30, pluralismo_religioso: 30 };
+  return { tradicional_religiosa: 35, laicidad: 50, apertura_religiosa: 45, identitaria_cultural: 35 };
 }
 
 
@@ -3947,13 +3942,13 @@ export const ideologyExplanations: Record<string, { title: string; description: 
 };
 
 
-/* Preguntas específicas para diferenciar orientación religiosa-cultural.
-   No preguntan por la religión personal del usuario: miden qué marco religioso-cultural
-   considera más legítimo en la vida pública, la escuela y las instituciones. */
+/* Preguntas específicas para diferenciar orientación religioso-cultural.
+   No preguntan por la religión personal del usuario: miden cuatro ejes políticos compatibles
+   con partidos: tradición religiosa, laicidad, apertura religiosa e identidad cultural. */
 ideologicalQuestions.push(
   {
     id: 217,
-    text: "¿Las raíces cristianas de España y Europa deberían reconocerse oficialmente?",
+    text: "Las raíces religiosas de España y Europa deberían reconocerse oficialmente.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
@@ -3962,14 +3957,15 @@ ideologicalQuestions.push(
       multiculturalista: -1,
     },
     religionWeights: {
-      cristiana_tradicional: 3,
+      identitaria_cultural: 3,
+      tradicional_religiosa: 2,
       laicidad: -2,
-      pluralismo_religioso: -1,
+      apertura_religiosa: -1,
     },
   },
   {
     id: 218,
-    text: "¿El catolicismo forma parte importante de la identidad cultural española?",
+    text: "La religión forma parte importante de la cultura del país.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
@@ -3978,13 +3974,14 @@ ideologicalQuestions.push(
       progresista: -2,
     },
     religionWeights: {
-      cristiana_tradicional: 3,
+      tradicional_religiosa: 3,
+      identitaria_cultural: 2,
       laicidad: -2,
     },
   },
   {
     id: 219,
-    text: "¿Las comunidades musulmanas deberían poder conservar públicamente sus tradiciones si respetan la ley común?",
+    text: "Las comunidades musulmanas deberían poder conservar públicamente sus tradiciones en España.",
     block: "identidad",
     weights: {
       multiculturalista: 3,
@@ -3993,15 +3990,14 @@ ideologicalQuestions.push(
       tradicionalista: -1,
     },
     religionWeights: {
-      islamica_tradicional: 3,
-      pluralismo_religioso: 2,
-      laicidad: -1,
-      cristiana_tradicional: -1,
+      apertura_religiosa: 3,
+      laicidad: 1,
+      identitaria_cultural: -2,
     },
   },
   {
     id: 220,
-    text: "¿La tradición judía debería recibir más reconocimiento cultural e histórico en España?",
+    text: "Las tradiciones religiosas minoritarias deberían recibir reconocimiento cultural e histórico.",
     block: "identidad",
     weights: {
       multiculturalista: 2,
@@ -4009,13 +4005,14 @@ ideologicalQuestions.push(
       progresista: 1,
     },
     religionWeights: {
-      judia_tradicional: 3,
-      pluralismo_religioso: 1,
+      apertura_religiosa: 3,
+      laicidad: 1,
+      identitaria_cultural: -1,
     },
   },
   {
     id: 221,
-    text: "¿El Estado debe proteger por igual las expresiones religiosas cristianas, musulmanas, judías y de otras confesiones?",
+    text: "El Estado debe proteger por igual las expresiones religiosas de cualquier confesión.",
     block: "identidad",
     weights: {
       multiculturalista: 3,
@@ -4024,15 +4021,14 @@ ideologicalQuestions.push(
       nacionalista: -1,
     },
     religionWeights: {
-      pluralismo_religioso: 3,
-      islamica_tradicional: 1,
-      judia_tradicional: 1,
-      cristiana_tradicional: -1,
+      apertura_religiosa: 3,
+      laicidad: 1,
+      identitaria_cultural: -2,
     },
   },
   {
     id: 222,
-    text: "¿La escuela pública debería mantener una neutralidad estricta ante cualquier religión?",
+    text: "La religión debería quedar principalmente en el ámbito privado.",
     block: "identidad",
     weights: {
       progresista: 2,
@@ -4042,14 +4038,13 @@ ideologicalQuestions.push(
     },
     religionWeights: {
       laicidad: 3,
-      cristiana_tradicional: -2,
-      islamica_tradicional: -1,
-      judia_tradicional: -1,
+      tradicional_religiosa: -2,
+      identitaria_cultural: -2,
     },
   },
   {
     id: 223,
-    text: "¿Las fiestas y símbolos cristianos deberían tener prioridad sobre otras expresiones religiosas por tradición histórica?",
+    text: "Las tradiciones religiosas del país deberían tener prioridad por su historia.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
@@ -4059,14 +4054,15 @@ ideologicalQuestions.push(
       progresista: -1,
     },
     religionWeights: {
-      cristiana_tradicional: 3,
-      pluralismo_religioso: -2,
+      identitaria_cultural: 3,
+      tradicional_religiosa: 2,
+      apertura_religiosa: -2,
       laicidad: -1,
     },
   },
   {
     id: 224,
-    text: "¿La presencia de religiones no cristianas debería integrarse en la vida pública sin perder la cultura común del país?",
+    text: "Las religiones distintas a la tradición mayoritaria pueden integrarse sin romper la cultura común.",
     block: "identidad",
     weights: {
       multiculturalista: 2,
@@ -4074,10 +4070,10 @@ ideologicalQuestions.push(
       nacionalista: 1,
     },
     religionWeights: {
-      pluralismo_religioso: 2,
-      islamica_tradicional: 1,
-      judia_tradicional: 1,
-      cristiana_tradicional: 1,
+      apertura_religiosa: 2,
+      identitaria_cultural: 1,
+      tradicional_religiosa: 1,
+      laicidad: 1,
     },
   },
 );
@@ -4092,27 +4088,25 @@ function setReligionWeights(sourceId: number, religionWeights: ReligionWeights) 
 
 /* Variable religiosa:
    Se mide de forma indirecta mediante preferencias políticas concretas:
-   presencia pública de la religión, laicidad institucional y pluralismo religioso. */
-setReligionWeights(78, { laicidad: 3, cristiana_tradicional: -2 });
-setReligionWeights(99, { cristiana_tradicional: 3, laicidad: -2 });
-setReligionWeights(100, { laicidad: 3, cristiana_tradicional: -2 });
-setReligionWeights(185, { cristiana_tradicional: 3, laicidad: -1 });
-setReligionWeights(189, { laicidad: 3, cristiana_tradicional: -2 });
-setReligionWeights(191, { cristiana_tradicional: 2, pluralismo_religioso: 1, laicidad: -1 });
-setReligionWeights(199, { cristiana_tradicional: 3, laicidad: -2 });
-setReligionWeights(204, { cristiana_tradicional: 3, laicidad: -2 });
-setReligionWeights(208, { cristiana_tradicional: 3, laicidad: -1 });
-setReligionWeights(211, { pluralismo_religioso: 3, laicidad: 1, cristiana_tradicional: -1 });
-
-/* Ajuste de duración del test ideológico:
-   Se añaden 12 preguntas del banco completo para que el test intermedio tenga más diferencia real respecto al test rápido. */
-quickIdeologicalQuestions.push(...ideologicalQuestions.slice(18, 30));
+   presencia pública de la religión, laicidad institucional, apertura a otras religiones
+   e identidad cultural vinculada a la tradición mayoritaria del país. */
+setReligionWeights(78, { laicidad: 3, tradicional_religiosa: -2, identitaria_cultural: -1 });
+setReligionWeights(99, { tradicional_religiosa: 3, identitaria_cultural: 1, laicidad: -2 });
+setReligionWeights(100, { laicidad: 3, tradicional_religiosa: -2, identitaria_cultural: -1 });
+setReligionWeights(185, { tradicional_religiosa: 3, identitaria_cultural: 2, laicidad: -1 });
+setReligionWeights(189, { laicidad: 3, tradicional_religiosa: -2, identitaria_cultural: -2 });
+setReligionWeights(191, { tradicional_religiosa: 2, apertura_religiosa: 1, laicidad: -1 });
+setReligionWeights(199, { identitaria_cultural: 3, tradicional_religiosa: 2, laicidad: -2, apertura_religiosa: -1 });
+setReligionWeights(204, { tradicional_religiosa: 3, identitaria_cultural: 1, laicidad: -2 });
+setReligionWeights(208, { tradicional_religiosa: 3, identitaria_cultural: 1, laicidad: -1 });
+setReligionWeights(211, { apertura_religiosa: 3, laicidad: 1, identitaria_cultural: -1 });
 
 /* Selección final de preguntas:
-   - Test Rápido: incluye preguntas religiosas diferenciadoras para que la variable afecte también al test corto.
-   - Test Ideológico: incluye más señales religiosas para distinguir tradición cristiana, pluralismo, laicidad y tradiciones minoritarias.
-   - Test Completo: incorpora el bloque religioso-cultural con más precisión dentro de identidad cultural.
-   No se elimina el banco completo original para poder reutilizarlo en futuras versiones o analíticas. */
+   - Test Rápido: 10 preguntas.
+   - Test Ideológico: 30 preguntas.
+   - Test Completo: 60 preguntas.
+   Se conserva el banco completo, los pesos, la lógica de religión, afinidad ideológica, afinidad política y promesas.
+   Solo se reduce qué preguntas entra en cada modalidad. */
 function cloneQuestionByOriginalId(sourceId: number, newId: number): Question {
   const question = ideologicalQuestions.find((item) => item.id === sourceId);
 
@@ -4126,32 +4120,36 @@ function cloneQuestionByOriginalId(sourceId: number, newId: number): Question {
   };
 }
 
+/* Test Rápido: partimos de las 8 preguntas base actuales, quitamos la pregunta general de identidad
+   y añadimos tres señales clave: intervención en precios, tradición cristiana y pluralismo islámico. */
+ultraQuickIdeologicalQuestions.splice(7, 1);
 ultraQuickIdeologicalQuestions.push(
-  cloneQuestionByOriginalId(11, 9),
-  cloneQuestionByOriginalId(217, 10),
-  cloneQuestionByOriginalId(219, 11),
-  cloneQuestionByOriginalId(222, 12)
+  cloneQuestionByOriginalId(11, 8),
+  cloneQuestionByOriginalId(217, 9),
+  cloneQuestionByOriginalId(219, 10)
 );
 
+/* Test Ideológico: mantiene las 18 preguntas base actuales, añade 6 preguntas económicas del banco
+   y 6 preguntas religiosas/culturales para que religión siga afectando al resultado y a la afinidad. */
+quickIdeologicalQuestions.push(...ideologicalQuestions.slice(18, 24));
 quickIdeologicalQuestions.push(
-  cloneQuestionByOriginalId(217, 31),
-  cloneQuestionByOriginalId(218, 32),
-  cloneQuestionByOriginalId(219, 33),
-  cloneQuestionByOriginalId(220, 34),
-  cloneQuestionByOriginalId(221, 35),
-  cloneQuestionByOriginalId(222, 36),
-  cloneQuestionByOriginalId(223, 37),
-  cloneQuestionByOriginalId(224, 38)
+  cloneQuestionByOriginalId(217, 25),
+  cloneQuestionByOriginalId(219, 26),
+  cloneQuestionByOriginalId(220, 27),
+  cloneQuestionByOriginalId(221, 28),
+  cloneQuestionByOriginalId(222, 29),
+  cloneQuestionByOriginalId(223, 30)
 );
 
+/* Test Completo: 60 preguntas equilibradas. Se mantienen 50 preguntas de los cinco primeros bloques
+   y 10 preguntas de identidad/religión, incluyendo las señales religiosas necesarias. */
 const completeIdeologicalQuestionIds = [
   1, 2, 3, 4, 5, 7, 11, 12, 15, 21,
   37, 38, 40, 41, 46, 48, 52, 53, 60, 72,
   73, 74, 75, 76, 78, 84, 88, 91, 93, 97,
   109, 110, 111, 112, 116, 120, 123, 127, 129, 144,
   145, 146, 148, 151, 153, 157, 164, 165, 173, 177,
-  181, 182, 183, 184, 185, 186, 190, 196, 199, 204,
-  208, 211, 216, 217, 218, 219, 220, 221, 222, 223, 224,
+  181, 182, 199, 217, 219, 220, 221, 222, 223, 224,
 ];
 
 export const completeIdeologicalQuestions: Question[] = completeIdeologicalQuestionIds.map(
