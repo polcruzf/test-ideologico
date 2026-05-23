@@ -2825,6 +2825,17 @@ span.party-card_religion-label {
   strong.party-card_religion-value {
     font-size: 15px;
     font-weight: 500;
+    border: 2px solid white;
+    border-radius: 14px;
+    padding: 10px 15px;
+  }
+  .party-card_religion {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  p.party-card_religion-description {
+    padding: 10px 0px 0px 15px;
   }
 }
 
