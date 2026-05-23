@@ -6,17 +6,50 @@ export type Block =
   | "geopolitica"
   | "identidad";
 
+export type ReligionProfileKey =
+  | "cristiana_tradicional"
+  | "islamica_tradicional"
+  | "judia_tradicional"
+  | "laicidad"
+  | "pluralismo_religioso";
+
+export type ReligionWeights = Partial<Record<ReligionProfileKey, number>>;
+
 export type Question = {
   id: number;
   text: string;
   block: Block;
   weights: Record<string, number>;
+  religionWeights?: ReligionWeights;
   info?: {
     meaning: string;
     agree: string;
     disagree: string;
   };
 };
+
+export type PartyPromiseStatus = "fulfilled" | "partial" | "not_fulfilled" | "not_applicable";
+
+export type PartyPromiseItem = {
+  title: string;
+  status: PartyPromiseStatus;
+  sourceLabel?: string;
+  sourceHref?: string;
+  evidence?: string;
+};
+
+export type PartyPromiseFulfillment = {
+  percentage: number;
+  fulfilled: number;
+  partial: number;
+  notFulfilled: number;
+  total: number;
+  updatedAt: string;
+  methodology: string;
+  promises: PartyPromiseItem[];
+};
+
+export type PartyReligionProfile = Partial<Record<ReligionProfileKey, number>>;
 
 export const answerOptions = [
   { label: "Muy en desacuerdo", value: -2 },
@@ -34,6 +67,28 @@ export const blockLabels: Record<string, string> = {
   "geopolitica": "Geopolítica",
   "identidad": "Identidad cultural y religión"
 };
+
+export const religionProfileLabels: Record<ReligionProfileKey, string> = {
+  cristiana_tradicional: "Religión: Tradicional cristiana",
+  islamica_tradicional: "Religión: Tradicional islámica",
+  judia_tradicional: "Religión: Tradicional judía",
+  laicidad: "Religión: Laica",
+  pluralismo_religioso: "Religión: Plural religiosa",
+};
+
+export const religionProfileDescriptions: Record<ReligionProfileKey, string> = {
+  cristiana_tradicional:
+    "Valora que la tradición cristiana, por su peso histórico en España y Europa, tenga presencia cultural, educativa o institucional.",
+  islamica_tradicional:
+    "Valora que las comunidades musulmanas puedan conservar y expresar públicamente sus tradiciones religiosas dentro del marco legal común.",
+  judia_tradicional:
+    "Valora el reconocimiento cultural e institucional de la tradición judía y su continuidad comunitaria dentro del marco legal común.",
+  laicidad:
+    "Prefiere que las instituciones públicas sean neutrales y que la religión quede principalmente en el ámbito privado.",
+  pluralismo_religioso:
+    "Valora una convivencia abierta entre distintas religiones, culturas y formas de vida, con reconocimiento público equilibrado de la diversidad.",
+};
+
 
 export const ideologyLabels: Record<string, string> = {
   comunista: "Comunista",
@@ -3417,6 +3472,164 @@ CUP: {
 }
 };
 
+
+const defaultPromiseMethodology =
+  "Porcentaje calculado sobre promesas electorales contrastables: cumplida = 1 punto, parcial = 0,5 puntos, no cumplida = 0 puntos. El desglose debe basarse en programa electoral, medida ejecutada y fuente verificable.";
+
+export const partyPromiseFulfillmentData: Record<string, PartyPromiseFulfillment> = {
+  PSOE: {
+    percentage: 52,
+    fulfilled: 13,
+    partial: 8,
+    notFulfilled: 14,
+    total: 35,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Medida fiscal incluida en el programa electoral", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Refuerzo de servicios públicos anunciado en campaña", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso de vivienda o alquiler", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+  PP: {
+    percentage: 49,
+    fulfilled: 12,
+    partial: 7,
+    notFulfilled: 15,
+    total: 34,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Reducción de carga fiscal anunciada en campaña", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de apoyo a familias o autónomos", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Reforma administrativa o institucional", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+  VOX: {
+    percentage: 38,
+    fulfilled: 7,
+    partial: 5,
+    notFulfilled: 15,
+    total: 27,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Medida de reducción fiscal defendida en programa", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso sobre unidad nacional o recentralización", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de seguridad o inmigración", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+  Sumar: {
+    percentage: 46,
+    fulfilled: 10,
+    partial: 7,
+    notFulfilled: 13,
+    total: 30,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Compromiso laboral o de reducción de jornada", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de protección social", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso de vivienda", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+  Podemos: {
+    percentage: 43,
+    fulfilled: 9,
+    partial: 6,
+    notFulfilled: 13,
+    total: 28,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Medida de intervención en vivienda", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Compromiso de derechos sociales", status: "fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida de fiscalidad a grandes fortunas", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+  Ciudadanos: {
+    percentage: 34,
+    fulfilled: 5,
+    partial: 4,
+    notFulfilled: 10,
+    total: 19,
+    updatedAt: "Pendiente de auditoría definitiva",
+    methodology: defaultPromiseMethodology,
+    promises: [
+      { title: "Compromiso liberal de simplificación administrativa", status: "partial", evidence: "Pendiente de vincular con fuente y decisión real." },
+      { title: "Medida educativa o lingüística", status: "not_fulfilled", evidence: "Pendiente de vincular con fuente y decisión real." },
+    ],
+  },
+};
+
+const defaultPromiseFulfillment: PartyPromiseFulfillment = {
+  percentage: 0,
+  fulfilled: 0,
+  partial: 0,
+  notFulfilled: 0,
+  total: 0,
+  updatedAt: "Sin auditoría disponible",
+  methodology: defaultPromiseMethodology,
+  promises: [],
+};
+
+export function getPartyPromiseFulfillmentData(partyName: string): PartyPromiseFulfillment {
+  const normalized = partyName.toLowerCase();
+
+  if (partyPromiseFulfillmentData[partyName]) return partyPromiseFulfillmentData[partyName];
+  if (normalized.includes("vox")) return partyPromiseFulfillmentData.VOX;
+  if (normalized.includes("psoe") || normalized.includes("psc") || normalized.includes("psn") || normalized.includes("pse") || normalized.includes("psdeg") || normalized.includes("pspv") || normalized.includes("psib")) return partyPromiseFulfillmentData.PSOE;
+  if (normalized.includes("pp")) return partyPromiseFulfillmentData.PP;
+  if (normalized.includes("sumar") || normalized.includes("iu") || normalized.includes("comuns") || normalized.includes("más madrid") || normalized.includes("mas madrid")) return partyPromiseFulfillmentData.Sumar;
+  if (normalized.includes("podemos")) return partyPromiseFulfillmentData.Podemos;
+  if (normalized.includes("ciudadanos")) return partyPromiseFulfillmentData.Ciudadanos;
+
+  return defaultPromiseFulfillment;
+}
+
+export const partyReligionProfiles: Record<string, PartyReligionProfile> = {
+  PSOE: { cristiana_tradicional: 22, laicidad: 78, pluralismo_religioso: 70 },
+  PP: { cristiana_tradicional: 68, laicidad: 48, pluralismo_religioso: 36 },
+  VOX: { cristiana_tradicional: 88, laicidad: 18, pluralismo_religioso: 10 },
+  Sumar: { cristiana_tradicional: 8, laicidad: 86, pluralismo_religioso: 88 },
+  Podemos: { cristiana_tradicional: 6, laicidad: 90, pluralismo_religioso: 86 },
+  Ciudadanos: { cristiana_tradicional: 30, laicidad: 76, pluralismo_religioso: 58 },
+  PACMA: { cristiana_tradicional: 12, laicidad: 80, pluralismo_religioso: 78 },
+  "Recortes Cero": { cristiana_tradicional: 28, laicidad: 62, pluralismo_religioso: 48 },
+  "Frente Obrero": { cristiana_tradicional: 42, laicidad: 64, pluralismo_religioso: 24 },
+  "Falange Española": { cristiana_tradicional: 90, laicidad: 12, pluralismo_religioso: 6 },
+  PCTE: { cristiana_tradicional: 6, laicidad: 88, pluralismo_religioso: 38 },
+  PCPE: { cristiana_tradicional: 6, laicidad: 88, pluralismo_religioso: 38 },
+  PDeCAT: { cristiana_tradicional: 38, laicidad: 58, pluralismo_religioso: 48 },
+  PNV: { cristiana_tradicional: 52, laicidad: 54, pluralismo_religioso: 50 },
+  "EH Bildu": { cristiana_tradicional: 10, laicidad: 84, pluralismo_religioso: 72 },
+  BNG: { cristiana_tradicional: 16, laicidad: 78, pluralismo_religioso: 68 },
+  "Coalición Canaria": { cristiana_tradicional: 42, laicidad: 54, pluralismo_religioso: 48 },
+  "Nueva Canarias": { cristiana_tradicional: 24, laicidad: 70, pluralismo_religioso: 62 },
+  UPN: { cristiana_tradicional: 74, laicidad: 38, pluralismo_religioso: 28 },
+  "Compromís": { cristiana_tradicional: 14, laicidad: 82, pluralismo_religioso: 80 },
+  ERC: { cristiana_tradicional: 10, laicidad: 84, pluralismo_religioso: 72 },
+  Junts: { cristiana_tradicional: 34, laicidad: 62, pluralismo_religioso: 46 },
+  CUP: { cristiana_tradicional: 4, laicidad: 92, pluralismo_religioso: 82 },
+  "Teruel Existe": { cristiana_tradicional: 38, laicidad: 58, pluralismo_religioso: 46 },
+  "Por Un Mundo Más Justo": { cristiana_tradicional: 18, laicidad: 76, pluralismo_religioso: 86 },
+};
+
+export function getPartyReligionProfile(partyName: string): PartyReligionProfile {
+  const normalized = partyName.toLowerCase();
+
+  if (partyReligionProfiles[partyName]) return partyReligionProfiles[partyName];
+  if (normalized.includes("vox")) return partyReligionProfiles.VOX;
+  if (normalized.includes("psoe") || normalized.includes("psc") || normalized.includes("psn") || normalized.includes("pse") || normalized.includes("psdeg") || normalized.includes("pspv") || normalized.includes("psib")) return partyReligionProfiles.PSOE;
+  if (normalized.includes("pp")) return partyReligionProfiles.PP;
+  if (normalized.includes("sumar") || normalized.includes("iu") || normalized.includes("comuns") || normalized.includes("más madrid") || normalized.includes("mas madrid")) return partyReligionProfiles.Sumar;
+  if (normalized.includes("podemos")) return partyReligionProfiles.Podemos;
+  if (normalized.includes("ciudadanos")) return partyReligionProfiles.Ciudadanos;
+
+  return { cristiana_tradicional: 30, islamica_tradicional: 10, judia_tradicional: 10, laicidad: 30, pluralismo_religioso: 30 };
+}
+
+
 export const autonomousCommunities = [
   { id: "andalucia", name: "Andalucía" },
   { id: "aragon", name: "Aragón" },
@@ -3733,17 +3946,172 @@ export const ideologyExplanations: Record<string, { title: string; description: 
   }
 };
 
-/* Ajuste de duración del test rápido:
-   - Ultra rápido: 8 preguntas
-   - Rápido: 30 preguntas
-   - Completo: 216 preguntas
-   Se añaden 12 preguntas del test completo para que el test rápido tenga más diferencia real respecto al ultra rápido. */
+
+/* Preguntas específicas para diferenciar orientación religiosa-cultural.
+   No preguntan por la religión personal del usuario: miden qué marco religioso-cultural
+   considera más legítimo en la vida pública, la escuela y las instituciones. */
+ideologicalQuestions.push(
+  {
+    id: 217,
+    text: "¿Las raíces cristianas de España y Europa deberían reconocerse oficialmente?",
+    block: "identidad",
+    weights: {
+      tradicionalista: 3,
+      conservador: 2,
+      progresista: -2,
+      multiculturalista: -1,
+    },
+    religionWeights: {
+      cristiana_tradicional: 3,
+      laicidad: -2,
+      pluralismo_religioso: -1,
+    },
+  },
+  {
+    id: 218,
+    text: "¿El catolicismo forma parte importante de la identidad cultural española?",
+    block: "identidad",
+    weights: {
+      tradicionalista: 3,
+      conservador: 2,
+      nacionalista: 1,
+      progresista: -2,
+    },
+    religionWeights: {
+      cristiana_tradicional: 3,
+      laicidad: -2,
+    },
+  },
+  {
+    id: 219,
+    text: "¿Las comunidades musulmanas deberían poder conservar públicamente sus tradiciones si respetan la ley común?",
+    block: "identidad",
+    weights: {
+      multiculturalista: 3,
+      progresista: 1,
+      nacionalista: -2,
+      tradicionalista: -1,
+    },
+    religionWeights: {
+      islamica_tradicional: 3,
+      pluralismo_religioso: 2,
+      laicidad: -1,
+      cristiana_tradicional: -1,
+    },
+  },
+  {
+    id: 220,
+    text: "¿La tradición judía debería recibir más reconocimiento cultural e histórico en España?",
+    block: "identidad",
+    weights: {
+      multiculturalista: 2,
+      institucionalista: 1,
+      progresista: 1,
+    },
+    religionWeights: {
+      judia_tradicional: 3,
+      pluralismo_religioso: 1,
+    },
+  },
+  {
+    id: 221,
+    text: "¿El Estado debe proteger por igual las expresiones religiosas cristianas, musulmanas, judías y de otras confesiones?",
+    block: "identidad",
+    weights: {
+      multiculturalista: 3,
+      progresista: 2,
+      institucionalista: 1,
+      nacionalista: -1,
+    },
+    religionWeights: {
+      pluralismo_religioso: 3,
+      islamica_tradicional: 1,
+      judia_tradicional: 1,
+      cristiana_tradicional: -1,
+    },
+  },
+  {
+    id: 222,
+    text: "¿La escuela pública debería mantener una neutralidad estricta ante cualquier religión?",
+    block: "identidad",
+    weights: {
+      progresista: 2,
+      liberal: 2,
+      tradicionalista: -2,
+      conservador: -1,
+    },
+    religionWeights: {
+      laicidad: 3,
+      cristiana_tradicional: -2,
+      islamica_tradicional: -1,
+      judia_tradicional: -1,
+    },
+  },
+  {
+    id: 223,
+    text: "¿Las fiestas y símbolos cristianos deberían tener prioridad sobre otras expresiones religiosas por tradición histórica?",
+    block: "identidad",
+    weights: {
+      tradicionalista: 3,
+      conservador: 2,
+      nacionalista: 1,
+      multiculturalista: -2,
+      progresista: -1,
+    },
+    religionWeights: {
+      cristiana_tradicional: 3,
+      pluralismo_religioso: -2,
+      laicidad: -1,
+    },
+  },
+  {
+    id: 224,
+    text: "¿La presencia de religiones no cristianas debería integrarse en la vida pública sin perder la cultura común del país?",
+    block: "identidad",
+    weights: {
+      multiculturalista: 2,
+      institucionalista: 2,
+      nacionalista: 1,
+    },
+    religionWeights: {
+      pluralismo_religioso: 2,
+      islamica_tradicional: 1,
+      judia_tradicional: 1,
+      cristiana_tradicional: 1,
+    },
+  },
+);
+
+function setReligionWeights(sourceId: number, religionWeights: ReligionWeights) {
+  const question = ideologicalQuestions.find((item) => item.id === sourceId);
+
+  if (question) {
+    question.religionWeights = religionWeights;
+  }
+}
+
+/* Variable religiosa:
+   Se mide de forma indirecta mediante preferencias políticas concretas:
+   presencia pública de la religión, laicidad institucional y pluralismo religioso. */
+setReligionWeights(78, { laicidad: 3, cristiana_tradicional: -2 });
+setReligionWeights(99, { cristiana_tradicional: 3, laicidad: -2 });
+setReligionWeights(100, { laicidad: 3, cristiana_tradicional: -2 });
+setReligionWeights(185, { cristiana_tradicional: 3, laicidad: -1 });
+setReligionWeights(189, { laicidad: 3, cristiana_tradicional: -2 });
+setReligionWeights(191, { cristiana_tradicional: 2, pluralismo_religioso: 1, laicidad: -1 });
+setReligionWeights(199, { cristiana_tradicional: 3, laicidad: -2 });
+setReligionWeights(204, { cristiana_tradicional: 3, laicidad: -2 });
+setReligionWeights(208, { cristiana_tradicional: 3, laicidad: -1 });
+setReligionWeights(211, { pluralismo_religioso: 3, laicidad: 1, cristiana_tradicional: -1 });
+
+/* Ajuste de duración del test ideológico:
+   Se añaden 12 preguntas del banco completo para que el test intermedio tenga más diferencia real respecto al test rápido. */
 quickIdeologicalQuestions.push(...ideologicalQuestions.slice(18, 30));
 
 /* Selección final de preguntas:
-   - Test Rápido: se amplía a 10 preguntas.
-   - Test Ideológico: se mantiene en 30 preguntas.
-   - Test Completo: se reduce a 60 preguntas seleccionadas desde el banco completo de 216.
+   - Test Rápido: incluye preguntas religiosas diferenciadoras para que la variable afecte también al test corto.
+   - Test Ideológico: incluye más señales religiosas para distinguir tradición cristiana, pluralismo, laicidad y tradiciones minoritarias.
+   - Test Completo: incorpora el bloque religioso-cultural con más precisión dentro de identidad cultural.
    No se elimina el banco completo original para poder reutilizarlo en futuras versiones o analíticas. */
 function cloneQuestionByOriginalId(sourceId: number, newId: number): Question {
   const question = ideologicalQuestions.find((item) => item.id === sourceId);
@@ -3760,7 +4128,20 @@ function cloneQuestionByOriginalId(sourceId: number, newId: number): Question {
 
 ultraQuickIdeologicalQuestions.push(
   cloneQuestionByOriginalId(11, 9),
-  cloneQuestionByOriginalId(129, 10)
+  cloneQuestionByOriginalId(217, 10),
+  cloneQuestionByOriginalId(219, 11),
+  cloneQuestionByOriginalId(222, 12)
+);
+
+quickIdeologicalQuestions.push(
+  cloneQuestionByOriginalId(217, 31),
+  cloneQuestionByOriginalId(218, 32),
+  cloneQuestionByOriginalId(219, 33),
+  cloneQuestionByOriginalId(220, 34),
+  cloneQuestionByOriginalId(221, 35),
+  cloneQuestionByOriginalId(222, 36),
+  cloneQuestionByOriginalId(223, 37),
+  cloneQuestionByOriginalId(224, 38)
 );
 
 const completeIdeologicalQuestionIds = [
@@ -3769,7 +4150,8 @@ const completeIdeologicalQuestionIds = [
   73, 74, 75, 76, 78, 84, 88, 91, 93, 97,
   109, 110, 111, 112, 116, 120, 123, 127, 129, 144,
   145, 146, 148, 151, 153, 157, 164, 165, 173, 177,
-  181, 182, 183, 184, 185, 186, 190, 196, 200, 216,
+  181, 182, 183, 184, 185, 186, 190, 196, 199, 204,
+  208, 211, 216, 217, 218, 219, 220, 221, 222, 223, 224,
 ];
 
 export const completeIdeologicalQuestions: Question[] = completeIdeologicalQuestionIds.map(
