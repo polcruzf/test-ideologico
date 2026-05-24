@@ -8,18 +8,11 @@ import {
   blockLabels,
   ideologyExplanations,
   ideologyLabels,
-  getPartyPromiseFulfillmentData,
-  getPartyReligionProfile,
-  religionProfileDescriptions,
-  religionProfileLabels,
   completeIdeologicalQuestions,
   nationalPartyProfiles,
   quickIdeologicalQuestions,
   regionalPartyProfiles,
   ultraQuickIdeologicalQuestions,
-  type PartyPromiseFulfillment,
-  type PartyReligionProfile,
-  type ReligionProfileKey,
   type Question,
 } from "./test-ideologico/testData";
 import "./test-ideologico/test-ideologico.css";
@@ -62,23 +55,12 @@ type IdeologicalMapPosition = {
   y: number;
 };
 
-type ReligionAffinityResult = {
-  label: string;
-  key: ReligionProfileKey;
-  percentage: number;
-  distribution: PartyReligionProfile;
-  description: string;
-};
-
 type PartyMatch = {
   party: string;
   percentage: number;
   isClearMatch?: boolean;
   closestParty?: string;
   explanation?: string;
-  promiseFulfillment?: PartyPromiseFulfillment;
-  religionProfile?: PartyReligionProfile;
-  religionLabel?: string;
 };
 
 type PracticalInfo = {
@@ -490,248 +472,6 @@ function getIdeologyProfileDetail(item: IdeologyResult) {
 function getIdeologyPercentage(results: IdeologyResult[], ideology: string) {
   return results.find((item) => item.ideology === ideology)?.percentage ?? 0;
 }
-
-function getReligionAffinityResult(answers: Answers, questions: Question[]): ReligionAffinityResult {
-  const religionScore: Partial<Record<ReligionProfileKey, number>> = {};
-  const religionMax: Partial<Record<ReligionProfileKey, number>> = {};
-
-  questions.forEach((question) => {
-    const answer = answers[question.id];
-
-    if (answer === undefined || !question.religionWeights) return;
-
-    Object.entries(question.religionWeights).forEach(([key, weight]) => {
-      const profileKey = key as ReligionProfileKey;
-      const numericWeight = Number(weight);
-      const points = answer * numericWeight;
-      const maxPoints = Math.abs(numericWeight * 2);
-
-      religionScore[profileKey] = (religionScore[profileKey] ?? 0) + points;
-      religionMax[profileKey] = (religionMax[profileKey] ?? 0) + maxPoints;
-    });
-  });
-
-  const distribution = (Object.keys(religionProfileLabels) as ReligionProfileKey[]).reduce(
-    (accumulator, key) => {
-      const max = religionMax[key] ?? 0;
-      const score = religionScore[key] ?? 0;
-
-      accumulator[key] = max > 0 ? clamp(Math.round(((score + max) / (max * 2)) * 100)) : 50;
-      return accumulator;
-    },
-    {} as PartyReligionProfile
-  );
-
-const strongestKey =
-  (Object.keys(distribution) as ReligionProfileKey[]).sort(
-    (a, b) => (distribution[b] ?? 0) - (distribution[a] ?? 0)
-  )[0] ?? "laicidad";
-
-return {
-  key: strongestKey,
-  label: religionProfileLabels[strongestKey],
-  percentage: distribution[strongestKey] ?? 50,
-  distribution,
-  description: religionProfileDescriptions[strongestKey],
-};
-}
-
-function getPartyReligionLabel(profile: PartyReligionProfile | undefined) {
-  if (!profile) return "";
-
-const strongestKey =
-  (Object.keys(profile) as ReligionProfileKey[]).sort(
-    (a, b) => (profile[b] ?? 0) - (profile[a] ?? 0)
-  )[0];
-
-if (!strongestKey) return "";
-
-return religionProfileLabels[strongestKey] ?? "";
-}
-
-function calculateReligionSimilarityAdjustment(
-  userReligionProfile: PartyReligionProfile,
-  partyReligionProfile: PartyReligionProfile
-) {
-  const keys = Object.keys(religionProfileLabels) as ReligionProfileKey[];
-  const averageDistance =
-    keys.reduce(
-      (sum, key) => sum + Math.abs((userReligionProfile[key] ?? 50) - (partyReligionProfile[key] ?? 50)),
-      0
-    ) / keys.length;
-
-  const similarity = 100 - averageDistance;
-
-  return (similarity - 50) * 0.14;
-}
-
-function getPromiseStatusLabel(status: string) {
-  if (status === "fulfilled") return "Cumplida";
-  if (status === "partial") return "Parcial";
-  if (status === "not_fulfilled") return "No cumplida";
-  return "No aplicable";
-}
-
-function getPromiseStatusSectionTitle(status: string) {
-  if (status === "fulfilled") return "Promesas cumplidas";
-  if (status === "partial") return "Promesas parcialmente cumplidas";
-  if (status === "not_fulfilled") return "Promesas no cumplidas";
-  return "Otras promesas analizadas";
-}
-
-function PartyPromiseListSection({
-  status,
-  promises,
-}: {
-  status: string;
-  promises: PartyPromiseFulfillment["promises"];
-}) {
-  if (promises.length === 0) return null;
-
-  return (
-    <div className={`party-card_promises-section party-card_promises-section--${status}`}>
-      <h4 className="party-card_promises-section-title">
-        {getPromiseStatusSectionTitle(status)}
-      </h4>
-
-      <ul className="party-card_promises-list">
-        {promises.map((promise, index) => (
-          <li key={`${promise.title}-${index}`} className={`party-card_promise party-card_promise--${promise.status}`}>
-            <div className="party-card_promise-header">
-              <strong>{promise.title}</strong>
-              <span>{getPromiseStatusLabel(promise.status)}</span>
-            </div>
-
-            {promise.evidence && (
-              <p className="party-card_promise-evidence">{promise.evidence}</p>
-            )}
-
-            {promise.sourceLabel && (
-              <p className="party-card_promise-source">
-                Fuente: {promise.sourceLabel}
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function PartyAccountabilityBlock({ match }: { match: PartyMatch }) {
-  const fulfillment = match.promiseFulfillment ?? getPartyPromiseFulfillmentData(match.party);
-
-  if (!match.isClearMatch) return null;
-
-  const fulfilledPromises = fulfillment.promises.filter((promise) => promise.status === "fulfilled");
-  const partialPromises = fulfillment.promises.filter((promise) => promise.status === "partial");
-  const notFulfilledPromises = fulfillment.promises.filter((promise) => promise.status === "not_fulfilled");
-  const otherPromises = fulfillment.promises.filter(
-    (promise) => !["fulfilled", "partial", "not_fulfilled"].includes(promise.status)
-  );
-
-  return (
-    <div className="party-card_promises">
-      <div className="party-card_promises-summary">
-        <span className="party-card_promises-label">Promesas cumplidas</span>
-        <strong className="party-card_promises-value">{fulfillment.percentage}%</strong>
-      </div>
-
-      <details className="party-card_promises-details">
-        <summary className="party-card_promises-button">Ver desglose</summary>
-
-        <div className="party-card_promises-content">
-          <div className="party-card_promises-stats">
-            <span>Cumplidas: {fulfillment.fulfilled}</span>
-            <span>Parciales: {fulfillment.partial}</span>
-            <span>No cumplidas: {fulfillment.notFulfilled}</span>
-            <span>Total analizadas: {fulfillment.total}</span>
-          </div>
-
-          <div className="party-card_promises-methodology-block">
-            <p className="party-card_promises-methodology">{fulfillment.methodology}</p>
-            <p className="party-card_promises-protection-note">
-              El porcentaje se basa en un análisis propio a partir de programas electorales, medidas ejecutadas y fuentes verificables. La clasificación de cada promesa puede estar sujeta a interpretación.
-            </p>
-          </div>
-
-          {fulfillment.promises.length > 0 ? (
-            <div className="party-card_promises-breakdown">
-              <PartyPromiseListSection status="fulfilled" promises={fulfilledPromises} />
-              <PartyPromiseListSection status="partial" promises={partialPromises} />
-              <PartyPromiseListSection status="not_fulfilled" promises={notFulfilledPromises} />
-              <PartyPromiseListSection status="other" promises={otherPromises} />
-            </div>
-          ) : (
-            <p className="party-card_promises-empty">
-              Aún no hay auditoría documental cargada para este partido.
-            </p>
-          )}
-        </div>
-      </details>
-    </div>
-  );
-}
-
-function getStrongestReligionProfileKey(profile: PartyReligionProfile | undefined) {
-  if (!profile) return null;
-
-  return (Object.keys(religionProfileLabels) as ReligionProfileKey[]).sort(
-    (a, b) => (profile[b] ?? 0) - (profile[a] ?? 0)
-  )[0] ?? null;
-}
-
-function getPartyAdjustedReligionAffinity(
-  match: PartyMatch,
-  religionAffinity: ReligionAffinityResult
-): ReligionAffinityResult {
-  const partyProfile = match.religionProfile ?? getPartyReligionProfile(match.party);
-
-  if (!match.isClearMatch || !partyProfile) {
-    return religionAffinity;
-  }
-
-  const keys = Object.keys(religionProfileLabels) as ReligionProfileKey[];
-  const adjustedDistribution = keys.reduce((accumulator, key) => {
-    const userValue = religionAffinity.distribution[key] ?? 50;
-    const partyValue = partyProfile[key] ?? 50;
-
-    accumulator[key] = clamp(Math.round(userValue * 0.35 + partyValue * 0.65));
-    return accumulator;
-  }, {} as PartyReligionProfile);
-
-  const strongestKey =
-    getStrongestReligionProfileKey(adjustedDistribution) ?? religionAffinity.key;
-
-  return {
-    key: strongestKey,
-    label: religionProfileLabels[strongestKey],
-    percentage: adjustedDistribution[strongestKey] ?? religionAffinity.percentage,
-    distribution: adjustedDistribution,
-    description: religionProfileDescriptions[strongestKey],
-  };
-}
-
-function PartyReligionBlock({
-  match,
-  religionAffinity,
-}: {
-  match: PartyMatch;
-  religionAffinity: ReligionAffinityResult;
-}) {
-  if (!match.isClearMatch) return null;
-
-  const adjustedReligionAffinity = getPartyAdjustedReligionAffinity(match, religionAffinity);
-
-  return (
-    <div className="party-card_religion">
-      <span className="party-card_religion-label">Valores religiosos</span>
-      <strong className="party-card_religion-value">{adjustedReligionAffinity.label}</strong>
-      <p className="party-card_religion-description">{adjustedReligionAffinity.description}</p>
-    </div>
-  );
-}
-
 
 
 function getProfileIdeologyValue(profile: Record<string, number>, ideology: string) {
@@ -1716,7 +1456,6 @@ function calculateResults(
     })
     .sort((a, b) => b.percentage - a.percentage);
 
-  const religionAffinity = getReligionAffinityResult(answers, questions);
   const regionalProfiles =
     regionalPartyProfiles[selectedCommunity] ?? nationalPartyProfiles;
   const nationalProfiles = getEligibleNationalPartyProfiles();
@@ -1749,31 +1488,27 @@ function calculateResults(
         regionalProfiles,
         selectedCommunity,
         independencePosition,
-        false,
-        religionAffinity.distribution
+        false
       ),
     };
   });
 
   return {
     ideologyPercentages,
-    religionAffinity,
     blockResults,
     finalNationalParty: findClosestParty(
       ideologyPercentages,
       nationalProfiles,
       selectedCommunity,
       independencePosition,
-      true,
-      religionAffinity.distribution
+      true
     ),
     finalRegionalParty: findClosestParty(
       ideologyPercentages,
       regionalProfiles,
       selectedCommunity,
       independencePosition,
-      false,
-      religionAffinity.distribution
+      false
     ),
   };
 }
@@ -1791,8 +1526,7 @@ function findClosestParty(
   partyProfiles: Record<string, Record<string, number>>,
   selectedCommunity: string,
   independencePosition: IndependencePosition,
-  isNationalResult: boolean,
-  userReligionProfile?: PartyReligionProfile
+  isNationalResult: boolean
 ): PartyMatch {
   let bestParty = "";
   let bestSimilarity = -Infinity;
@@ -1804,8 +1538,7 @@ function findClosestParty(
       party,
       selectedCommunity,
       independencePosition,
-      isNationalResult,
-      userReligionProfile
+      isNationalResult
     );
 
     if (similarity > bestSimilarity) {
@@ -1824,9 +1557,6 @@ function findClosestParty(
       closestParty: bestParty,
       explanation:
         "Tu perfil ideológico no encaja de forma suficientemente clara con ningún partido incluido. Esto puede ocurrir cuando combinas posiciones que los programas electorales actuales no suelen reunir en una misma candidatura.",
-      promiseFulfillment: getPartyPromiseFulfillmentData(bestParty),
-      religionProfile: getPartyReligionProfile(bestParty),
-      religionLabel: getPartyReligionLabel(getPartyReligionProfile(bestParty)),
     };
   }
 
@@ -1834,9 +1564,6 @@ function findClosestParty(
     party: bestParty,
     percentage,
     isClearMatch: true,
-    promiseFulfillment: getPartyPromiseFulfillmentData(bestParty),
-    religionProfile: getPartyReligionProfile(bestParty),
-    religionLabel: getPartyReligionLabel(getPartyReligionProfile(bestParty)),
   };
 }
 
@@ -1909,18 +1636,13 @@ function calculatePartySimilarity(
   partyName: string,
   selectedCommunity: string,
   independencePosition: IndependencePosition,
-  isNationalResult: boolean,
-  userReligionProfile?: PartyReligionProfile
+  isNationalResult: boolean
 ) {
   const baseSimilarity = calculatePartySimilarityPure(userProfile, partyProfile);
-  const religionAdjustment = userReligionProfile
-    ? calculateReligionSimilarityAdjustment(userReligionProfile, getPartyReligionProfile(partyName))
-    : 0;
 
   if (isNationalResult) {
     return clamp(
       baseSimilarity +
-        religionAdjustment +
         calculateNationalTerritorialCompatibilityAdjustment(
           partyName,
           selectedCommunity,
@@ -1931,7 +1653,6 @@ function calculatePartySimilarity(
 
   return clamp(
     baseSimilarity +
-      religionAdjustment +
       calculateRegionalTerritorialCompatibilityAdjustment(
         partyName,
         selectedCommunity,
@@ -2152,6 +1873,7 @@ export default function IdeologicalTestPage() {
   const [openCompositeIdeology, setOpenCompositeIdeology] = useState<string | null>(null);
   const [confirmationType, setConfirmationType] = useState<ConfirmationType>(null);
   const [isAdvancingQuestion, setIsAdvancingQuestion] = useState(false);
+  const [resultPublicSlug, setResultPublicSlug] = useState<string | null>(null);
   const savedResultSignatureRef = useRef<string | null>(null);
   const testStartedAtRef = useRef<string | null>(null);
   const lastScrollYRef = useRef(0);
@@ -2262,6 +1984,7 @@ export default function IdeologicalTestPage() {
     setConfirmationType(null);
     setIsAdvancingQuestion(false);
     setIsPreTestSetup(false);
+    setResultPublicSlug(null);
     savedResultSignatureRef.current = null;
     testStartedAtRef.current = new Date().toISOString();
 
@@ -2283,6 +2006,7 @@ export default function IdeologicalTestPage() {
     setOpenIdeology(null);
     setConfirmationType(null);
     setIsAdvancingQuestion(false);
+    setResultPublicSlug(null);
     savedResultSignatureRef.current = null;
     testStartedAtRef.current = new Date().toISOString();
 
@@ -2304,6 +2028,7 @@ function goBackToSelector() {
   setIsPreTestSetup(false);
   setConfirmationType(null);
   setIsAdvancingQuestion(false);
+  setResultPublicSlug(null);
   savedResultSignatureRef.current = null;
   testStartedAtRef.current = null;
 
@@ -2427,17 +2152,54 @@ function goBackToSelector() {
         finalNationalParty: results.finalNationalParty,
         finalRegionalParty: results.finalRegionalParty,
         ideologyPercentages: results.ideologyPercentages,
-        religionAffinity: results.religionAffinity,
         voterType: completeAnalysisForSave?.voterType ?? null,
         consistency: completeAnalysisForSave?.consistency ?? null,
         answers,
         questions: activeQuestions,
       }),
-    }).catch((error) => {
-      console.error("Error guardando resultado del test", error);
-      savedResultSignatureRef.current = null;
-    });
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("No se pudo guardar el resultado");
+        }
+
+        const data = await response.json();
+
+        if (data.publicSlug) {
+          setResultPublicSlug(data.publicSlug);
+        }
+      })
+      .catch((error) => {
+        console.error("Error guardando resultado del test", error);
+        savedResultSignatureRef.current = null;
+        setResultPublicSlug(null);
+      });
   }, [showResults, testMode, selectedCommunity, effectiveIndependencePosition, territorialReference, activeQuestions, answers, results, canShowPoliticalResults]);
+
+  const handleShareResult = async () => {
+    if (!resultPublicSlug) {
+      alert("El resultado aún se está preparando. Espera unos segundos y vuelve a intentarlo.");
+      return;
+    }
+
+    const shareUrl = `${window.location.origin}/resultado/${resultPublicSlug}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Mi resultado en Match Político",
+          text: "Mira mi resultado en Match Político",
+          url: shareUrl,
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Enlace copiado");
+    } catch (error) {
+      console.error("Error al compartir el resultado", error);
+    }
+  };
 
   if (testMode === "selector") {
     return (
@@ -2531,25 +2293,6 @@ function goBackToSelector() {
     const regionalPartyMainDistribution = calculateMainIdeologyDistributionFromPartyProfile(
       getPartyProfileForAxes(results.finalRegionalParty.party, regionalProfiles)
     );
-    const handleShareResult = async () => {
-  const shareUrl = window.location.href;
-
-  try {
-    if (navigator.share) {
-      await navigator.share({
-        title: "Mi resultado en Match Político",
-        text: "Mira mi resultado en Match Político",
-        url: shareUrl,
-      });
-      return;
-    }
-
-    await navigator.clipboard.writeText(shareUrl);
-    alert("Enlace copiado");
-  } catch (error) {
-    console.error("Error al compartir el resultado", error);
-  }
-};
 
     return (
       <main className="ideology-test">
@@ -2624,39 +2367,27 @@ function goBackToSelector() {
 
           {canShowPoliticalResults && (
             <>
-<section className="party-results-share-section">
-  <div className="party-results-share-header">
-    <h2>Partido político más afín</h2>
-  </div>
+              <section className="party-results-share-section">
+                <div className="party-results-share-header">
+                  <h2>Partido político más afín</h2>
+                </div>
 
-  <div className="party-results">
+                <div className="party-results">
                 <div className="party-card">
                   <div className="party-card_title"><span>Elecciones generales en España</span></div>
                   <div className="party-card_results">
                     <div className="party-card_finalresult"><strong>{results.finalNationalParty.party}</strong></div>
                     <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
                   </div>
-
-<PartyAccountabilityBlock match={results.finalNationalParty} />
-
-{results.finalNationalParty.isClearMatch && (
-  <details className="party-card_ideologies party-card_ideologies-toggle">
-    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-
-    <div className="party-card_ideologies-content">
-            <MainIdeologyPills
-        distribution={nationalPartyMainDistribution}
-        variant="dark"
-      />
-      <PartyReligionBlock
-        match={results.finalNationalParty}
-        religionAffinity={results.religionAffinity}
-      />
-
-
-    </div>
-  </details>
-)}
+                  {results.finalNationalParty.isClearMatch && (
+                    <details className="party-card_ideologies party-card_ideologies-toggle">
+                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+                      <MainIdeologyPills
+                        distribution={nationalPartyMainDistribution}
+                        variant="dark"
+                      />
+                    </details>
+                  )}
                   {!results.finalNationalParty.isClearMatch && (
                     <>
                       <p className="party-card_explanation">
@@ -2696,58 +2427,46 @@ function goBackToSelector() {
                     <div className="party-card_finalresult"><strong>{results.finalRegionalParty.party}</strong></div>
                     <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
                   </div>
-
-<PartyAccountabilityBlock match={results.finalRegionalParty} />
-
-{results.finalRegionalParty.isClearMatch && (
-  <details className="party-card_ideologies party-card_ideologies-toggle">
-    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-
-    <div className="party-card_ideologies-content">
-      <MainIdeologyPills
-        distribution={regionalPartyMainDistribution}
-        variant="dark"
-      />
-
-      <PartyReligionBlock
-        match={results.finalRegionalParty}
-        religionAffinity={results.religionAffinity}
-      />
-
-    </div>
-  </details>
-)}
+                  {results.finalRegionalParty.isClearMatch && (
+                    <details className="party-card_ideologies party-card_ideologies-toggle">
+                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+                      <MainIdeologyPills
+                        distribution={regionalPartyMainDistribution}
+                        variant="dark"
+                      />
+                    </details>
+                  )}
                   {!results.finalRegionalParty.isClearMatch && (
                     <p className="party-card_explanation">
                       {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
                     </p>
                   )}
                 </div>
-              </div>
+                </div>
 
-              <button
-                type="button"
-                className="share-result-button"
-                onClick={handleShareResult}
-                aria-label="Compartir resultado"
-              >
-                <span>Compartir</span>
-                <svg
-                  className="share-result-button__icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+                <button
+                  type="button"
+                  className="share-result-button"
+                  onClick={handleShareResult}
+                  aria-label="Compartir resultado"
                 >
-                  <path
-                    d="M12 3v12M12 3l-4 4M12 3l4 4M5 11v8h14v-8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </section>
+                  <span>Compartir</span>
+                  <svg
+                    className="share-result-button__icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3v12M12 3l-4 4M12 3l4 4M5 11v8h14v-8"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </section>
 
               <section className="ideological-profile-card results-profile-card">
                 <h2 className="results-profile-title">Perfil ideológico resumido</h2>
@@ -2972,7 +2691,7 @@ function goBackToSelector() {
 
           {canShowPoliticalResults && !isUltraTest && (
             <>
-              <h2>Afinidad por bloques</h2>
+              <h2>Resultado por bloques</h2>
 
               <div className="block-results">
                 {results.blockResults.map((block) => (

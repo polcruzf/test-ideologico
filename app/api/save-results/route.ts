@@ -10,6 +10,32 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
+function normalizeSlugText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
+function createShortId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID().replace(/-/g, "").slice(0, 8);
+  }
+
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function createPublicSlug(body: any) {
+  const shortId = createShortId();
+  const topIdeology = body.ideologyPercentages?.[0]?.ideology ?? "resultado";
+  const normalizedTopIdeology = normalizeSlugText(topIdeology) || "resultado";
+
+  return `${shortId}-${normalizedTopIdeology}`;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -37,31 +63,48 @@ export async function POST(req: Request) {
       );
     }
 
-    const { data: session, error: sessionError } = await supabase
-      .from("test_sessions")
-      .insert({
-        anonymous_user_id: anonymousUserId ?? null,
-        started_at: startedAt ?? null,
-        completed_at: completedAt ?? null,
-        duration_seconds: durationSeconds ?? null,
+    let session = null;
+    let sessionError = null;
 
-        test_mode: testMode,
-        community: selectedCommunity,
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const publicSlug = createPublicSlug(body);
 
-        national_party: finalNationalParty?.party,
-        national_party_percentage: finalNationalParty?.percentage,
+      const insertResult = await supabase
+        .from("test_sessions")
+        .insert({
+          public_slug: publicSlug,
 
-        regional_party: finalRegionalParty?.party,
-        regional_party_percentage: finalRegionalParty?.percentage,
+          anonymous_user_id: anonymousUserId ?? null,
+          started_at: startedAt ?? null,
+          completed_at: completedAt ?? null,
+          duration_seconds: durationSeconds ?? null,
 
-        voter_type: voterType,
-        consistency,
+          test_mode: testMode,
+          community: selectedCommunity,
 
-        top_ideologies: ideologyPercentages,
-        raw_results: body,
-      })
-      .select("id")
-      .single();
+          national_party: finalNationalParty?.party,
+          national_party_percentage: finalNationalParty?.percentage,
+
+          regional_party: finalRegionalParty?.party,
+          regional_party_percentage: finalRegionalParty?.percentage,
+
+          voter_type: voterType,
+          consistency,
+
+          top_ideologies: ideologyPercentages,
+          raw_results: body,
+        })
+        .select("id, public_slug")
+        .single();
+
+      session = insertResult.data;
+      sessionError = insertResult.error;
+
+      if (!sessionError && session) break;
+
+      const errorCode = sessionError?.code;
+      if (errorCode !== "23505") break;
+    }
 
     if (sessionError || !session) {
       console.error(sessionError);
@@ -97,6 +140,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
+      sessionId: session.id,
+      publicSlug: session.public_slug,
     });
   } catch (error) {
     console.error(error);
