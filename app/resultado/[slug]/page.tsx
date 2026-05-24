@@ -3,6 +3,7 @@ import {
   autonomousCommunities,
   ideologyLabels,
 } from "../../test-ideologico/testData";
+import ShareSharedResultButton from "./ShareSharedResultButton";
 import "../../test-ideologico/test-ideologico.css";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -426,18 +427,23 @@ export default async function SharedResultPage({ params }: PageProps) {
   const specificIdeologyLabel = getSpecificIdeologyLabel(topIdeologies);
 
   return (
-    <main className="ideology-test shared-result-layout">
+    <>
       <header className="shared-result-header">
-        <a className="shared-result-logo" href="/">
-          Match Político
-        </a>
+        <div className="shared-result-header__inner">
+          <a className="shared-result-logo" href="/">
+            Match Político
+          </a>
 
-        <a className="shared-result-header__button" href="/">
-          Realizar mi propio test
-        </a>
+<div className="shared-result-header__actions">
+  <a className="shared-result-header__button" href="/">
+    Realizar mi propio test
+  </a>
+</div>
+        </div>
       </header>
 
-      <section className="results shared-result-page">
+      <main className="ideology-test shared-result-layout">
+        <section className="results shared-result-page">
         <h1>Resultado compartido</h1>
 
         <section className="party-results-share-section">
@@ -612,7 +618,8 @@ export default async function SharedResultPage({ params }: PageProps) {
             Realizar mi propio test
           </a>
         </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 }

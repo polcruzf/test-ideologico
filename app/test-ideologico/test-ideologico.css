@@ -3014,3 +3014,201 @@ span.party-card_religion-label {
 .party-card_promises {
     display: none;
 }
+
+/* =========================================================
+   RESULTADO COMPARTIDO
+   CSS exclusivo para /resultado/[slug]
+   ========================================================= */
+
+.shared-result-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: #eeeee8;
+}
+
+.shared-result-header__inner {
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+}
+
+.shared-result-logo {
+    color: #111;
+    font-size: 25px;
+    font-weight: 350;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: "Inter Tight";
+}
+
+.shared-result-header__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.shared-result-share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.shared-result-share-button__icon {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+}
+
+.shared-result-header__button,
+.shared-result-cta {
+    color: #fff;
+    cursor: pointer;
+    background: #111;
+    border: 1px solid #111;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.shared-result-header__button:hover,
+.shared-result-cta:hover {
+  background: #333;
+}
+
+.shared-result-layout {
+  padding-top: 42px;
+}
+
+.shared-result-page {
+  gap: 38px;
+}
+
+.shared-result-page h1 {
+  margin: 0;
+}
+
+.shared-result-footer-cta {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0;
+}
+
+.shared-result-advanced-card {
+  margin-top: 20px;
+}
+
+.results-profile-summary-head {
+  display: grid;
+  gap: 14px;
+}
+
+.results-profile-specific-title {
+  color: #111;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.shared-result-page .composite-ideology-item {
+  min-height: auto !important;
+}
+
+.shared-result-page .composite-ideology-item p {
+  margin: 0;
+  color: #444;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .shared-result-header__inner {
+    width: min(100% - 24px, 1180px);
+    padding: 18px 0;
+    display: grid;
+    gap: 16px;
+  }
+
+  .shared-result-header__actions {
+    display: grid;
+    justify-content: stretch;
+    gap: 14px;
+  }
+
+  .shared-result-share-button {
+    justify-content: flex-start;
+    font-size: 20px;
+  }
+
+  .shared-result-header__button,
+  .shared-result-cta {
+    width: 100%;
+  }
+
+  .shared-result-layout {
+    padding-top: 34px;
+  }
+
+  .results-profile-specific-title {
+    font-size: 30px;
+  }
+
+  .shared-result-footer-cta {
+    display: grid;
+  }
+}
+
+/* =========================
+   BOTÓN COMPARTIR HEADER
+   ========================= */
+
+.site-sticky-header__share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: transparent;
+  border: none;
+
+  color: #111;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.site-sticky-header__share-button:hover {
+  opacity: 0.7;
+}
+
+/* icono */
+.site-sticky-header__share-button svg {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+.site-sticky-header__actions {
+    gap: 20px;
+    display: flex;
+}
