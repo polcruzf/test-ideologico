@@ -2515,11 +2515,32 @@ section.test-selector {
     padding: 15px 20px;
     box-shadow: 0px 2px 10px #57462930;
   }
-
   .site-sticky-header__brand {
-    display: none;
+    display: block;
+    font-size: 18px;
+    font-weight: 350;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
   }
 
+  .site-sticky-header__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .site-sticky-header__actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .site-sticky-header__share-button,
+  .site-sticky-header__button {
+    width: auto;
+    flex: 1;
+  }
 
   .site-sticky-header__button {
     font-size: 18px;
@@ -3211,4 +3232,9 @@ span.party-card_religion-label {
 .site-sticky-header__actions {
     gap: 20px;
     display: flex;
+}
+.shared-result-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
