@@ -2841,7 +2841,13 @@ span.party-card_religion-label {
   }
   .composite-ideology-card {
   margin: 0px 0px 50px;
-}
+  }
+.share-result-button {
+    position: static;
+    margin-top: 18px;
+    justify-self: start;
+    font-size: 22px;
+  }
 }
 
 
@@ -2961,6 +2967,41 @@ span.party-card_religion-label {
     display: flex;
     flex-direction: column;
   }
+  .party-results-share-section {
+  position: relative;
+}
+
+.party-results-share-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.share-result-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.share-result-button__icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+}
 }
 
 

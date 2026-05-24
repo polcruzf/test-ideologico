@@ -2531,6 +2531,30 @@ function goBackToSelector() {
     const regionalPartyMainDistribution = calculateMainIdeologyDistributionFromPartyProfile(
       getPartyProfileForAxes(results.finalRegionalParty.party, regionalProfiles)
     );
+    const handleShareResult = async () => {
+  const shareText = `Mi resultado en Match Político:
+
+Elecciones generales en España:
+${results.finalNationalParty.party} - ${results.finalNationalParty.percentage}% de coincidencia
+
+Elecciones autonómicas en ${selectedCommunityName}:
+${results.finalRegionalParty.party} - ${results.finalRegionalParty.percentage}% de coincidencia`;
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: "Mi resultado en Match Político",
+        text: shareText,
+      });
+      return;
+    }
+
+    await navigator.clipboard.writeText(shareText);
+    alert("Resultado copiado");
+  } catch (error) {
+    console.error("Error al compartir el resultado", error);
+  }
+};
 
     return (
       <main className="ideology-test">
@@ -2605,9 +2629,12 @@ function goBackToSelector() {
 
           {canShowPoliticalResults && (
             <>
-              <h2>Partido político más afín</h2>
+<section className="party-results-share-section">
+  <div className="party-results-share-header">
+    <h2>Partido político más afín</h2>
+  </div>
 
-              <div className="party-results">
+  <div className="party-results">
                 <div className="party-card">
                   <div className="party-card_title"><span>Elecciones generales en España</span></div>
                   <div className="party-card_results">
@@ -2702,6 +2729,30 @@ function goBackToSelector() {
                   )}
                 </div>
               </div>
+
+              <button
+                type="button"
+                className="share-result-button"
+                onClick={handleShareResult}
+                aria-label="Compartir resultado"
+              >
+                <span>Compartir</span>
+                <svg
+                  className="share-result-button__icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 3v12M12 3l-4 4M12 3l4 4M5 11v8h14v-8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </section>
 
               <section className="ideological-profile-card results-profile-card">
                 <h2 className="results-profile-title">Perfil ideológico resumido</h2>
