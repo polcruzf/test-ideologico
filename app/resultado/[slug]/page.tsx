@@ -11,13 +11,13 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export default async function SharedResultPage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const { data: result, error } = await supabase
     .from("test_sessions")
