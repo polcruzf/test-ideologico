@@ -2926,7 +2926,7 @@ function goBackToSelector() {
 
           {canShowPoliticalResults && !isUltraTest && (
             <>
-              <h2>Resultado por bloques</h2>
+              <h2>Afinidad por bloques</h2>
 
               <div className="block-results">
                 {results.blockResults.map((block) => (

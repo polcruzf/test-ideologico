@@ -671,13 +671,15 @@ export const ideologicalQuestions: Question[] = [
   },
   {
     "id": 24,
-    "text": "La economía debería priorizar la igualdad sobre el crecimiento.",
+    "text": "El Estado debería priorizar la redistribución de la riqueza aunque eso reduzca el crecimiento económico del país.",
     "block": "economia",
     "weights": {
       "socialista": 3,
-      "comunista": 3,
-      "socialdemocrata": 1,
-      "liberal": -2
+      "comunista": 2,
+      "socialdemocrata": 3,
+      "liberal": -2,
+      "libertario": -3,
+      "conservador": -1
     }
   },
   {
@@ -3956,18 +3958,17 @@ export const ideologyExplanations: Record<string, { title: string; description: 
 ideologicalQuestions.push(
   {
     id: 217,
-    text: "Las raíces religiosas de España y Europa deberían reconocerse oficialmente.",
+    text: "Las instituciones públicas deberían reconocer explícitamente la tradición religiosa como parte de la identidad histórica de España y Europa.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
       conservador: 2,
       progresista: -2,
-      multiculturalista: -1,
     },
     religionWeights: {
       identitaria_cultural: 3,
       tradicional_religiosa: 2,
-      laicidad: -2,
+      laicidad: -3,
       apertura_religiosa: -1,
     },
   },
@@ -3989,60 +3990,63 @@ ideologicalQuestions.push(
   },
   {
     id: 219,
-    text: "Las comunidades musulmanas deberían poder conservar públicamente sus tradiciones en España.",
+    text: "La religión musulmana debería tener la misma presencia en el espacio público que la religión católica en España.",
     block: "identidad",
     weights: {
       multiculturalista: 3,
-      progresista: 1,
+      progresista: 2,
       nacionalista: -2,
-      tradicionalista: -1,
+      tradicionalista: -2,
     },
     religionWeights: {
       apertura_religiosa: 3,
-      laicidad: 1,
+      laicidad: 0,
       identitaria_cultural: -2,
     },
   },
   {
     id: 220,
-    text: "Las tradiciones religiosas minoritarias deberían recibir reconocimiento cultural e histórico.",
+    text: "La religión musulmana debería tener el mismo reconocimiento cultural que la religión católica en España.",
     block: "identidad",
     weights: {
-      multiculturalista: 2,
-      institucionalista: 1,
-      progresista: 1,
+      multiculturalista: 3,
+      tradicionalista: -2,
+      progresista: 2,
+      nacionalista: -2
     },
     religionWeights: {
       apertura_religiosa: 3,
-      laicidad: 1,
-      identitaria_cultural: -1,
+      laicidad: 0,
+      identitaria_cultural: -3,
     },
   },
   {
     id: 221,
-    text: "El Estado debe proteger por igual las expresiones religiosas de cualquier confesión.",
+    text: "El Estado debería priorizar la tradición religiosa del país frente a otras religiones.",
     block: "identidad",
     weights: {
-      multiculturalista: 3,
-      progresista: 2,
-      institucionalista: 1,
-      nacionalista: -1,
+      tradicionalista:3,
+      multiculturalista: -3,
+      progresista: -2,
+      nacionalista: 2,
+      conservador:2
     },
     religionWeights: {
-      apertura_religiosa: 3,
-      laicidad: 1,
-      identitaria_cultural: -2,
+      apertura_religiosa: -3,
+      laicidad: -1,
+      identitaria_cultural: 3,
     },
   },
   {
     id: 222,
-    text: "La religión debería quedar principalmente en el ámbito privado.",
+    text: "La religión debería limitarse al ámbito privado y no tener presencia en el espacio público.",
     block: "identidad",
     weights: {
       progresista: 2,
-      liberal: 2,
+      liberal: 1,
+      multiculturalista: -1,
       tradicionalista: -2,
-      conservador: -1,
+      conservador: -2,
     },
     religionWeights: {
       laicidad: 3,
@@ -4052,20 +4056,20 @@ ideologicalQuestions.push(
   },
   {
     id: 223,
-    text: "Las tradiciones religiosas del país deberían tener prioridad por su historia.",
+    text: "Por su historia, las tradiciones religiosas del país deberían tener un papel más importante que otras religiones.",
     block: "identidad",
     weights: {
       tradicionalista: 3,
       conservador: 2,
       nacionalista: 1,
       multiculturalista: -2,
-      progresista: -1,
+      progresista: -2,
     },
     religionWeights: {
       identitaria_cultural: 3,
       tradicional_religiosa: 2,
       apertura_religiosa: -2,
-      laicidad: -1,
+      laicidad: -2,
     },
   },
   {

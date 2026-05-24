@@ -442,7 +442,7 @@ span.nota_transparencia {
 }
 
 .community-selector select {
-  width: min(100%, 420px);
+  width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
   background: #fff;
@@ -496,6 +496,7 @@ span.nota_transparencia {
   border-radius: 22px;
   background: #f7f6d8;
   color: #000000;
+  margin-top: 30px;
 }
 
 .upgrade-result-card h2 {
@@ -1944,7 +1945,7 @@ a.ideology-blocks-info-card__button {
 .composite-ideology-card {
   display: grid;
   gap: 18px;
-  margin-bottom: 45px;
+  margin: 60px 0px 60px;
 }
 
 .composite-ideology-card__intro {
@@ -2838,6 +2839,9 @@ span.party-card_religion-label {
   p.party-card_religion-description {
     padding: 10px 0px 0px 15px;
   }
+  .composite-ideology-card {
+  margin: 0px 0px 50px;
+}
 }
 
 
