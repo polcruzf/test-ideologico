@@ -2532,25 +2532,20 @@ function goBackToSelector() {
       getPartyProfileForAxes(results.finalRegionalParty.party, regionalProfiles)
     );
     const handleShareResult = async () => {
-  const shareText = `Mi resultado en Match Político:
-
-Elecciones generales en España:
-${results.finalNationalParty.party} - ${results.finalNationalParty.percentage}% de coincidencia
-
-Elecciones autonómicas en ${selectedCommunityName}:
-${results.finalRegionalParty.party} - ${results.finalRegionalParty.percentage}% de coincidencia`;
+  const shareUrl = window.location.href;
 
   try {
     if (navigator.share) {
       await navigator.share({
         title: "Mi resultado en Match Político",
-        text: shareText,
+        text: "Mira mi resultado en Match Político",
+        url: shareUrl,
       });
       return;
     }
 
-    await navigator.clipboard.writeText(shareText);
-    alert("Resultado copiado");
+    await navigator.clipboard.writeText(shareUrl);
+    alert("Enlace copiado");
   } catch (error) {
     console.error("Error al compartir el resultado", error);
   }
