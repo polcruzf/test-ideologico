@@ -110,7 +110,7 @@ body.min-h-full.flex.flex-col {
 .test-selector__intro p {
   margin: 0;
   color: #555;
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1.6;
 }
 
@@ -2422,6 +2422,7 @@ section.test-selector {
 
   .electoral-programs-card__details {
     width: min(100%, 320px);
+    text-align: center;
   }
 
   .electoral-programs-card__details summary {

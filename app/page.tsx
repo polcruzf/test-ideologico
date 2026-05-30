@@ -2486,7 +2486,7 @@ function goBackToSelector() {
             </div>
             
             <p>
-              Haz el test ideológico de Match Político y descubre tu perfil político real
+              ¿Seguro que sabes cuál es tu posición política? Compruébalo haciendo nuestro test.
             </p>
           </div>
 
