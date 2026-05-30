@@ -3182,6 +3182,7 @@ span.party-card_religion-label {
   .shared-result-cta {
     width: 100%;
     font-size: 18px;
+    text-align: center;
   }
 
   .shared-result-layout {
