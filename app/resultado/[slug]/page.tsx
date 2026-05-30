@@ -444,7 +444,9 @@ export default async function SharedResultPage({ params }: PageProps) {
 
       <main className="ideology-test shared-result-layout">
         <section className="results shared-result-page">
-        <h1>Resultado compartido</h1>
+        <div className="resultadodiv">
+          <h1>Resultado del test</h1>
+        </div>
 
         <section className="party-results-share-section">
           <div className="party-results-share-header">

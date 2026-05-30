@@ -3056,7 +3056,7 @@ span.party-card_religion-label {
 
 .shared-result-logo {
     color: #111;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 350;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -3159,14 +3159,17 @@ span.party-card_religion-label {
   .shared-result-header__inner {
     width: min(100% - 24px, 1180px);
     padding: 18px 0;
-    display: grid;
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .shared-result-header__actions {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-content: stretch;
     gap: 14px;
+    width: 100%;
   }
 
   .shared-result-share-button {
@@ -3177,6 +3180,7 @@ span.party-card_religion-label {
   .shared-result-header__button,
   .shared-result-cta {
     width: 100%;
+    font-size: 18px;
   }
 
   .shared-result-layout {
@@ -3188,7 +3192,10 @@ span.party-card_religion-label {
   }
 
   .shared-result-footer-cta {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
   }
 }
 
