@@ -2,8 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import {
   autonomousCommunities,
   ideologyLabels,
+  religionProfileDescriptions,
+  religionProfileLabels,
 } from "../../test-ideologico/testData";
-import ShareSharedResultButton from "./ShareSharedResultButton";
 import "../../test-ideologico/test-ideologico.css";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -394,6 +395,47 @@ function getCommunityName(communityId: string | null) {
   return autonomousCommunities.find((community) => community.id === communityId)?.name ?? communityId;
 }
 
+type SharedReligionProfileKey =
+  | "tradicional_religiosa"
+  | "laicidad"
+  | "apertura_religiosa"
+  | "identitaria_cultural";
+
+function isSharedReligionProfileKey(value: unknown): value is SharedReligionProfileKey {
+  return (
+    value === "tradicional_religiosa" ||
+    value === "laicidad" ||
+    value === "apertura_religiosa" ||
+    value === "identitaria_cultural"
+  );
+}
+
+function SharedPartyReligionBlock({ rawResults }: { rawResults: any }) {
+  const religionAffinity = rawResults?.religionAffinity;
+  const religionKey = religionAffinity?.key;
+
+  if (!isSharedReligionProfileKey(religionKey)) return null;
+
+  const label =
+    religionAffinity.label ??
+    religionProfileLabels[religionKey] ??
+    "Religión";
+
+  const description =
+    religionAffinity.description ??
+    religionProfileDescriptions[religionKey] ??
+    "";
+
+  return (
+    <div className="party-card_religion">
+      <span className="party-card_religion-label">Valores religiosos</span>
+      <strong className="party-card_religion-value">{label}</strong>
+      {description && (
+        <p className="party-card_religion-description">{description}</p>
+      )}
+    </div>
+  );
+}
 export default async function SharedResultPage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -463,7 +505,14 @@ export default async function SharedResultPage({ params }: PageProps) {
                 <div className="party-card_finalresult">
                   <strong>{result.national_party}</strong>
                 </div>
+                
+<details className="party-card_ideologies party-card_ideologies-toggle">
+  <summary className="party-card_ideologies-button">
+    Ver ideologías del partido
+  </summary>
 
+  <SharedPartyReligionBlock rawResults={rawResults} />
+</details>
                 <div className="party-card_percentatge">
                   <em>{result.national_party_percentage}% de coincidencia</em>
                 </div>
@@ -481,7 +530,13 @@ export default async function SharedResultPage({ params }: PageProps) {
                 <div className="party-card_finalresult">
                   <strong>{result.regional_party}</strong>
                 </div>
+<details className="party-card_ideologies party-card_ideologies-toggle">
+  <summary className="party-card_ideologies-button">
+    Ver ideologías del partido
+  </summary>
 
+  <SharedPartyReligionBlock rawResults={rawResults} />
+</details>
                 <div className="party-card_percentatge">
                   <em>{result.regional_party_percentage}% de coincidencia</em>
                 </div>

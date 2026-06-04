@@ -29,7 +29,8 @@ type TestMode = "selector" | "ultra" | "rapido" | "completo";
 type ConfirmationType = "restart" | "home" | null;
 type TerritorialReference = "spain" | "selectedCommunity" | "mixed";
 type IndependencePosition =
-  | "independence"
+  | "unilateral_independence"
+  | "negotiated_independence"
   | "right_to_decide"
   | "autonomy_inside_spain"
   | "against_independence"
@@ -140,16 +141,22 @@ const independencePositionOptions: {
   description: string;
 }[] = [
   {
-    value: "independence",
-    label: "A favor de la independencia",
+    value: "unilateral_independence",
+    label: "Independencia unilateral",
     description:
-      "El resultado interpretará el nacionalismo como soberanía de la comunidad seleccionada y penalizará partidos estatales incompatibles con esa posición.",
+      "El resultado interpretará tu posición como independentismo rupturista y penalizará con mucha fuerza a partidos contrarios a la independencia.",
+  },
+  {
+    value: "negotiated_independence",
+    label: "Independencia pactada",
+    description:
+      "El resultado interpretará tu posición como independentismo negociado o mediante referéndum acordado.",
   },
   {
     value: "right_to_decide",
     label: "Derecho a decidir",
     description:
-      "El resultado dará peso al autogobierno y reducirá la afinidad con partidos muy centralistas.",
+      "El resultado dará peso al autogobierno y al referéndum, sin asumir necesariamente que quieres la independencia.",
   },
   {
     value: "autonomy_inside_spain",
@@ -159,9 +166,9 @@ const independencePositionOptions: {
   },
   {
     value: "against_independence",
-    label: "En contra",
+    label: "Unidad de España",
     description:
-      "El resultado permitirá partidos estatales constitucionalistas o unionistas si encajan con el resto de tu perfil.",
+      "El resultado favorecerá partidos constitucionalistas o unionistas si encajan con el resto de tu perfil.",
   },
   {
     value: "unclear",
@@ -1412,9 +1419,13 @@ function getTerritorialReferenceFromIndependence(
 ): TerritorialReference {
   if (!isIndependenceQuestionCommunity(selectedCommunity)) return "spain";
 
-  if (independencePosition === "independence" || independencePosition === "right_to_decide") {
-    return "selectedCommunity";
-  }
+if (
+  independencePosition === "unilateral_independence" ||
+  independencePosition === "negotiated_independence" ||
+  independencePosition === "right_to_decide"
+) {
+  return "selectedCommunity";
+}
 
   if (independencePosition === "autonomy_inside_spain") {
     return "mixed";
@@ -1912,12 +1923,19 @@ function calculateNationalTerritorialCompatibilityAdjustment(
 ) {
   const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
 
-  if (effectivePosition === "independence") {
-    if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -100;
-    if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -45;
-    if (partyName === "PSOE") return -8;
-    return 0;
-  }
+if (effectivePosition === "unilateral_independence") {
+  if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -100;
+  if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -55;
+  if (partyName === "PSOE") return -18;
+  return 0;
+}
+
+if (effectivePosition === "negotiated_independence") {
+  if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -85;
+  if (MODERATE_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -38;
+  if (partyName === "PSOE") return -8;
+  return 0;
+}
 
   if (effectivePosition === "right_to_decide") {
     if (HARD_SPANISH_UNIONIST_GENERAL_PARTIES.has(partyName)) return -70;
@@ -1971,12 +1989,19 @@ function calculateRegionalTerritorialCompatibilityAdjustment(
 ) {
   const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
 
-  if (effectivePosition === "independence") {
-    if (isHardSpanishUnionistRegionalParty(partyName)) return -100;
-    if (isModerateSpanishUnionistRegionalParty(partyName)) return -45;
-    if (isSoftSpanishUnionistRegionalParty(partyName)) return -8;
-    return 0;
-  }
+if (effectivePosition === "unilateral_independence") {
+  if (isHardSpanishUnionistRegionalParty(partyName)) return -100;
+  if (isModerateSpanishUnionistRegionalParty(partyName)) return -55;
+  if (isSoftSpanishUnionistRegionalParty(partyName)) return -18;
+  return 8;
+}
+
+if (effectivePosition === "negotiated_independence") {
+  if (isHardSpanishUnionistRegionalParty(partyName)) return -85;
+  if (isModerateSpanishUnionistRegionalParty(partyName)) return -38;
+  if (isSoftSpanishUnionistRegionalParty(partyName)) return -8;
+  return 4;
+}
 
   if (effectivePosition === "right_to_decide") {
     if (isHardSpanishUnionistRegionalParty(partyName)) return -70;
@@ -2012,19 +2037,29 @@ function calculateBlockTerritorialCompatibilityAdjustment(
 ) {
   const effectivePosition = getEffectiveIndependencePosition(selectedCommunity, independencePosition);
 
-  if (effectivePosition !== "independence" && effectivePosition !== "right_to_decide") {
-    return 0;
-  }
+if (
+  effectivePosition !== "unilateral_independence" &&
+  effectivePosition !== "negotiated_independence" &&
+  effectivePosition !== "right_to_decide"
+) {
+  return 0;
+}
 
   if (block !== "nacion" && block !== "identidad" && block !== "geopolitica") {
     return 0;
   }
 
-  if (effectivePosition === "independence") {
-    if (partyName === "VOX" || partyName === "Ciudadanos") return -100;
-    if (partyName === "PP") return -45;
-    if (partyName === "PSOE") return -10;
-  }
+if (effectivePosition === "unilateral_independence") {
+  if (partyName === "VOX" || partyName === "Ciudadanos") return -100;
+  if (partyName === "PP") return -55;
+  if (partyName === "PSOE") return -18;
+}
+
+if (effectivePosition === "negotiated_independence") {
+  if (partyName === "VOX" || partyName === "Ciudadanos") return -85;
+  if (partyName === "PP") return -38;
+  if (partyName === "PSOE") return -8;
+}
 
   if (effectivePosition === "right_to_decide") {
     if (partyName === "VOX" || partyName === "Ciudadanos") return -70;
@@ -2651,18 +2686,23 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalNationalParty.percentage}% de coincidencia</em></div>
                   </div>
 
-                  <PartyAccountabilityBlock match={results.finalNationalParty} />
-                  <PartyReligionBlock match={results.finalNationalParty} religionAffinity={results.religionAffinity} />
+<PartyAccountabilityBlock match={results.finalNationalParty} />
 
-                  {results.finalNationalParty.isClearMatch && (
-                    <details className="party-card_ideologies party-card_ideologies-toggle">
-                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-                      <MainIdeologyPills
-                        distribution={nationalPartyMainDistribution}
-                        variant="dark"
-                      />
-                    </details>
-                  )}
+{results.finalNationalParty.isClearMatch && (
+  <details className="party-card_ideologies party-card_ideologies-toggle">
+    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+
+    <MainIdeologyPills
+      distribution={nationalPartyMainDistribution}
+      variant="dark"
+    />
+
+    <PartyReligionBlock
+      match={results.finalNationalParty}
+      religionAffinity={results.religionAffinity}
+    />
+  </details>
+)}
                   {!results.finalNationalParty.isClearMatch && (
                     <>
                       <p className="party-card_explanation">
@@ -2703,18 +2743,23 @@ function goBackToSelector() {
                     <div className="party-card_percentatge"><em>{results.finalRegionalParty.percentage}% de coincidencia</em></div>
                   </div>
 
-                  <PartyAccountabilityBlock match={results.finalRegionalParty} />
-                  <PartyReligionBlock match={results.finalRegionalParty} religionAffinity={results.religionAffinity} />
+<PartyAccountabilityBlock match={results.finalRegionalParty} />
 
-                  {results.finalRegionalParty.isClearMatch && (
-                    <details className="party-card_ideologies party-card_ideologies-toggle">
-                      <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
-                      <MainIdeologyPills
-                        distribution={regionalPartyMainDistribution}
-                        variant="dark"
-                      />
-                    </details>
-                  )}
+{results.finalRegionalParty.isClearMatch && (
+  <details className="party-card_ideologies party-card_ideologies-toggle">
+    <summary className="party-card_ideologies-button">Ver ideologías del partido</summary>
+
+    <MainIdeologyPills
+      distribution={regionalPartyMainDistribution}
+      variant="dark"
+    />
+
+    <PartyReligionBlock
+      match={results.finalRegionalParty}
+      religionAffinity={results.religionAffinity}
+    />
+  </details>
+)}
                   {!results.finalRegionalParty.isClearMatch && (
                     <p className="party-card_explanation">
                       {results.finalRegionalParty.explanation} El partido autonómico más cercano sería {results.finalRegionalParty.closestParty}, pero la coincidencia no es lo bastante alta para considerarlo una afinidad clara.
