@@ -3019,12 +3019,6 @@ span.party-card_religion-label {
 
 
 
-
-
-/* .party-card_promises {
-    display: none;
-} */
-
 /* =========================================================
    RESULTADO COMPARTIDO
    CSS exclusivo para /resultado/[slug]
@@ -3234,4 +3228,16 @@ span.party-card_religion-label {
   position: sticky;
   top: 0;
   z-index: 1000;
+}
+
+
+
+
+
+
+
+
+
+.party-card_promises {
+    display: none;
 }
